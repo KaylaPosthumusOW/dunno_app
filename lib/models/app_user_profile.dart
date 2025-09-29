@@ -3,8 +3,6 @@ import 'package:equatable/equatable.dart';
 import 'package:sp_user_repository/sp_user_repository.dart';
 import 'package:sp_utilities/utilities.dart';
 
-enum UserRole { user, admin }
-
 class AppUserProfile extends Equatable {
   final String? uid;
   final String? name;
@@ -14,15 +12,14 @@ class AppUserProfile extends Equatable {
   final String? pushToken;
   final String? profilePicture;
   final Timestamp? createdAt;
-  final UserRole? role;
-  final int activeDays;
-  final Timestamp? lastSeen;
   final bool hasSeenOnboarding;
+  final num? connectionCount;
+  final String? profileLink;
 
-  const AppUserProfile({this.uid, this.name, this.surname, this.email, this.phoneNumber, this.pushToken, this.profilePicture, this.createdAt, this.role, this.activeDays = 1, this.lastSeen, this.hasSeenOnboarding = false});
+  const AppUserProfile({this.uid, this.name, this.surname, this.email, this.phoneNumber, this.pushToken, this.profilePicture, this.createdAt, this.hasSeenOnboarding = false, this.connectionCount, this.profileLink});
 
   @override
-  List<Object?> get props => [uid, name, surname, email, phoneNumber, pushToken, profilePicture, createdAt, role, activeDays, lastSeen, hasSeenOnboarding];
+  List<Object?> get props => [uid, name, surname, email, phoneNumber, pushToken, profilePicture, createdAt, hasSeenOnboarding, connectionCount, profileLink];
 
   bool get isProfileComplete => !StringHelpers.isNullOrEmpty(name) && !StringHelpers.isNullOrEmpty(surname) && !StringHelpers.isNullOrEmpty(email) && !StringHelpers.isNullOrEmpty(phoneNumber);
 
@@ -32,7 +29,6 @@ class AppUserProfile extends Equatable {
         name: authProviderUserDetails.name,
         surname: authProviderUserDetails.surname,
         createdAt: authProviderUserDetails.createdAt,
-        role: UserRole.user,
       );
 
   AppUserProfile copyWith({
@@ -44,10 +40,9 @@ class AppUserProfile extends Equatable {
     String? pushToken,
     String? profilePicture,
     Timestamp? createdAt,
-    UserRole? role,
-    int? activeDays,
-    Timestamp? lastSeen,
     bool? hasSeenOnboarding,
+    num? connectionCount,
+    String? profileLink,
   }) {
     return AppUserProfile(
       uid: uid ?? this.uid,
@@ -58,10 +53,9 @@ class AppUserProfile extends Equatable {
       pushToken: pushToken ?? this.pushToken,
       profilePicture: profilePicture ?? this.profilePicture,
       createdAt: createdAt ?? this.createdAt,
-      role: role ?? this.role,
-      activeDays: activeDays ?? this.activeDays,
-      lastSeen: lastSeen ?? this.lastSeen,
       hasSeenOnboarding: hasSeenOnboarding ?? this.hasSeenOnboarding,
+      connectionCount: connectionCount ?? this.connectionCount,
+      profileLink: profileLink ?? this.profileLink,
     );
   }
 
@@ -74,10 +68,9 @@ class AppUserProfile extends Equatable {
     String? pushToken,
     String? profilePicture,
     Timestamp? createdAt,
-    UserRole? role,
-    int? activeDays,
-    Timestamp? lastSeen,
     bool? hasSeenOnboarding,
+    num? connectionCount,
+    String? profileLink,
   }) {
     return AppUserProfile(
       uid: uid ?? this.uid,
@@ -88,10 +81,9 @@ class AppUserProfile extends Equatable {
       pushToken: pushToken ?? this.pushToken,
       profilePicture: profilePicture,
       createdAt: createdAt ?? this.createdAt,
-      role: role ?? this.role,
-      activeDays: activeDays ?? this.activeDays,
-      lastSeen: lastSeen ?? this.lastSeen,
       hasSeenOnboarding: hasSeenOnboarding ?? this.hasSeenOnboarding,
+      connectionCount: connectionCount,
+      profileLink: profileLink,
     );
   }
 
@@ -105,14 +97,10 @@ class AppUserProfile extends Equatable {
       'pushToken': pushToken,
       'profilePicture': profilePicture,
       'createdAt': timeStampSafe ? createdAt?.toDate().toIso8601String() : createdAt,
-      'role': role?.name,
-      'activeDays': activeDays,
-      'lastSeen': timeStampSafe ? lastSeen?.toDate().toIso8601String() : lastSeen,
       'isProfileComplete': isProfileComplete,
-      'isAdmin': role == UserRole.admin,
-      'isUser': role == UserRole.user,
-      'isActive': activeDays > 0,
       'hasSeenOnboarding': hasSeenOnboarding,
+      'connectionCount': connectionCount,
+      'profileLink': profileLink,
     };
   }
 
@@ -139,10 +127,9 @@ class AppUserProfile extends Equatable {
       pushToken: map['pushToken'],
       profilePicture: map['profilePicture'],
       createdAt: createdAt,
-      role: map['role'] != null ? UserRole.values.firstWhere((e) => e.name == map['role']) : null,
-      activeDays: map['activeDays'] ?? 1,
-      lastSeen: timeStampSafe && map['lastSeen'] != null ? Timestamp.fromDate(DateTime.parse(map['lastSeen'])) : map['lastSeen'],
       hasSeenOnboarding: map['hasSeenOnboarding'] ?? false,
+      connectionCount: map['connectionCount'],
+      profileLink: map['profileLink'],
     );
   }
 }
