@@ -24,7 +24,7 @@ class CreateAccountButton extends StatelessWidget {
           child: TextButton(
             style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0))),
             onPressed: () => _goToRegisterScreen(context),
-            child: Text('Register Now', style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: AppColors.framePurple, )),
+            child: Text('Register Now', style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: AppColors.cerise, )),
           ),
         ),
       ],

@@ -40,16 +40,16 @@ class DunnoTextFieldState extends State<DunnoTextField> {
     final theme = Theme.of(context);
     final isErrorState = widget.errorText != null && widget.errorText!.isNotEmpty;
 
-    final textColor = widget.isLight ? AppColors.black : AppColors.white;
-    final borderColor = widget.isLight ? AppColors.black : AppColors.white;
-    final iconColor = widget.isLight ? AppColors.black : AppColors.white;
+    final textColor = widget.isLight ? AppColors.cerise : AppColors.offWhite;
+    final borderColor = widget.isLight ? AppColors.cerise : AppColors.offWhite;
+    final iconColor = widget.isLight ? AppColors.cerise : AppColors.offWhite;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
           padding: const EdgeInsets.only(bottom: 4),
-          child: Text(widget.label ?? '', style: theme.textTheme.labelMedium?.copyWith(color: isErrorState ? AppColors.errorRed : textColor)),
+          child: Text(widget.label ?? '', style: theme.textTheme.labelMedium?.copyWith(color: isErrorState ? AppColors.cerise : textColor)),
         ),
         TextField(
           inputFormatters: widget.inputFormatters ?? [],

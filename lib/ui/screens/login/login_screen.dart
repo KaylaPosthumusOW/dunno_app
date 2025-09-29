@@ -10,10 +10,10 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: SvgPicture.asset(
-          'assets/svg/frame_logo_dark.svg',
-          height: 32,
-        ),
+        // title: SvgPicture.asset(
+        //   'assets/svg/frame_logo_dark.svg',
+        //   height: 32,
+        // ),
         centerTitle: true,
       ),
       body: LoginForm(),

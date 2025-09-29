@@ -7,22 +7,22 @@ const kDefaultThemeMode = ThemeMode.light;
 
 class FrameTheme {
   static TextTheme get textTheme {
-    return GoogleFonts.robotoTextTheme().copyWith(
-      displayLarge: GoogleFonts.lexend(fontSize: 32, fontWeight: FontWeight.w600, color: Colors.black),
-      displayMedium: GoogleFonts.lexend(fontSize: 18, fontWeight: FontWeight.w700, color: Colors.black),
-      displaySmall: GoogleFonts.lexend(fontSize: 16, fontWeight: FontWeight.w700, color: Colors.black),
-      headlineLarge: GoogleFonts.lexend(fontSize: 24, fontWeight: FontWeight.w700, color: Colors.black),
-      headlineMedium: GoogleFonts.lexend(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.black),
-      headlineSmall: GoogleFonts.lexend(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.black),
-      titleLarge: GoogleFonts.lexend(fontSize: 24, fontWeight: FontWeight.w400, color: Colors.black),
-      titleMedium: GoogleFonts.lexend(fontSize: 20, fontWeight: FontWeight.w400, color: Colors.black),
-      titleSmall: GoogleFonts.lexend(fontSize: 12, fontWeight: FontWeight.w400, color: Colors.black),
-      labelLarge: GoogleFonts.lexend(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.black),
-      labelMedium: GoogleFonts.lexend(fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black),
-      labelSmall: GoogleFonts.lexend(fontSize: 12, fontWeight: FontWeight.w400, color: Colors.black),
-      bodyLarge: GoogleFonts.lexend(fontSize: 16, fontWeight: FontWeight.w300, color: Colors.black),
-      bodyMedium: GoogleFonts.lexend(fontSize: 14, fontWeight: FontWeight.w300, color: Colors.black),
-      bodySmall: GoogleFonts.lexend(fontSize: 10, fontWeight: FontWeight.w300, color: Colors.black),
+    return GoogleFonts.mulishTextTheme().copyWith(
+      displayLarge: GoogleFonts.mulish(fontSize: 32, fontWeight: FontWeight.w600, color: Colors.black),
+      displayMedium: GoogleFonts.mulish(fontSize: 18, fontWeight: FontWeight.w700, color: Colors.black),
+      displaySmall: GoogleFonts.mulish(fontSize: 16, fontWeight: FontWeight.w700, color: Colors.black),
+      headlineLarge: GoogleFonts.mulish(fontSize: 24, fontWeight: FontWeight.w700, color: Colors.black),
+      headlineMedium: GoogleFonts.mulish(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.black),
+      headlineSmall: GoogleFonts.mulish(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.black),
+      titleLarge: GoogleFonts.mulish(fontSize: 24, fontWeight: FontWeight.w400, color: Colors.black),
+      titleMedium: GoogleFonts.mulish(fontSize: 20, fontWeight: FontWeight.w400, color: Colors.black),
+      titleSmall: GoogleFonts.mulish(fontSize: 12, fontWeight: FontWeight.w400, color: Colors.black),
+      labelLarge: GoogleFonts.mulish(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.black),
+      labelMedium: GoogleFonts.mulish(fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black),
+      labelSmall: GoogleFonts.mulish(fontSize: 12, fontWeight: FontWeight.w400, color: Colors.black),
+      bodyLarge: GoogleFonts.mulish(fontSize: 16, fontWeight: FontWeight.w300, color: Colors.black),
+      bodyMedium: GoogleFonts.mulish(fontSize: 14, fontWeight: FontWeight.w300, color: Colors.black),
+      bodySmall: GoogleFonts.mulish(fontSize: 10, fontWeight: FontWeight.w300, color: Colors.black),
     );
   }
 
@@ -31,7 +31,7 @@ class FrameTheme {
       textTheme: textTheme,
       useMaterial3: useMaterial3,
       brightness: Brightness.light,
-      scaffoldBackgroundColor: AppColors.white,
+      scaffoldBackgroundColor: AppColors.offWhite,
       appBarTheme: AppBarTheme(
         elevation: 0,
         backgroundColor: Colors.transparent,
@@ -45,34 +45,34 @@ class FrameTheme {
       ),
       iconTheme: IconThemeData(color: Colors.black, size: 33),
       colorScheme: ColorScheme.light(
-        primary: AppColors.framePurple,
-        secondary: AppColors.limeGreen,
-        surface: AppColors.white,
-        error: AppColors.errorRed.withValues(alpha: 0.5),
-        onPrimary: AppColors.white,
-        onSecondary: AppColors.white,
-        onSurface: AppColors.white,
-        onError: AppColors.errorRed.withValues(alpha: 0.5),
+        primary: AppColors.cerise,
+        secondary: AppColors.cinnabar,
+        surface: AppColors.offWhite,
+        error: AppColors.cinnabar.withValues(alpha: 0.5),
+        onPrimary: AppColors.cerise,
+        onSecondary: AppColors.tangerine,
+        onSurface: AppColors.black,
+        onError: AppColors.cinnabar.withValues(alpha: 0.5),
       ),
       tabBarTheme: TabBarThemeData(
         indicator: UnderlineTabIndicator(
-          borderSide: BorderSide(color: AppColors.framePurple, width: 2),
+          borderSide: BorderSide(color: AppColors.cerise, width: 2),
         ),
-        labelColor: AppColors.framePurple,
-        unselectedLabelColor: AppColors.white,
+        labelColor: AppColors.cerise,
+        unselectedLabelColor: AppColors.pinkLavender,
         labelStyle: textTheme.labelMedium,
         unselectedLabelStyle: textTheme.labelMedium,
       ),
       toggleButtonsTheme: ToggleButtonsThemeData(
-        color: AppColors.black,
-        selectedColor: AppColors.framePurple,
+        color: AppColors.offWhite,
+        selectedColor: AppColors.cerise,
         fillColor: AppColors.black,
         borderRadius: BorderRadius.circular(8),
         constraints: const BoxConstraints(minHeight: 40, minWidth: 40),
       ),
       switchTheme: SwitchThemeData(
         thumbColor: WidgetStateProperty.all(AppColors.black),
-        trackColor: WidgetStateProperty.all(AppColors.slateGrey),
+        trackColor: WidgetStateProperty.all(AppColors.tangerine),
       ),
       navigationBarTheme: NavigationBarThemeData(
         backgroundColor: AppColors.black,
@@ -82,18 +82,18 @@ class FrameTheme {
         ),
       ),
       listTileTheme: ListTileThemeData(
-        iconColor: AppColors.framePurple,
+        iconColor: AppColors.cerise,
         textColor: Colors.black,
         titleTextStyle: textTheme.displaySmall,
       ),
       checkboxTheme: CheckboxThemeData(
-        fillColor: WidgetStateProperty.all(AppColors.white),
-        checkColor: WidgetStateProperty.all(AppColors.framePurple),
+        fillColor: WidgetStateProperty.all(AppColors.offWhite),
+        checkColor: WidgetStateProperty.all(AppColors.cerise),
       ),
-      dividerTheme: DividerThemeData(color: AppColors.slateGrey),
+      dividerTheme: DividerThemeData(color: AppColors.black),
       splashColor: Colors.transparent,
       cardTheme: CardThemeData(
-        color: AppColors.white,
+        color: AppColors.offWhite,
       ),
       dialogTheme: DialogThemeData(
         shape: RoundedRectangleBorder(
@@ -101,7 +101,7 @@ class FrameTheme {
         ),
       ),
       badgeTheme: BadgeThemeData(
-        backgroundColor: AppColors.framePurple,
+        backgroundColor: AppColors.cerise,
         textStyle: textTheme.labelMedium?.copyWith(color: Colors.white),
         textColor: Colors.white,
       ),
@@ -122,34 +122,34 @@ class FrameTheme {
       ),
       iconTheme: IconThemeData(color: Colors.black, size: 33),
       colorScheme: ColorScheme.dark(
-        primary: AppColors.framePurple,
-        secondary: AppColors.limeGreen,
-        surface: AppColors.lightPink,
-        error: AppColors.framePurple.withValues(alpha: 0.5),
-        onPrimary: AppColors.white,
-        onSecondary: AppColors.white,
-        onSurface: AppColors.white,
-        onError: AppColors.framePurple.withValues(alpha: 0.5),
+        primary: AppColors.cerise,
+        secondary: AppColors.tangerine,
+        surface: AppColors.black,
+        error: AppColors.cinnabar.withValues(alpha: 0.5),
+        onPrimary: AppColors.offWhite,
+        onSecondary: AppColors.offWhite,
+        onSurface: AppColors.offWhite,
+        onError: AppColors.offWhite,
       ),
       tabBarTheme: TabBarThemeData(
         indicator: UnderlineTabIndicator(
-          borderSide: BorderSide(color: AppColors.framePurple, width: 2),
+          borderSide: BorderSide(color: AppColors.cerise, width: 2),
         ),
-        labelColor: AppColors.framePurple,
-        unselectedLabelColor: AppColors.white,
+        labelColor: AppColors.cerise,
+        unselectedLabelColor: AppColors.offWhite,
         labelStyle: textTheme.labelMedium,
         unselectedLabelStyle: textTheme.labelMedium,
       ),
       toggleButtonsTheme: ToggleButtonsThemeData(
-        color: AppColors.slateGrey,
-        selectedColor: AppColors.framePurple,
-        fillColor: AppColors.slateGrey,
+        color: AppColors.offWhite,
+        selectedColor: AppColors.cerise,
+        fillColor: AppColors.offWhite,
         borderRadius: BorderRadius.circular(8),
         constraints: const BoxConstraints(minHeight: 40, minWidth: 40),
       ),
       switchTheme: SwitchThemeData(
         thumbColor: WidgetStateProperty.all(AppColors.black),
-        trackColor: WidgetStateProperty.all(AppColors.slateGrey),
+        trackColor: WidgetStateProperty.all(AppColors.offWhite),
       ),
       navigationBarTheme: NavigationBarThemeData(
         backgroundColor: AppColors.black,
@@ -159,18 +159,18 @@ class FrameTheme {
         ),
       ),
       listTileTheme: ListTileThemeData(
-        iconColor: AppColors.limeGreen,
+        iconColor: AppColors.offWhite,
         textColor: Colors.black,
         titleTextStyle: textTheme.displaySmall,
       ),
       checkboxTheme: CheckboxThemeData(
-        fillColor: WidgetStateProperty.all(AppColors.white),
-        checkColor: WidgetStateProperty.all(AppColors.framePurple),
+        fillColor: WidgetStateProperty.all(AppColors.offWhite),
+        checkColor: WidgetStateProperty.all(AppColors.offWhite),
       ),
-      dividerTheme: DividerThemeData(color: AppColors.slateGrey),
+      dividerTheme: DividerThemeData(color: AppColors.offWhite),
       splashColor: Colors.transparent,
       cardTheme: CardThemeData(
-        color: AppColors.white,
+        color: AppColors.offWhite,
       ),
       dialogTheme: DialogThemeData(
         shape: RoundedRectangleBorder(
@@ -183,13 +183,13 @@ class FrameTheme {
 
 class AppColors {
   static Color black = HexColor('#151515');
-  static Color white = HexColor('#FFFFFF');
-  static Color limeGreen = HexColor('#D5ED8B');
-  static Color framePurple = HexColor('#AC77FF');
-  static Color lightPink = HexColor('#FCC2FB');
-  static Color slateGrey = HexColor('#333333');
+  static Color offWhite = HexColor('#F5F5F5');
+  static Color pinkLavender = HexColor('#F3C8F3');
+  static Color cerise = HexColor('#E22897');
+  static Color tangerine = HexColor('#FD9651');
+  static Color cinnabar = HexColor('#EF512C');
+  static Color antiqueWhite = HexColor('#FBE9D1');
   static Color errorRed = HexColor('#FF4C4C');
-  static Color grey = HexColor('#F3EEE6');
 }
 
 List<BoxShadow> getBoxShadow(BuildContext context) {

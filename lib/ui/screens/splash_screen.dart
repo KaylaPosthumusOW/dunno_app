@@ -15,13 +15,7 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
     return Scaffold(
       backgroundColor: AppColors.black,
       body: Center(
-        child: Container(
-          padding: const EdgeInsets.all(20.0),
-          child: SvgPicture.asset(
-            'assets/svg/frame_logo.svg',
-            height: 100,
-          ),
-        ),
+        child: CircularProgressIndicator(),
       ),
     );
   }

@@ -11,10 +11,10 @@ class RegisterScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: SvgPicture.asset(
-          'assets/svg/frame_logo_dark.svg',
-          height: 32,
-        ),
+        // title: SvgPicture.asset(
+        //   'assets/svg/frame_logo_dark.svg',
+        //   height: 32,
+        // ),
         centerTitle: true,
       ),
       body: const RegisterForm(),

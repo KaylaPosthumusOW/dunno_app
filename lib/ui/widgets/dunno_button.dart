@@ -1,7 +1,7 @@
 import 'package:dunno/constants/themes.dart';
 import 'package:flutter/material.dart';
 
-enum ButtonType { primary, secondary, outline, whiteOutline }
+enum ButtonType { primary, secondary, outline }
 
 class DunnoButton extends StatefulWidget {
   final VoidCallback? onPressed;
@@ -51,13 +51,12 @@ class _DunnoButtonState extends State<DunnoButton> {
   ButtonStyle _getButtonStyle(bool isDisabled) {
     switch (widget.type) {
       case ButtonType.primary:
-        return FilledButton.styleFrom(backgroundColor: isDisabled ? AppColors.framePurple.withValues(alpha: 0.4) : widget.buttonColor ?? AppColors.framePurple, foregroundColor: AppColors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)));
+        return FilledButton.styleFrom(backgroundColor: isDisabled ? AppColors.cerise.withValues(alpha: 0.4) : widget.buttonColor ?? AppColors.cerise, foregroundColor: AppColors.pinkLavender, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)));
       case ButtonType.secondary:
-        return FilledButton.styleFrom(backgroundColor: isDisabled ? AppColors.limeGreen.withValues(alpha: 0.4) : widget.buttonColor ?? AppColors.limeGreen, foregroundColor: AppColors.black, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)));
+        return FilledButton.styleFrom(backgroundColor: isDisabled ? AppColors.cinnabar.withValues(alpha: 0.4) : widget.buttonColor ?? AppColors.cinnabar, foregroundColor: AppColors.antiqueWhite, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)));
       case ButtonType.outline:
-        return OutlinedButton.styleFrom(backgroundColor: Colors.transparent, side: BorderSide(color: isDisabled ? AppColors.framePurple : widget.outlineColor ?? AppColors.framePurple), foregroundColor: isDisabled ? AppColors.framePurple : AppColors.framePurple, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)));
-      case ButtonType.whiteOutline:
-        return OutlinedButton.styleFrom(backgroundColor: Colors.transparent, side: BorderSide(color: isDisabled ? AppColors.white : widget.outlineColor ?? AppColors.white), foregroundColor: isDisabled ? AppColors.white : AppColors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)));
+        return OutlinedButton.styleFrom(backgroundColor: Colors.transparent, side: BorderSide(color: isDisabled ? AppColors.cerise : widget.outlineColor ?? AppColors.cerise), foregroundColor: isDisabled ? AppColors.cerise : AppColors.cerise, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)));
+
     }
   }
 
@@ -68,8 +67,6 @@ class _DunnoButtonState extends State<DunnoButton> {
       case ButtonType.secondary:
         return FilledButton.icon(onPressed: onPressed, icon: icon ?? const SizedBox.shrink(), label: label, style: style);
       case ButtonType.outline:
-        return OutlinedButton.icon(onPressed: onPressed, icon: icon ?? const SizedBox.shrink(), label: label, style: style);
-      case ButtonType.whiteOutline:
         return OutlinedButton.icon(onPressed: onPressed, icon: icon ?? const SizedBox.shrink(), label: label, style: style);
     }
   }

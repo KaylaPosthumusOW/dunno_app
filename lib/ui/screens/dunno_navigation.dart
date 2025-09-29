@@ -42,12 +42,12 @@ class _DunnoNavigationScreenState extends State<DunnoNavigationScreen> {
                 ),
                 bottomNavigationBar: Container(
                   decoration: BoxDecoration(
-                    color: AppColors.black,
-                    border: Border(top: BorderSide(color: AppColors.white, width: 0.5)),
+                    color: AppColors.offWhite,
+                    border: Border(top: BorderSide(color: AppColors.cerise, width: 0.5)),
                   ),
                   child: TabBar(
-                    labelColor: AppColors.framePurple,
-                    unselectedLabelColor: Colors.grey,
+                    labelColor: AppColors.cerise,
+                    unselectedLabelColor: AppColors.pinkLavender,
                     tabs: [
                       Tab(icon: Icon(Icons.home_rounded), text: 'Home'),
                       Tab(icon: Icon(Icons.image_rounded), text: 'Find Friends'),
