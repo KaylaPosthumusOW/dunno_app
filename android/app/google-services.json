@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "112952377151",
+    "project_id": "dunno-da82e",
+    "storage_bucket": "dunno-da82e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:112952377151:android:a98def5ded2200ea6add8a",
+        "android_client_info": {
+          "package_name": "com.example.dunno_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDTYSAN0uoBEYGFy-3azfRrA0Lu8ZBSLKw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
