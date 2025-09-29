@@ -4,26 +4,26 @@ import 'package:equatable/equatable.dart';
 
 enum ConnectionType { pending, accepted }
 
-class Connections extends Equatable {
+class Connection extends Equatable {
   final String? uid;
   final AppUserProfile? user;
   final AppUserProfile? connectedUser;
   final ConnectionType? connectionType;
   final Timestamp? createdAt;
 
-  const Connections({this.uid, this.user, this.connectedUser, this.connectionType, this.createdAt});
+  const Connection({this.uid, this.user, this.connectedUser, this.connectionType, this.createdAt});
 
   @override
   List<Object?> get props => [uid, user, connectedUser, connectionType, createdAt];
 
-  Connections copyWith({
+  Connection copyWith({
     String? uid,
     AppUserProfile? user,
     AppUserProfile? connectedUser,
     ConnectionType? connectionType,
     Timestamp? createdAt,
   }) {
-    return Connections(
+    return Connection(
       uid: uid ?? this.uid,
       user: user ?? this.user,
       connectedUser: connectedUser ?? this.connectedUser,
@@ -42,7 +42,7 @@ class Connections extends Equatable {
     };
   }
 
-  factory Connections.fromMap(Map<String, dynamic> map, {bool timeStampSafe = false}) {
+  factory Connection.fromMap(Map<String, dynamic> map, {bool timeStampSafe = false}) {
     var createdAt = map['createdAt'];
     if (createdAt != null) {
       if (createdAt is String) {
@@ -56,7 +56,7 @@ class Connections extends Equatable {
       createdAt = createdAt;
     }
 
-    return Connections(
+    return Connection(
       uid: map['uid'],
       user: map['user'] != null ? AppUserProfile.fromMap(map['user']) : null,
       connectedUser: map['connectedUser'] != null ? AppUserProfile.fromMap(map['connectedUser']) : null,

@@ -1,6 +1,6 @@
 import 'package:dunno/constants/constants.dart';
 import 'package:dunno/constants/themes.dart';
-import 'package:dunno/cubits/general/app_user_profile/app_user_profile_cubit.dart';
+import 'package:dunno/cubits/app_user_profile/app_user_profile_cubit.dart';
 import 'package:dunno/ui/screens/find_friends_screen.dart';
 import 'package:dunno/ui/screens/home_screen.dart';
 import 'package:dunno/ui/screens/profile/profile_screen.dart';
@@ -46,6 +46,7 @@ class _DunnoNavigationScreenState extends State<DunnoNavigationScreen> {
                     border: Border(top: BorderSide(color: AppColors.cerise, width: 0.5)),
                   ),
                   child: TabBar(
+                    automaticIndicatorColorAdjustment: false,
                     labelColor: AppColors.cerise,
                     unselectedLabelColor: AppColors.pinkLavender,
                     tabs: [

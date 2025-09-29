@@ -1,6 +1,6 @@
 import 'package:dunno/constants/constants.dart';
 import 'package:dunno/constants/themes.dart';
-import 'package:dunno/cubits/general/app_user_profile/app_user_profile_cubit.dart';
+import 'package:dunno/cubits/app_user_profile/app_user_profile_cubit.dart';
 import 'package:dunno/ui/widgets/dunno_button.dart';
 import 'package:dunno/ui/widgets/dunno_text_field.dart';
 import 'package:flutter/material.dart';

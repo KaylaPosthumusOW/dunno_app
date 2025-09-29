@@ -10,7 +10,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:sp_user_repository/sp_user_repository.dart';
 
-part 'app_user_profile_state.dart';
+part '../app_user_profile/app_user_profile_state.dart';
 
 class AppUserProfileCubit extends Cubit<AppUserProfileState> {
   final AppUserProfileFirebaseRepository _appUserProfileRepository = GetIt.instance<AppUserProfileFirebaseRepository>();

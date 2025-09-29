@@ -1,3 +1,5 @@
+import 'package:dunno/constants/constants.dart';
+import 'package:dunno/cubits/app_user_profile/app_user_profile_cubit.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -8,6 +10,14 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final AppUserProfileCubit _appUserProfileCubit = sl<AppUserProfileCubit>();
+
+  @override
+  void initState() {
+    super.initState();
+    _appUserProfileCubit.loadProfile();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
