@@ -1,5 +1,6 @@
 import 'package:dunno/constants/routes.dart';
 import 'package:dunno/ui/screens/dunno_landing_screen.dart';
+import 'package:dunno/ui/screens/profile/edit_profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -14,6 +15,11 @@ class AppRouter {
         path: MAIN_SCREEN,
         name: MAIN_SCREEN,
         builder: (BuildContext context, GoRouterState state) => DunnoLandingScreen(),
+      ),
+      GoRoute(
+        path: EDIT_PROFILE_SCREEN,
+        name: EDIT_PROFILE_SCREEN,
+        builder: (BuildContext context, GoRouterState state) => EditProfileScreen(),
       ),
     ],
     redirect: (BuildContext context, GoRouterState state) async {

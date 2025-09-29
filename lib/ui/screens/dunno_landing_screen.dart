@@ -30,18 +30,18 @@ class _DunnoLandingScreenState extends State<DunnoLandingScreen> {
         }
       },
       builder: (context, state) {
-        // if (state is Uninitialized) {
-        //   return const SplashScreen();
-        // }
-        //
-        // if (state is Unauthenticated) {
-        //   return const LoginScreen();
-        // }
-        //
-        // if (state is Authenticated) {
-        //   return const DunnoNavigationScreen();
-        // }
-        return DunnoNavigationScreen();
+        if (state is Uninitialized) {
+          return const SplashScreen();
+        }
+
+        if (state is Unauthenticated) {
+          return const LoginScreen();
+        }
+
+        if (state is Authenticated) {
+          return const DunnoNavigationScreen();
+        }
+        // return DunnoNavigationScreen();
 
         return const Scaffold(body: Center(child: CircularProgressIndicator()));
       },
