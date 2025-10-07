@@ -1,0 +1,101 @@
+import 'dart:async';
+
+import 'package:dunno/constants/themes.dart';
+import 'package:flutter/material.dart';
+import 'package:sp_utilities/utilities.dart';
+
+enum TypeSearch { friends }
+
+class DunnoSearchField extends StatefulWidget {
+  final String? hintText;
+  final String? initialValue;
+  final Color? color;
+  final TypeSearch typeSearch;
+  final TextEditingController controller;
+
+  const DunnoSearchField({super.key, this.hintText, this.color, this.initialValue, required this.typeSearch, required this.controller});
+
+  @override
+  State<DunnoSearchField> createState() => DunnoSearchFieldState();
+}
+
+class DunnoSearchFieldState extends State<DunnoSearchField> {
+  Timer? _debounce;
+
+  void _onSearchChanged(String text) {
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+    _debounce = Timer(const Duration(milliseconds: 500), () async {
+      if (!StringHelpers.isNullOrEmpty(text) && text.length > 2) {
+        _handleSearch(text);
+      } else {
+        _handleSearch(text);
+      }
+    });
+    setState(() {});
+  }
+
+  void _handleSearch(String query) {
+    switch (widget.typeSearch) {
+      case TypeSearch.friends:
+      // _floaterCubit.searchFloaters(query, reset: StringHelpers.isNullOrEmpty(query), workspaceId: _workspaceManagementCubit.state.mainWorkspaceManagementState.activeWorkspace?.uid);
+    }
+  }
+
+  @override
+  void didUpdateWidget(covariant DunnoSearchField oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (widget.initialValue != oldWidget.initialValue && widget.initialValue != widget.controller.text) {
+      widget.controller.text = widget.initialValue ?? '';
+      _handleSearch(widget.initialValue ?? '');
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    if (!StringHelpers.isNullOrEmpty(widget.initialValue)) {
+      widget.controller.text = widget.initialValue!;
+      _handleSearch(widget.initialValue!);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      child: TextField(
+        autocorrect: false,
+        controller: widget.controller,
+        style: Theme.of(context).textTheme.labelLarge,
+        decoration: InputDecoration(
+          hintText: widget.hintText ?? 'Search',
+          suffixIcon: StringHelpers.isNullOrEmpty(widget.controller.text)
+              ? Container(
+                  margin: const EdgeInsets.only(right: 5, top: 3, bottom: 3),
+                  decoration: BoxDecoration(color: AppColors.cerise, borderRadius: BorderRadius.circular(10),),
+                  child: Icon(Icons.search, color: AppColors.offWhite),
+                )
+              : IconButton(
+                  icon: Icon(Icons.close, color: AppColors.cerise),
+                  onPressed: () {
+                    widget.controller.clear();
+                    _onSearchChanged('');
+                  },
+                ),
+          contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+          hintStyle: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.cerise),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+          fillColor: widget.color ?? AppColors.pinkLavender,
+          filled: true,
+        ),
+        onChanged: (text) => _onSearchChanged(text.trim()),
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _debounce?.cancel();
+    super.dispose();
+  }
+}
