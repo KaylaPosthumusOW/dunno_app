@@ -17,7 +17,20 @@ class RegisterScreen extends StatelessWidget {
         // ),
         centerTitle: true,
       ),
-      body: const RegisterForm(),
+      body: ListView(
+        padding: const EdgeInsets.all(20),
+        children: [
+          Column(
+            children: [
+              Container(margin: const EdgeInsets.only(top: 20), child: SvgPicture.asset('assets/svg/celebration.svg', width: 160, height: 160)),
+              SizedBox(height: 20),
+              Text('Create Your Account', style: Theme.of(context).textTheme.displayLarge?.copyWith(fontWeight: FontWeight.w600, height: 1.2)),
+              SizedBox(height: 10),
+              const RegisterForm(),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

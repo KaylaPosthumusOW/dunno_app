@@ -2,12 +2,13 @@ import 'package:dunno/constants/constants.dart';
 import 'package:dunno/constants/routes.dart';
 import 'package:dunno/constants/themes.dart';
 import 'package:dunno/cubits/app_user_profile/app_user_profile_cubit.dart';
+import 'package:dunno/cubits/collections/collection_cubit.dart';
 import 'package:dunno/models/app_user_profile.dart';
+import 'package:dunno/ui/widgets/collection_card.dart';
 import 'package:dunno/ui/widgets/dunno_alert_dialog.dart';
 import 'package:dunno/ui/widgets/dunno_button.dart';
 import 'package:dunno/ui/widgets/dunno_extended_image.dart';
 import 'package:dunno/ui/widgets/dunno_image_uploading_tile.dart';
-import 'package:dunno/ui/widgets/dunno_text_field.dart';
 import 'package:dunno/ui/widgets/loading_indicator.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +28,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final AppUserProfileCubit _appUserProfileCubit = sl<AppUserProfileCubit>();
   final SPFileUploaderCubit _imageUploaderCubit = sl<SPFileUploaderCubit>();
   final AuthenticationCubit _authenticationCubit = sl<AuthenticationCubit>();
+  final CollectionCubit _collectionCubit = sl<CollectionCubit>();
 
   String? _downloadUrl;
 
@@ -292,6 +294,69 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
+  Widget _profileCollections() {
+    return BlocBuilder<CollectionCubit, CollectionState>(
+      bloc: _collectionCubit,
+      builder: (context, state) {
+        final collections = state.mainCollectionState.allUserCollections ?? [];
+        final hasCollections = collections.isNotEmpty;
+        final displayCount = hasCollections
+            ? (collections.length > 3 ? 3 : collections.length)
+            : 0;
+
+        return Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    'Your Collections',
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold, color: AppColors.black),
+                  ),
+                  InkWell(
+                    onTap: () => context.pushNamed(COLLECTIONS_SCREEN),
+                    child: Text(
+                      'View All',
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        color: AppColors.black,
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 10),
+
+              if (!hasCollections)
+                Text(
+                  'No collections found.',
+                  style: Theme.of(context).textTheme.bodyMedium,
+                )
+              else
+                SizedBox(
+                  height: 150,
+                  child: ListView.builder(
+                    clipBehavior: Clip.none,
+                    scrollDirection: Axis.horizontal,
+                    itemCount: displayCount,
+                    itemBuilder: (context, index) {
+                      final collection = collections[index];
+                      return CollectionCard(collection: collection);
+                    },
+                  ),
+                ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   _buildBody(AppUserProfileState state) {
     AppUserProfile profile = state.mainAppUserProfileState.appUserProfile ?? const AppUserProfile();
     return LayoutBuilder(
@@ -345,10 +410,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ],
             ),
+            SizedBox(height: 30),
+            _profileCollections(),
           ],
         );
       },
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _collectionCubit.loadAllCollectionsForUser(userUid: _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile?.uid ?? '');
   }
 
   @override

@@ -11,7 +11,7 @@ class RegisterButton extends StatelessWidget {
     return DunnoButton(
       type: ButtonType.primary,
       onPressed: _onPressed,
-      label: 'Register',
+      label: 'Create Your Account',
     );
   }
 }

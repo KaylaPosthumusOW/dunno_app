@@ -40,16 +40,16 @@ class DunnoTextFieldState extends State<DunnoTextField> {
     final theme = Theme.of(context);
     final isErrorState = widget.errorText != null && widget.errorText!.isNotEmpty;
 
-    final textColor = widget.isLight ? AppColors.cerise : AppColors.offWhite;
-    final borderColor = widget.isLight ? AppColors.cerise : AppColors.offWhite;
+    final textColor = widget.isLight ? AppColors.black : AppColors.offWhite;
+    final borderColor = widget.isLight ? AppColors.pinkLavender.withValues(alpha: 0.6) : AppColors.offWhite;
     final iconColor = widget.isLight ? AppColors.cerise : AppColors.offWhite;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.only(bottom: 4),
-          child: Text(widget.label ?? '', style: theme.textTheme.labelMedium?.copyWith(color: isErrorState ? AppColors.cerise : textColor)),
+          padding: const EdgeInsets.only(bottom: 4, left: 15),
+          child: Text(widget.label ?? '', style: theme.textTheme.labelMedium?.copyWith(color: isErrorState ? AppColors.black : textColor)),
         ),
         TextField(
           inputFormatters: widget.inputFormatters ?? [],
@@ -77,7 +77,8 @@ class DunnoTextFieldState extends State<DunnoTextField> {
           style: theme.textTheme.labelLarge?.copyWith(color: textColor),
           decoration: InputDecoration(
             isDense: widget.isDense,
-            filled: false,
+            filled: true,
+            fillColor: widget.isLight ? AppColors.pinkLavender.withValues(alpha: 0.6) : AppColors.pinkLavender,
             prefixIcon: widget.leadingIcon != null ? Icon(widget.leadingIcon, color: iconColor, size: 20) : null,
             suffixIcon: !widget.readOnly && widget.controller.text.isNotEmpty && widget.suffixIcon == null
                 ? GestureDetector(
@@ -97,11 +98,11 @@ class DunnoTextFieldState extends State<DunnoTextField> {
             errorStyle: theme.textTheme.labelLarge?.copyWith(color: AppColors.errorRed),
             counterText: "",
             floatingLabelBehavior: FloatingLabelBehavior.never,
-            disabledBorder: OutlineInputBorder(borderRadius: const BorderRadius.all(Radius.circular(10)), borderSide: BorderSide(color: borderColor)),
-            enabledBorder: OutlineInputBorder(borderRadius: const BorderRadius.all(Radius.circular(10)), borderSide: BorderSide(color: borderColor)),
-            focusedBorder: OutlineInputBorder(borderRadius: const BorderRadius.all(Radius.circular(10)), borderSide: BorderSide(color: borderColor, width: 1.5)),
-            errorBorder: OutlineInputBorder(borderRadius: const BorderRadius.all(Radius.circular(10)), borderSide: BorderSide(color: AppColors.errorRed, width: 1.5)),
-            focusedErrorBorder: OutlineInputBorder(borderRadius: const BorderRadius.all(Radius.circular(10)), borderSide: BorderSide(color: AppColors.errorRed, width: 1.5)),
+            disabledBorder: OutlineInputBorder(borderRadius: const BorderRadius.all(Radius.circular(30)), borderSide: BorderSide(color: borderColor)),
+            enabledBorder: OutlineInputBorder(borderRadius: const BorderRadius.all(Radius.circular(30)), borderSide: BorderSide(color: borderColor)),
+            focusedBorder: OutlineInputBorder(borderRadius: const BorderRadius.all(Radius.circular(30)), borderSide: BorderSide(color: AppColors.pinkLavender, width: 1.5)),
+            errorBorder: OutlineInputBorder(borderRadius: const BorderRadius.all(Radius.circular(30)), borderSide: BorderSide(color: AppColors.errorRed, width: 1.5)),
+            focusedErrorBorder: OutlineInputBorder(borderRadius: const BorderRadius.all(Radius.circular(30)), borderSide: BorderSide(color: AppColors.errorRed, width: 1.5)),
           ),
         ),
       ],

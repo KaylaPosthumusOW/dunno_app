@@ -13,15 +13,19 @@ class AppUserProfile extends Equatable {
   final String? profilePicture;
   final Timestamp? createdAt;
   final bool hasSeenOnboarding;
+  final bool hasCreatedFirstCollection;
   final num? connectionCount;
   final String? profileLink;
 
-  const AppUserProfile({this.uid, this.name, this.surname, this.email, this.phoneNumber, this.pushToken, this.profilePicture, this.createdAt, this.hasSeenOnboarding = false, this.connectionCount, this.profileLink});
+  const AppUserProfile({this.uid, this.name, this.surname, this.email, this.phoneNumber, this.pushToken, this.profilePicture, this.createdAt, this.hasSeenOnboarding = false, this.hasCreatedFirstCollection = false, this.connectionCount, this.profileLink});
 
   @override
-  List<Object?> get props => [uid, name, surname, email, phoneNumber, pushToken, profilePicture, createdAt, hasSeenOnboarding, connectionCount, profileLink];
+  List<Object?> get props => [uid, name, surname, email, phoneNumber, pushToken, profilePicture, createdAt, hasSeenOnboarding, hasCreatedFirstCollection, connectionCount, profileLink];
 
   bool get isProfileComplete => !StringHelpers.isNullOrEmpty(name) && !StringHelpers.isNullOrEmpty(surname) && !StringHelpers.isNullOrEmpty(email) && !StringHelpers.isNullOrEmpty(phoneNumber);
+
+  bool get hasSeenOnboardingFlag => hasSeenOnboarding;
+  bool get hasCreatedFirstCollectionFlag => hasCreatedFirstCollection;
 
   factory AppUserProfile.fromAuthProviderUserDetails(AuthProviderUserDetails authProviderUserDetails) => AppUserProfile(
         uid: authProviderUserDetails.uid,
@@ -41,6 +45,7 @@ class AppUserProfile extends Equatable {
     String? profilePicture,
     Timestamp? createdAt,
     bool? hasSeenOnboarding,
+    bool? hasCreatedFirstCollection,
     num? connectionCount,
     String? profileLink,
   }) {
@@ -54,6 +59,7 @@ class AppUserProfile extends Equatable {
       profilePicture: profilePicture ?? this.profilePicture,
       createdAt: createdAt ?? this.createdAt,
       hasSeenOnboarding: hasSeenOnboarding ?? this.hasSeenOnboarding,
+      hasCreatedFirstCollection: hasCreatedFirstCollection ?? this.hasCreatedFirstCollection,
       connectionCount: connectionCount ?? this.connectionCount,
       profileLink: profileLink ?? this.profileLink,
     );
@@ -69,6 +75,7 @@ class AppUserProfile extends Equatable {
     String? profilePicture,
     Timestamp? createdAt,
     bool? hasSeenOnboarding,
+    bool? hasCreatedFirstCollection,
     num? connectionCount,
     String? profileLink,
   }) {
@@ -82,6 +89,7 @@ class AppUserProfile extends Equatable {
       profilePicture: profilePicture,
       createdAt: createdAt ?? this.createdAt,
       hasSeenOnboarding: hasSeenOnboarding ?? this.hasSeenOnboarding,
+      hasCreatedFirstCollection: hasCreatedFirstCollection ?? this.hasCreatedFirstCollection,
       connectionCount: connectionCount,
       profileLink: profileLink,
     );
@@ -99,6 +107,7 @@ class AppUserProfile extends Equatable {
       'createdAt': timeStampSafe ? createdAt?.toDate().toIso8601String() : createdAt,
       'isProfileComplete': isProfileComplete,
       'hasSeenOnboarding': hasSeenOnboarding,
+      'hasCreatedFirstCollection': hasCreatedFirstCollection,
       'connectionCount': connectionCount,
       'profileLink': profileLink,
     };
@@ -128,6 +137,7 @@ class AppUserProfile extends Equatable {
       profilePicture: map['profilePicture'],
       createdAt: createdAt,
       hasSeenOnboarding: map['hasSeenOnboarding'] ?? false,
+      hasCreatedFirstCollection: map['hasCreatedFirstCollection'] ?? false,
       connectionCount: map['connectionCount'],
       profileLink: map['profileLink'],
     );

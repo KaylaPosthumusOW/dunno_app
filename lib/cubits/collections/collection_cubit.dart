@@ -11,7 +11,7 @@ class CollectionCubit extends Cubit<CollectionState> {
 
   CollectionCubit() : super(const CollectionInitial());
 
-  Future<void> loadAllCollections({required String userUid}) async {
+  Future<void> loadAllCollectionsForUser({required String userUid}) async {
     emit(LoadingAllCollections(state.mainCollectionState.copyWith(message: 'Loading collections')));
     try {
       List<Collections> collections = await _collectionFirebaseRepository.loadAllCollectionsForUser(userUid: userUid);

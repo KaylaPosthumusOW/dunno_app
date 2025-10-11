@@ -1,4 +1,6 @@
 import 'package:dunno/constants/constants.dart';
+import 'package:dunno/cubits/app_user_profile/app_user_profile_cubit.dart';
+import 'package:dunno/models/app_user_profile.dart';
 import 'package:dunno/ui/screens/register/register_button.dart';
 import 'package:dunno/ui/widgets/dunno_text_field.dart';
 import 'package:flutter/material.dart';
@@ -16,9 +18,11 @@ class _RegisterFormState extends State<RegisterForm> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
 
   final RegisterCubit _registerCubit = sl<RegisterCubit>();
   final AuthenticationCubit _authenticationCubit = sl<AuthenticationCubit>();
+  final AppUserProfileCubit _appUserProfileCubit = sl<AppUserProfileCubit>();
 
   bool _passwordVisible = false;
 
@@ -26,6 +30,23 @@ class _RegisterFormState extends State<RegisterForm> {
 
   bool isRegisterButtonEnabled(RegisterState state) {
     return isPopulated && !state.isInProgress;
+  }
+
+  void _onFormSubmitted() async {
+    List<String> nameParts = _nameController.text.split(' ');
+    String name = nameParts.isNotEmpty ? nameParts.first : '';
+    String surname = nameParts.length > 1 ? nameParts.sublist(1).join(' ') : '';
+    await _appUserProfileCubit.saveAppUserProfileDetailsToState(
+      appUserProfile: AppUserProfile(
+        name: name,
+        surname: surname,
+      ),
+    );
+
+    _registerCubit.registerSubmitted(
+      email: _emailController.text.trim(),
+      password: _passwordController.text,
+    );
   }
 
   @override
@@ -62,11 +83,20 @@ class _RegisterFormState extends State<RegisterForm> {
       child: BlocBuilder<RegisterCubit, RegisterState>(
         bloc: _registerCubit,
         builder: (context, state) {
-          return Padding(
-            padding: const EdgeInsets.all(8.0),
+          return SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
+                DunnoTextField(
+                  isLight: true,
+                  label: 'Name & Surname',
+                  controller: _nameController,
+                  keyboardType: TextInputType.emailAddress,
+                  onChanged: (value) {
+                    setState(() {});
+                  },
+                ),
+                SizedBox(height: 10),
                 DunnoTextField(
                   isLight: true,
                   label: 'Email',
@@ -106,7 +136,7 @@ class _RegisterFormState extends State<RegisterForm> {
                     },
                   ),
                 ),
-                SizedBox(height: 20),
+                SizedBox(height: 30),
                 RegisterButton(onPressed: isRegisterButtonEnabled(state) ? _onFormSubmitted : () {}),
               ],
             ),
@@ -121,12 +151,5 @@ class _RegisterFormState extends State<RegisterForm> {
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
-  }
-
-  void _onFormSubmitted() {
-    _registerCubit.registerSubmitted(
-      email: _emailController.text,
-      password: _passwordController.text,
-    );
   }
 }

@@ -1,4 +1,6 @@
 import 'package:dunno/constants/routes.dart';
+import 'package:dunno/ui/screens/collections/create_collection_screen.dart';
+import 'package:dunno/ui/screens/collections/view_all_collections_screen.dart';
 import 'package:dunno/ui/screens/dunno_landing_screen.dart';
 import 'package:dunno/ui/screens/profile/edit_profile_screen.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +22,16 @@ class AppRouter {
         path: EDIT_PROFILE_SCREEN,
         name: EDIT_PROFILE_SCREEN,
         builder: (BuildContext context, GoRouterState state) => EditProfileScreen(),
+      ),
+      GoRoute(
+        path: COLLECTIONS_SCREEN,
+        name: COLLECTIONS_SCREEN,
+        builder: (BuildContext context, GoRouterState state) => ViewAllCollectionsScreen(),
+      ),
+      GoRoute(
+        path: CREATE_COLLECTION_SCREEN,
+        name: CREATE_COLLECTION_SCREEN,
+        builder: (BuildContext context, GoRouterState state) => CreateCollectionScreen(),
       ),
     ],
     redirect: (BuildContext context, GoRouterState state) async {
