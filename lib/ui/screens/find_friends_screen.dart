@@ -1,6 +1,8 @@
+import 'package:dunno/constants/routes.dart';
 import 'package:dunno/ui/widgets/dunno_search_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 
 class FindFriendsScreen extends StatefulWidget {
   const FindFriendsScreen({super.key});
@@ -38,7 +40,13 @@ class _FindFriendsScreenState extends State<FindFriendsScreen> {
                 SizedBox(height: 80),
                 Text('Search Friends, Family & Colleagues', style: Theme.of(context).textTheme.titleMedium),
                 SizedBox(height: 10),
-                DunnoSearchField(typeSearch: TypeSearch.friends, controller: _searchFriendController),
+                DunnoSearchField(
+                  onChanged: (value) {
+                    context.pushNamed(SEARCH_FRIENDS_SCREEN);
+                  },
+                  typeSearch: TypeSearch.friends,
+                  controller: _searchFriendController,
+                ),
                 SizedBox(height: 130),
               ],
             ),

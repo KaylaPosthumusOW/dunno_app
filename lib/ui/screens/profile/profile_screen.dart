@@ -346,7 +346,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     itemCount: displayCount,
                     itemBuilder: (context, index) {
                       final collection = collections[index];
-                      return CollectionCard(collection: collection);
+                      return Container(
+                        margin: EdgeInsets.only(right: index == displayCount - 1 ? 0 : 15),
+                        child: CollectionCard(collection: collection));
                     },
                   ),
                 ),
@@ -394,7 +396,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     Icon(Icons.people),
                     SizedBox(width: 8),
                     Text(
-                      '${profile.connectionCount ?? '2'}',
+                      '${profile.connectionCount ?? '0'}',
                       style: Theme.of(context).textTheme.displayLarge?.copyWith(fontWeight: FontWeight.bold, color: AppColors.black),
                     ),
                   ],
@@ -404,7 +406,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   onPressed: () {
                     context.pushNamed(EDIT_PROFILE_SCREEN);
                   },
-                  type: ButtonType.primary,
+                  type: ButtonType.secondary,
                   label: 'Edit Profile',
                   icon: Icon(Icons.edit),
                 ),

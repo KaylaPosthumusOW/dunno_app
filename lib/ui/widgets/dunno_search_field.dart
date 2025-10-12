@@ -12,8 +12,9 @@ class DunnoSearchField extends StatefulWidget {
   final Color? color;
   final TypeSearch typeSearch;
   final TextEditingController controller;
+  final Function(String)? onChanged;
 
-  const DunnoSearchField({super.key, this.hintText, this.color, this.initialValue, required this.typeSearch, required this.controller});
+  const DunnoSearchField({super.key, this.hintText, this.color, this.initialValue, required this.typeSearch, required this.controller, this.onChanged});
 
   @override
   State<DunnoSearchField> createState() => DunnoSearchFieldState();
@@ -64,6 +65,7 @@ class DunnoSearchFieldState extends State<DunnoSearchField> {
   Widget build(BuildContext context) {
     return SizedBox(
       child: TextField(
+
         autocorrect: false,
         controller: widget.controller,
         style: Theme.of(context).textTheme.labelLarge,
@@ -88,7 +90,12 @@ class DunnoSearchFieldState extends State<DunnoSearchField> {
           fillColor: widget.color ?? AppColors.pinkLavender,
           filled: true,
         ),
-        onChanged: (text) => _onSearchChanged(text.trim()),
+        onChanged: (value) {
+          _onSearchChanged(value);
+          if (widget.onChanged != null) {
+            widget.onChanged!(value);
+          }
+        },
       ),
     );
   }

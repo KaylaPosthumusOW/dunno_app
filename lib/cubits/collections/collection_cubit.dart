@@ -42,7 +42,13 @@ class CollectionCubit extends Cubit<CollectionState> {
       if (index != -1) {
         collectionsList[index] = collection;
       }
-      emit(UpdatedCollection(state.mainCollectionState.copyWith(allUserCollections: collectionsList, message: 'Collection updated', errorMessage: '')));
+
+      Collections? selected = state.mainCollectionState.selectedCollection;
+      if (selected != null && selected.uid == collection.uid) {
+        selected = collection;
+      }
+
+      emit(UpdatedCollection(state.mainCollectionState.copyWith(allUserCollections: collectionsList, selectedCollection: selected, message: 'Collection updated', errorMessage: '')));
     } catch (error, stackTrace) {
       emit(CollectionError(state.mainCollectionState.copyWith(message: '', errorMessage: error.toString()), stackTrace: stackTrace.toString()));
     }
@@ -58,5 +64,10 @@ class CollectionCubit extends Cubit<CollectionState> {
     } catch (error, stackTrace) {
       emit(CollectionError(state.mainCollectionState.copyWith(message: '', errorMessage: error.toString()), stackTrace: stackTrace.toString()));
     }
+  }
+
+  void setSelectedCollection(Collections collection) {
+    emit(LoadingAllCollections(state.mainCollectionState.copyWith(message: 'Selecting collection')));
+    emit(SelectedCollection(state.mainCollectionState.copyWith(selectedCollection: collection, message: 'Collection selected', errorMessage: '')));
   }
 }

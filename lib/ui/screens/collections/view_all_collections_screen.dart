@@ -1,4 +1,9 @@
+import 'package:dunno/constants/constants.dart';
+import 'package:dunno/cubits/app_user_profile/app_user_profile_cubit.dart';
+import 'package:dunno/cubits/collections/collection_cubit.dart';
+import 'package:dunno/ui/widgets/collection_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ViewAllCollectionsScreen extends StatefulWidget {
   const ViewAllCollectionsScreen({super.key});
@@ -8,15 +13,67 @@ class ViewAllCollectionsScreen extends StatefulWidget {
 }
 
 class _ViewAllCollectionsScreenState extends State<ViewAllCollectionsScreen> {
+  final AppUserProfileCubit _appUserProfileCubit = sl<AppUserProfileCubit>();
+  final CollectionCubit _collectionCubit = sl<CollectionCubit>();
+
+  @override
+  void initState() {
+    super.initState();
+    _collectionCubit.loadAllCollectionsForUser(userUid: _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile?.uid ?? '');
+  }
+
+  _displayCollections() {
+    return BlocBuilder<CollectionCubit, CollectionState>(
+      bloc: _collectionCubit,
+      builder: (context, state) {
+        if (state is LoadingAllCollections) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        if (state is CollectionError) {
+          return Center(child: Text('Error: ${state.mainCollectionState.errorMessage}'));
+        }
+
+        final collections = state.mainCollectionState.allUserCollections ?? [];
+
+        if (collections.isEmpty) {
+          return const Center(child: Text('No collections found.'));
+        }
+
+        return ListView.builder(
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          clipBehavior: Clip.none,
+          itemCount: collections.length,
+          itemBuilder: (context, index) {
+            final collection = collections[index];
+            return Container(
+              margin: const EdgeInsets.only(bottom: 16.0),
+              child: CollectionCard(collection: collection));
+          },
+        );
+      }
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('All Collections'),
       ),
-      body: const Center(
-        child: Text('View All Collections Screen'),
-      ),
+      body: Column(
+        children: [
+          Expanded(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: _displayCollections(),
+              ),
+            ),
+          ),
+        ],
+      )
     );
   }
 }
