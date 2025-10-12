@@ -71,7 +71,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Expanded(
                 child: InkWell(
                   onTap: () {
-                    context.pushNamed(QUICK_SUGGESTIONS_SCREEN);
+                    context.pushNamed(GIFT_SUGGESTION_SCREEN);
                   },
                   child: Container(
                     padding: const EdgeInsets.all(16),
@@ -136,8 +136,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Upcoming Events', style: Theme.of(context).textTheme.displayMedium?.copyWith(color: AppColors.cinnabar)),
-                    Icon(Icons.lightbulb_outline_rounded, color: AppColors.cinnabar),
+                    Text('Upcoming Events', style: Theme.of(context).textTheme.displayMedium?.copyWith(color: AppColors.antiqueWhite)),
+                    Icon(Icons.lightbulb_outline_rounded, color: AppColors.antiqueWhite),
                   ],
                 ),
                 SizedBox(height: 50),

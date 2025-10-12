@@ -7,11 +7,12 @@ class MainAppUserProfileState extends Equatable {
   final AppUserProfile? registerDetails;
   final List<AppUserProfile>? allProfiles;
   final AppUserProfile? selectedProfile;
+  final List<AppUserProfile>? searchedUsers;
 
-  const MainAppUserProfileState({this.message, this.errorMessage, this.appUserProfile, this.registerDetails, this.allProfiles, this.selectedProfile});
+  const MainAppUserProfileState({this.message, this.errorMessage, this.appUserProfile, this.registerDetails, this.allProfiles, this.selectedProfile, this.searchedUsers});
 
   @override
-  List<Object?> get props => [message, errorMessage, appUserProfile, registerDetails, allProfiles, selectedProfile];
+  List<Object?> get props => [message, errorMessage, appUserProfile, registerDetails, allProfiles, selectedProfile, searchedUsers];
 
   MainAppUserProfileState copyWith({
     String? message,
@@ -20,6 +21,7 @@ class MainAppUserProfileState extends Equatable {
     AppUserProfile? registerDetails,
     List<AppUserProfile>? allProfiles,
     AppUserProfile? selectedProfile,
+    List<AppUserProfile>? searchedUsers,
   }) {
     return MainAppUserProfileState(
       message: message ?? this.message,
@@ -28,6 +30,7 @@ class MainAppUserProfileState extends Equatable {
       registerDetails: registerDetails ?? this.registerDetails,
       allProfiles: allProfiles ?? this.allProfiles,
       selectedProfile: selectedProfile ?? this.selectedProfile,
+      searchedUsers: searchedUsers ?? this.searchedUsers,
     );
   }
 
@@ -38,14 +41,16 @@ class MainAppUserProfileState extends Equatable {
     AppUserProfile? registerDetails,
     List<AppUserProfile>? allProfiles,
     AppUserProfile? selectedProfile,
+    List<AppUserProfile>? searchedUsers,
   }) {
     return MainAppUserProfileState(
       message: message ?? this.message,
       errorMessage: errorMessage ?? this.errorMessage,
       appUserProfile: appUserProfile ?? this.appUserProfile,
       registerDetails: registerDetails,
-      allProfiles: allProfiles,
+      allProfiles: allProfiles ?? this.allProfiles,
       selectedProfile: selectedProfile,
+      searchedUsers: searchedUsers ?? this.searchedUsers,
     );
   }
 
@@ -65,6 +70,7 @@ class MainAppUserProfileState extends Equatable {
       registerDetails: registerDetails ?? this.registerDetails,
       allProfiles: allProfiles ?? this.allProfiles,
       selectedProfile: selectedProfile,
+      searchedUsers: searchedUsers ?? this.searchedUsers,
     );
   }
 }
@@ -132,14 +138,6 @@ class DeletingUserProfile extends AppUserProfileState {
 
 class UserProfileDeleted extends AppUserProfileState {
   const UserProfileDeleted(super.mainAppUserProfileState);
-}
-
-class SavingBookMarkedItem extends AppUserProfileState {
-  const SavingBookMarkedItem(super.mainAppUserProfileState);
-}
-
-class SavedBookMarkedItem extends AppUserProfileState {
-  const SavedBookMarkedItem(super.mainAppUserProfileState);
 }
 
 class SelectedRoleFilter extends AppUserProfileState {

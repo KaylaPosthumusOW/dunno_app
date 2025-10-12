@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:dunno/constants/constants.dart';
 import 'package:dunno/constants/themes.dart';
+import 'package:dunno/cubits/app_user_profile/app_user_profile_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:sp_utilities/utilities.dart';
 
@@ -21,6 +23,8 @@ class DunnoSearchField extends StatefulWidget {
 }
 
 class DunnoSearchFieldState extends State<DunnoSearchField> {
+  final AppUserProfileCubit _appUserProfileCubit = sl<AppUserProfileCubit>();
+
   Timer? _debounce;
 
   void _onSearchChanged(String text) {
@@ -38,7 +42,7 @@ class DunnoSearchFieldState extends State<DunnoSearchField> {
   void _handleSearch(String query) {
     switch (widget.typeSearch) {
       case TypeSearch.friends:
-      // _floaterCubit.searchFloaters(query, reset: StringHelpers.isNullOrEmpty(query), workspaceId: _workspaceManagementCubit.state.mainWorkspaceManagementState.activeWorkspace?.uid);
+        _appUserProfileCubit.searchUsers(query);
     }
   }
 

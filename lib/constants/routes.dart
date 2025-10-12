@@ -6,3 +6,6 @@ const SEARCH_FRIENDS_SCREEN = '/search_friends';
 const COLLECTION_DETAIL_SCREEN = '/collection_details';
 const QUICK_SUGGESTIONS_SCREEN = '/quick_suggestions';
 const FIND_FRIENDS_SCREEN = '/find_friends';
+
+//-----------
+const GIFT_SUGGESTION_SCREEN = '/gift_suggestion';

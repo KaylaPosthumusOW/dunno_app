@@ -132,4 +132,26 @@ class AppUserProfileCubit extends Cubit<AppUserProfileState> {
     final updatedProfile = profile.copyWith(hasSeenOnboarding: true);
     await updateProfile(updatedProfile);
   }
+
+  void searchUsers(String query, {bool reset = false}) {
+    emit(SearchingForUsers(state.mainAppUserProfileState.copyWith(message: 'Searching users...')));
+    try {
+      List<AppUserProfile>? allItems = state.mainAppUserProfileState.allProfiles ?? [];
+      List<AppUserProfile>? searchedItems = [];
+      if (reset) {
+        searchedItems = allItems;
+      } else {
+        searchedItems = allItems.where((item) {
+          final fullName = '${item.name} ${item.surname}'.toLowerCase();
+          final email = item.email?.toLowerCase() ?? '';
+          final phoneNumber = item.phoneNumber?.toLowerCase() ?? '';
+          final searchLower = query.toLowerCase();
+          return fullName.contains(searchLower) || email.contains(searchLower) || phoneNumber.contains(searchLower);
+        }).toList();
+      }
+      emit(SearchingForUsersComplete(state.mainAppUserProfileState.copyWith(searchedUsers: searchedItems, message: 'Searched users', errorMessage: '')));
+    } catch (error, stackTrace) {
+      emit(ProfileError(state.mainAppUserProfileState.copyWith(message: '', errorMessage: error.toString()), stackTrace: stackTrace.toString()));
+    }
+  }
 }
