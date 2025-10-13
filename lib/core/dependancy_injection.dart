@@ -1,12 +1,14 @@
 import 'package:dunno/constants/constants.dart';
 import 'package:dunno/cubits/ai_gift_suggestion/ai_gift_suggestion_cubit.dart';
 import 'package:dunno/cubits/app_user_profile/app_user_profile_cubit.dart';
+import 'package:dunno/cubits/calender_event_cubit/calender_event_cubit.dart';
 import 'package:dunno/cubits/collections/collection_cubit.dart';
 import 'package:dunno/cubits/connections/connection_cubit.dart';
 import 'package:dunno/cubits/general/general_cubit.dart';
 import 'package:dunno/firebase_options.dart';
 import 'package:dunno/repositories/ai_text_generation_repository.dart';
 import 'package:dunno/stores/firebase/app_user_profile_firebase_repository.dart';
+import 'package:dunno/stores/firebase/calender_event_firebase_repository.dart';
 import 'package:dunno/stores/firebase/collection_firebase_repository.dart';
 import 'package:dunno/stores/firebase/connection_firebase_repository.dart';
 import 'package:dunno/stores/firebase/main_firebase_repository.dart';
@@ -27,6 +29,7 @@ class DependencyInjection {
   static _repos() async {
     sl.registerLazySingleton<MainFirebaseRepository>(() => MainFirebaseRepository());
     sl.registerLazySingleton<AppUserProfileFirebaseRepository>(() => AppUserProfileFirebaseRepository());
+    sl.registerLazySingleton<CalenderEventFirebaseRepository>(() => CalenderEventFirebaseRepository());
     sl.registerLazySingleton<CollectionFirebaseRepository>(() => CollectionFirebaseRepository());
     sl.registerLazySingleton<ConnectionFirebaseRepository>(() => ConnectionFirebaseRepository());
     
@@ -37,6 +40,7 @@ class DependencyInjection {
   static _cubits() async {
     sl.registerSingleton<AppUserProfileCubit>(AppUserProfileCubit());
     sl.registerLazySingleton<GeneralCubit>(() => GeneralCubit()..checkIfLatestAppVersion());
+    sl.registerSingleton<CalenderEventCubit>(CalenderEventCubit());
     sl.registerSingleton<CollectionCubit>(CollectionCubit());
     sl.registerSingleton<ConnectionCubit>(ConnectionCubit());
 

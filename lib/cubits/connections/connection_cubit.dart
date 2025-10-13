@@ -1,7 +1,12 @@
 import 'package:dunno/constants/constants.dart';
 import 'package:dunno/cubits/app_user_profile/app_user_profile_cubit.dart';
+import 'package:dunno/cubits/calender_event_cubit/calender_event_cubit.dart';
+import 'package:dunno/cubits/collections/collection_cubit.dart';
 import 'package:dunno/models/app_user_profile.dart';
+import 'package:dunno/models/calender_events.dart';
+import 'package:dunno/models/collections.dart';
 import 'package:dunno/models/connections.dart';
+import 'package:dunno/stores/firebase/calender_event_firebase_repository.dart';
 import 'package:dunno/stores/firebase/connection_firebase_repository.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,6 +15,9 @@ part 'connection_state.dart';
 
 class ConnectionCubit extends Cubit<ConnectionState> {
   final ConnectionFirebaseRepository _connectionFirebaseRepository = sl<ConnectionFirebaseRepository>();
+  final AppUserProfileCubit _appUserProfileCubit = sl<AppUserProfileCubit>();
+  final CalenderEventCubit _calenderEventCubit = sl<CalenderEventCubit>();
+  final CollectionCubit _collectionCubit = sl<CollectionCubit>();
 
   ConnectionCubit() : super(const ConnectionInitial());
 
@@ -47,6 +55,24 @@ class ConnectionCubit extends Cubit<ConnectionState> {
       List<Connection> connections = List.from(state.mainConnectionState.allUserConnections ?? []);
       Connection connection = await _connectionFirebaseRepository.createConnection(newConnection);
       connections.add(connection);
+
+      //Create a calender event for the connection if the user has enabled this in their profile settings
+      List<Collections> userCollections = _collectionCubit.state.mainCollectionState.allUserCollections ?? [];
+      if (userCollections.isNotEmpty) {
+        for (var collection in userCollections) {
+          if (collection.isDateVisible == true) {
+            await _calenderEventCubit.createNewCalenderEvent(
+              CalenderEvent(
+                user: _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile ?? AppUserProfile(),
+                friend: _appUserProfileCubit.state.mainAppUserProfileState.selectedProfile ?? AppUserProfile(),
+                collection: collection,
+              ),
+            );
+          }
+        }
+      }
+
+
       emit(CreatedConnection(state.mainConnectionState.copyWith(allUserConnections: connections, numberOfUserConnections: connections.length, message: 'New connection created')));
     } catch (error, stackTrace) {
       emit(

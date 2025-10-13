@@ -30,6 +30,17 @@ class _FriendProfileScreenState extends State<FriendProfileScreen> {
     super.initState();
     _collectionCubit.loadAllCollectionsForUser(userUid: _appUserProfileCubit.state.mainAppUserProfileState.selectedProfile?.uid ?? '');
     _connectionCubit.countAllUserConnections(userUid: _appUserProfileCubit.state.mainAppUserProfileState.selectedProfile?.uid ?? '');
+    _connectionCubit.loadAllUserConnections(userUid: _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile?.uid ?? '');
+  }
+
+  bool _isAlreadyConnected(ConnectionState connectionState, String? friendUid) {
+    if (friendUid == null) return false;
+    
+    final connections = connectionState.mainConnectionState.allUserConnections ?? [];
+    return connections.any((connection) =>
+      (connection.connectedUser?.uid == friendUid || connection.user?.uid == friendUid) &&
+      connection.connectionType == ConnectionType.accepted
+    );
   }
 
   Widget _profilePicture(AppUserProfileState profileState) {
@@ -202,21 +213,62 @@ class _FriendProfileScreenState extends State<FriendProfileScreen> {
               }
             ),
             const SizedBox(height: 20),
-            DunnoButton(
-              onPressed: () {
-                _connectionCubit.createNewConnection(
-                  Connection(
-                    connectedUser: state.mainAppUserProfileState.selectedProfile ?? AppUserProfile(),
-                    connectionType: ConnectionType.pending,
-                    user: state.mainAppUserProfileState.appUserProfile ?? AppUserProfile(),
-                  )
+            BlocBuilder<ConnectionCubit, ConnectionState>(
+              bloc: _connectionCubit,
+              builder: (context, connectionState) {
+                // Check connection states
+                bool isConnected = _isAlreadyConnected(connectionState, state.mainAppUserProfileState.selectedProfile?.uid);
+                bool isConnecting = connectionState is CreatingConnection;
+                bool justCreated = connectionState is CreatedConnection;
+                
+                String buttonText;
+                Color buttonColor;
+                Icon buttonIcon;
+                bool isButtonDisabled;
+                Color textColor;
+                
+                if (isConnecting) {
+                  buttonText = 'Connecting...';
+                  buttonColor = AppColors.tangerine;
+                  buttonIcon = Icon(Icons.person_add_alt_1, color: AppColors.offWhite);
+                  textColor = AppColors.offWhite;
+                  isButtonDisabled = true;
+                } else if (isConnected || justCreated) {
+                  buttonText = 'Connected';
+                  buttonColor = AppColors.cerise;
+                  buttonIcon = Icon(Icons.check_circle, color: AppColors.offWhite);
+                  textColor = AppColors.offWhite;
+                  isButtonDisabled = true;
+                } else {
+                  buttonText = 'Connect';
+                  buttonColor = AppColors.tangerine;
+                  buttonIcon = Icon(Icons.person_add_alt_1, color: AppColors.offWhite);
+                  textColor = AppColors.offWhite;
+                  isButtonDisabled = false;
+                }
+                
+                return DunnoButton(
+                  onPressed: isButtonDisabled ? null : () {
+                    _connectionCubit.createNewConnection(
+                      Connection(
+                        connectedUser: state.mainAppUserProfileState.selectedProfile ?? AppUserProfile(),
+                        connectionType: ConnectionType.accepted,
+                        user: state.mainAppUserProfileState.appUserProfile ?? AppUserProfile(),
+                      )
+                    );
+                  },
+                  type: ButtonType.secondary,
+                  isLoading: isConnecting,
+                  label: buttonText,
+                  icon: buttonIcon,
+                  buttonColor: buttonColor,
+                  textColor: textColor,
+                  loadingIndicator: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: AppColors.offWhite,
+                  ),
                 );
               },
-              type: ButtonType.secondary,
-              label: 'Connect',
-              icon: const Icon(Icons.person_add_alt_1),
-              buttonColor: AppColors.tangerine,
-              textColor: AppColors.offWhite,
             ),
           ],
         ),
