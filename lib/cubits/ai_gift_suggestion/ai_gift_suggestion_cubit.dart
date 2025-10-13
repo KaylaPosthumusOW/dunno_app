@@ -52,7 +52,7 @@ class AiGiftSuggestionCubit extends Cubit<AiGiftSuggestionState> {
       _startTimeoutTimer();
 
       emit(AiGiftSuggestionLoading(
-        message: 'Generating personalized suggestions...',
+        message: 'Generating personalised suggestions...',
         progress: 0.5,
         profile: profile,
         filters: filters,

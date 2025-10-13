@@ -25,7 +25,7 @@ class AiGiftSuggestionLoading extends AiGiftSuggestionState {
   final Map<String, dynamic>? filters;
   
   const AiGiftSuggestionLoading({
-    this.message = 'Generating personalized gift suggestions...',
+    this.message = 'Generating personalised gift suggestions...',
     this.progress,
     this.profile,
     this.filters,

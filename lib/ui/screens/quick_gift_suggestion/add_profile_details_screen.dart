@@ -130,8 +130,8 @@ class _AddProfileDetailsPageState extends State<AddProfileDetailsPage> {
               onChanged: (value) {
                 _interests = value
                     .split(',')
-                    .map((e) => e.trim())
-                    .where((e) => e.isNotEmpty)
+                    .map((String e) => e.trim())
+                    .where((String e) => e.isNotEmpty)
                     .toList();
                 _updateProfile();
               },
@@ -150,8 +150,8 @@ class _AddProfileDetailsPageState extends State<AddProfileDetailsPage> {
               onChanged: (value) {
                 _hobbies = value
                     .split(',')
-                    .map((e) => e.trim())
-                    .where((e) => e.isNotEmpty)
+                    .map((String e) => e.trim())
+                    .where((String e) => e.isNotEmpty)
                     .toList();
                 _updateProfile();
               },
@@ -170,8 +170,8 @@ class _AddProfileDetailsPageState extends State<AddProfileDetailsPage> {
               onChanged: (value) {
                 _likes = value
                     .split(',')
-                    .map((e) => e.trim())
-                    .where((e) => e.isNotEmpty)
+                    .map((String e) => e.trim())
+                    .where((String e) => e.isNotEmpty)
                     .toList();
                 _updateProfile();
               },
