@@ -34,32 +34,6 @@ class AiGiftSuggestion extends Equatable {
         category,
       ];
 
-  factory AiGiftSuggestion.fromJson(Map<String, dynamic> json) {
-    return AiGiftSuggestion(
-      title: json['title'] ?? '',
-      description: json['description'] ?? '',
-      reason: json['reason'] ?? '',
-      estimatedPrice: (json['estimatedPrice'] ?? 0).toDouble(),
-      imageUrl: json['imageUrl'],
-      purchaseLink: json['purchaseLink'],
-      tags: List<String>.from(json['tags'] ?? []),
-      category: json['category'] ?? '',
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'title': title,
-      'description': description,
-      'reason': reason,
-      'estimatedPrice': estimatedPrice,
-      'imageUrl': imageUrl,
-      'purchaseLink': purchaseLink,
-      'tags': tags,
-      'category': category,
-    };
-  }
-
   AiGiftSuggestion copyWith({
     String? title,
     String? description,
@@ -79,6 +53,32 @@ class AiGiftSuggestion extends Equatable {
       purchaseLink: purchaseLink ?? this.purchaseLink,
       tags: tags ?? this.tags,
       category: category ?? this.category,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'title': title,
+      'description': description,
+      'reason': reason,
+      'estimatedPrice': estimatedPrice,
+      'imageUrl': imageUrl,
+      'purchaseLink': purchaseLink,
+      'tags': tags,
+      'category': category,
+    };
+  }
+
+  factory AiGiftSuggestion.fromJson(Map<String, dynamic> json) {
+    return AiGiftSuggestion(
+      title: json['title'],
+      description: json['description'],
+      reason: json['reason'],
+      estimatedPrice: (json['estimatedPrice'] as num).toDouble(),
+      imageUrl: json['imageUrl'],
+      purchaseLink: json['purchaseLink'],
+      tags: List<String>.from(json['tags'] ?? []),
+      category: json['category'],
     );
   }
 }

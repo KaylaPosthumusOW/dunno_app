@@ -1,4 +1,5 @@
 import 'package:dunno/constants/themes.dart';
+import 'package:dunno/ui/widgets/dunno_dropdown_field.dart';
 import 'package:dunno/ui/widgets/dunno_text_field.dart';
 import 'package:flutter/material.dart';
 
@@ -21,36 +22,63 @@ class _AddProfileDetailsPageState extends State<AddProfileDetailsPage> {
       padding: const EdgeInsets.all(20),
       child: Column(
         children: [
-          _buildDropdown('What is the occasion?', ['Birthday', 'Anniversary', 'Christmas'], (value) {
-            setState(() => occasion = value);
-          }),
-          _buildDropdown('Gender', ['Male', 'Female', 'Other'], (value) {
-            setState(() => gender = value);
-          }),
-          _buildDropdown('Likes', ['Tech', 'Books', 'Fashion', 'Food'], (value) {
-            setState(() => likes = value);
-          }),
+          DunnoDropdownField(
+            label: 'Select',
+            hintText: 'Select Analysis Type',
+            value: null,
+            onChanged: (type) {},
+            dropDownColor: AppColors.offWhite,
+            dropDownTextColor: AppColors.black,
+            items: ['Birthday', 'Anniversary', 'Graduation', 'Holiday'].map((type) {
+              return DropdownMenuItem(
+                value: type,
+                child: Text(
+                  type,
+                  style: Theme.of(context).textTheme.labelLarge?.copyWith(color: Colors.white),
+                ),
+              );
+            }).toList(),
+          ),
+          SizedBox(height: 10),
+          DunnoDropdownField(
+            label: 'Select',
+            hintText: 'Select Analysis Type',
+            value: null,
+            onChanged: (type) {},
+            dropDownColor: AppColors.offWhite,
+            dropDownTextColor: AppColors.black,
+            items: ['Birthday', 'Anniversary', 'Graduation', 'Holiday'].map((type) {
+              return DropdownMenuItem(
+                value: type,
+                child: Text(
+                  type,
+                  style: Theme.of(context).textTheme.labelLarge?.copyWith(color: Colors.white),
+                ),
+              );
+            }).toList(),
+          ),
+          SizedBox(height: 10),
+          DunnoDropdownField(
+            label: 'Select',
+            hintText: 'Select Analysis Type',
+            value: null,
+            onChanged: (type) {},
+            dropDownColor: AppColors.offWhite,
+            dropDownTextColor: AppColors.black,
+            items: ['Birthday', 'Anniversary', 'Graduation', 'Holiday'].map((type) {
+              return DropdownMenuItem(
+                value: type,
+                child: Text(
+                  type,
+                  style: Theme.of(context).textTheme.labelLarge?.copyWith(color: Colors.white),
+                ),
+              );
+            }).toList(),
+          ),
           const SizedBox(height: 10),
           _buildNotesField(),
           const Spacer(),
         ],
-      ),
-    );
-  }
-
-  Widget _buildDropdown(String label, List<String> items, Function(String?) onChanged) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 30),
-      child: DropdownButtonFormField<String>(
-        decoration: InputDecoration(
-          labelText: label,
-          filled: true,
-          fillColor: AppColors.antiqueWhite,
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(40)),
-          enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(40), borderSide: BorderSide(color: AppColors.antiqueWhite))
-        ),
-        items: items.map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
-        onChanged: onChanged,
       ),
     );
   }
