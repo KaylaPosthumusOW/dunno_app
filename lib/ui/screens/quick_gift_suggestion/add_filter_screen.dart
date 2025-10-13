@@ -3,6 +3,7 @@ import 'package:dunno/models/filter_suggestion.dart';
 import 'package:dunno/ui/widgets/dunno_dropdown_field.dart';
 import 'package:dunno/ui/widgets/dunno_text_field.dart';
 import 'package:flutter/material.dart';
+import 'package:syncfusion_flutter_sliders/sliders.dart';
 
 class AddFilterPage extends StatefulWidget {
   final Function(FilterSuggestion)? onFilterUpdated;
@@ -18,7 +19,8 @@ class _AddFilterPageState extends State<AddFilterPage> {
   final _giftTypeController = TextEditingController();
   final _extraNotesController = TextEditingController();
 
-  double _budget = 200;
+  double _minBudget = 200;
+  double _maxBudget = 1000;
   String? _relation;
   String? _giftType;
   GiftValue? _giftValue;
@@ -54,7 +56,7 @@ class _AddFilterPageState extends State<AddFilterPage> {
               child: Padding(
                 padding: const EdgeInsets.only(bottom: 8, left: 15),
                 child: Text(
-                  'Budget: \$${_budget.toStringAsFixed(0)}',
+                  'Budget: R${_minBudget.toStringAsFixed(0)} - R${_maxBudget.toStringAsFixed(0)}',
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 16,
@@ -62,16 +64,40 @@ class _AddFilterPageState extends State<AddFilterPage> {
                 ),
               ),
             ),
-            Slider(
-              value: _budget,
-              min: 10,
-              max: 1000,
-              divisions: 99,
+            SfRangeSlider(
+              values: SfRangeValues(_minBudget, _maxBudget),
+              min: 50.0,
+              max: 5000.0,
+              interval: 500,
+              showLabels: true,
               activeColor: AppColors.tangerine,
-              label: '\$${_budget.toStringAsFixed(0)}',
-              onChanged: (value) {
+              inactiveColor: AppColors.tangerine.withValues(alpha: 0.3),
+              startThumbIcon: Container(
+                decoration: BoxDecoration(
+                  color: AppColors.tangerine,
+                  shape: BoxShape.circle,
+                  border: Border.all(color: Colors.white, width: 2),
+                ),
+              ),
+              endThumbIcon: Container(
+                decoration: BoxDecoration(
+                  color: AppColors.tangerine,
+                  shape: BoxShape.circle,
+                  border: Border.all(color: Colors.white, width: 2),
+                ),
+              ),
+              tooltipTextFormatterCallback:
+                  (dynamic actualValue, String formattedText) {
+                    return 'R${actualValue.toStringAsFixed(0)}';
+                  },
+              labelFormatterCallback:
+                  (dynamic actualValue, String formattedText) {
+                    return 'R${(actualValue / 1000).toStringAsFixed(0)}k';
+                  },
+              onChanged: (SfRangeValues values) {
                 setState(() {
-                  _budget = value;
+                  _minBudget = values.start;
+                  _maxBudget = values.end;
                 });
                 _updateFilter();
               },
@@ -171,8 +197,8 @@ class _AddFilterPageState extends State<AddFilterPage> {
   void _updateFilter() {
     final filterSuggestion = FilterSuggestion(
       title: _relation ?? '',
-      minBudget: _budget * 0.8, // 80% of selected budget as min
-      maxBudget: _budget,
+      minBudget: _minBudget,
+      maxBudget: _maxBudget,
       category: _giftCategory,
       giftValue: _giftValue,
       giftType: _giftType,

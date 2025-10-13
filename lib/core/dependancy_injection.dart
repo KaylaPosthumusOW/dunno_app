@@ -4,7 +4,6 @@ import 'package:dunno/cubits/app_user_profile/app_user_profile_cubit.dart';
 import 'package:dunno/cubits/collections/collection_cubit.dart';
 import 'package:dunno/cubits/connections/connection_cubit.dart';
 import 'package:dunno/cubits/general/general_cubit.dart';
-import 'package:dunno/cubits/quick_generate_suggestion_flow_cubit/quick_generate_suggestion_flow_cubit.dart';
 import 'package:dunno/firebase_options.dart';
 import 'package:dunno/repositories/ai_text_generation_repository.dart';
 import 'package:dunno/stores/firebase/app_user_profile_firebase_repository.dart';
@@ -42,8 +41,6 @@ class DependencyInjection {
     sl.registerSingleton<ConnectionCubit>(ConnectionCubit());
 
     sl.registerLazySingleton<AiGiftSuggestionCubit>(() => AiGiftSuggestionCubit(sl<AiTextGenerationRepository>()));
-
-    sl.registerSingleton<QuickGiftGenerationCubit>(QuickGiftGenerationCubit());
   }
 
 

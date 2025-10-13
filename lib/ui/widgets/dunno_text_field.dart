@@ -177,11 +177,11 @@ class DunnoTextFieldState extends State<DunnoTextField> {
       case DunnoTextFieldColor.antiqueWhite:
         return ColorSchemeData(
           textColor: isLight ? AppColors.black : AppColors.offWhite,
-          borderColor: AppColors.antiqueWhite.withValues(alpha: 0.6),
+          borderColor: AppColors.antiqueWhite,
           iconColor: AppColors.antiqueWhite,
           fillColor: isLight
-              ? AppColors.antiqueWhite.withValues(alpha: 0.6)
-              : AppColors.antiqueWhite,
+              ? AppColors.tangerine.withValues(alpha: 0.4)
+              : AppColors.tangerine.withValues(alpha: 0.4),
           focusedColor: AppColors.antiqueWhite,
         );
     }

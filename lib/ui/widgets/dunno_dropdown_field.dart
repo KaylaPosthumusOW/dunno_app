@@ -38,7 +38,7 @@ class DunnoDropdownField<T> extends StatelessWidget {
           decoration: InputDecoration(
             contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
             filled: true,
-            fillColor: fillColor ?? AppColors.antiqueWhite,
+            fillColor: fillColor ?? AppColors.tangerine.withValues(alpha: 0.4),
             hintText: hintText,
             labelStyle: theme.textTheme.labelMedium?.copyWith(color: AppColors.black),
             hintStyle: theme.textTheme.labelMedium?.copyWith(color: AppColors.black),
@@ -47,7 +47,7 @@ class DunnoDropdownField<T> extends StatelessWidget {
             counterText: "",
             disabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(30),
-              borderSide: BorderSide(color: AppColors.antiqueWhite),
+              borderSide: BorderSide(color: AppColors.tangerine.withValues(alpha: 0.4)),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(30),

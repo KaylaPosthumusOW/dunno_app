@@ -237,14 +237,4 @@ class _AddProfileDetailsPageState extends State<AddProfileDetailsPage> {
     _interestsController.dispose();
     super.dispose();
   }
-
-  // void _saveProfile() {
-  //   final profile = {
-  //     "occasion": occasion,
-  //     "gender": gender,
-  //     "likes": likes,
-  //     "extraNotes": extraNotes,
-  //   };
-  //   _quickGiftGenerationCubit.saveProfile(profile);
-  // }
 }

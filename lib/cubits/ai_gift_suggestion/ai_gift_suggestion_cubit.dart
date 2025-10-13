@@ -12,6 +12,7 @@ class AiGiftSuggestionCubit extends Cubit<AiGiftSuggestionState> {
 
   String? _currentRequestId;
 
+
   static const int _maxRetryAttempts = 3;
 
   int _retryCount = 0;
@@ -43,7 +44,7 @@ class AiGiftSuggestionCubit extends Cubit<AiGiftSuggestionState> {
       }
 
       emit(AiGiftSuggestionLoading(
-        message: 'Analyzing your preferences...',
+        message: 'Analysing your preferences...',
         progress: 0.1,
         profile: profile,
         filters: filters,
@@ -66,7 +67,7 @@ class AiGiftSuggestionCubit extends Cubit<AiGiftSuggestionState> {
       _cancelTimeoutTimer();
 
       emit(AiGiftSuggestionLoading(
-        message: 'Finalizing suggestions...',
+        message: 'Finalising suggestions...',
         progress: 0.9,
         profile: profile,
         filters: filters,
@@ -187,8 +188,6 @@ class AiGiftSuggestionCubit extends Cubit<AiGiftSuggestionState> {
     emit(const AiGiftSuggestionInitial());
     developer.log('Suggestions cleared', name: 'AiGiftSuggestionCubit');
   }
-
-  /// Regenerate suggestions with same parameters
   Future<void> regenerateSuggestions() async {
     final currentState = state;
     if (currentState is AiGiftSuggestionLoaded) {
@@ -198,16 +197,11 @@ class AiGiftSuggestionCubit extends Cubit<AiGiftSuggestionState> {
       );
     }
   }
-
-  // === Private Helper Methods ===
-
-  /// Validate input data quality
   String? _validateInputData(Map<String, dynamic> profile, Map<String, dynamic> filters) {
     if (profile.isEmpty && filters.isEmpty) {
       return 'Please provide profile or filter information to generate suggestions';
     }
 
-    // Check for meaningful content
     final hasProfileContent = profile.values.any((value) => 
       value != null && value.toString().trim().isNotEmpty);
     final hasFilterContent = filters.values.any((value) => 
@@ -220,7 +214,6 @@ class AiGiftSuggestionCubit extends Cubit<AiGiftSuggestionState> {
     return null;
   }
 
-  /// Validate the quality of generated suggestions
   String? _validateSuggestionQuality(List<AiGiftSuggestion> suggestions) {
     if (suggestions.length < 3) {
       return 'Expected 3 suggestions, got ${suggestions.length}';
@@ -245,7 +238,6 @@ class AiGiftSuggestionCubit extends Cubit<AiGiftSuggestionState> {
     return null;
   }
 
-  /// Categorize error and determine retry strategy
   Map<String, dynamic> _categorizeError(dynamic error) {
     final errorString = error.toString().toLowerCase();
     
@@ -296,7 +288,6 @@ class AiGiftSuggestionCubit extends Cubit<AiGiftSuggestionState> {
     };
   }
 
-  /// Start timeout timer
   void _startTimeoutTimer() {
     _cancelTimeoutTimer();
     _timeoutTimer = Timer(const Duration(seconds: 60), () {
@@ -311,15 +302,11 @@ class AiGiftSuggestionCubit extends Cubit<AiGiftSuggestionState> {
     });
   }
 
-  /// Cancel timeout timer
   void _cancelTimeoutTimer() {
     _timeoutTimer?.cancel();
     _timeoutTimer = null;
   }
 
-  // === Public Getters ===
-
-  /// Get the current suggestions (if any)
   List<AiGiftSuggestion>? get currentSuggestions {
     final currentState = state;
     if (currentState is AiGiftSuggestionLoaded) {
@@ -328,19 +315,14 @@ class AiGiftSuggestionCubit extends Cubit<AiGiftSuggestionState> {
     return null;
   }
 
-  /// Check if currently generating suggestions
   bool get isLoading => state is AiGiftSuggestionLoading;
 
-  /// Check if there's an error
   bool get hasError => state is AiGiftSuggestionError;
 
-  /// Check if suggestions are loaded
   bool get hasResults => state is AiGiftSuggestionLoaded;
 
-  /// Check if in initial state
   bool get isInitial => state is AiGiftSuggestionInitial;
 
-  /// Get current error message (if any)
   String? get errorMessage {
     final currentState = state;
     if (currentState is AiGiftSuggestionError) {
@@ -349,7 +331,6 @@ class AiGiftSuggestionCubit extends Cubit<AiGiftSuggestionState> {
     return null;
   }
 
-  /// Get loading progress (0.0 to 1.0)
   double? get loadingProgress {
     final currentState = state;
     if (currentState is AiGiftSuggestionLoading) {
@@ -358,7 +339,6 @@ class AiGiftSuggestionCubit extends Cubit<AiGiftSuggestionState> {
     return null;
   }
 
-  /// Get loading message
   String? get loadingMessage {
     final currentState = state;
     if (currentState is AiGiftSuggestionLoading) {
@@ -367,10 +347,8 @@ class AiGiftSuggestionCubit extends Cubit<AiGiftSuggestionState> {
     return null;
   }
 
-  /// Get current retry count
   int get retryCount => _retryCount;
 
-  /// Check if retry is available
   bool get canRetry {
     final currentState = state;
     return currentState is AiGiftSuggestionError && 
