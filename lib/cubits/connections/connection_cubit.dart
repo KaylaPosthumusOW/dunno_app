@@ -1,4 +1,6 @@
 import 'package:dunno/constants/constants.dart';
+import 'package:dunno/cubits/app_user_profile/app_user_profile_cubit.dart';
+import 'package:dunno/models/app_user_profile.dart';
 import 'package:dunno/models/connections.dart';
 import 'package:dunno/stores/firebase/connection_firebase_repository.dart';
 import 'package:equatable/equatable.dart';
@@ -8,6 +10,7 @@ part 'connection_state.dart';
 
 class ConnectionCubit extends Cubit<ConnectionState> {
   final ConnectionFirebaseRepository _connectionFirebaseRepository = sl<ConnectionFirebaseRepository>();
+  final AppUserProfileCubit _appUserProfileCubit = sl<AppUserProfileCubit>();
 
   ConnectionCubit() : super(const ConnectionInitial());
 
@@ -17,7 +20,12 @@ class ConnectionCubit extends Cubit<ConnectionState> {
       List<Connection> connections = await _connectionFirebaseRepository.loadAllConnectionsForUser(userUid: userUid);
       emit(LoadedConnections(state.mainConnectionState.copyWith(allUserConnections: connections, numberOfUserConnections: connections.length, message: 'Loaded ${connections.length} connections')));
     } catch (error, stackTrace) {
-      emit(ConnectionError(state.mainConnectionState.copyWith(message: '', errorMessage: error.toString()), stackTrace: stackTrace.toString()));
+      emit(
+        ConnectionError(
+          state.mainConnectionState.copyWith(message: '', errorMessage: error.toString()),
+          stackTrace: stackTrace.toString(),
+        ),
+      );
     }
   }
 
@@ -28,7 +36,8 @@ class ConnectionCubit extends Cubit<ConnectionState> {
       emit(LoadedConnections(state.mainConnectionState.copyWith(numberOfUserConnections: count, message: 'Counted $count connections')));
       return count;
     } catch (error, stackTrace) {
-      emit(ConnectionError(state.mainConnectionState.copyWith(message: '', errorMessage: error.toString()), stackTrace: stackTrace.toString()));
+      emit(ConnectionError(state.mainConnectionState.copyWith(message: '', errorMessage: error.toString()), stackTrace: stackTrace.toString()),
+      );
       return 0;
     }
   }
@@ -41,7 +50,12 @@ class ConnectionCubit extends Cubit<ConnectionState> {
       connections.add(connection);
       emit(CreatedConnection(state.mainConnectionState.copyWith(allUserConnections: connections, numberOfUserConnections: connections.length, message: 'New connection created')));
     } catch (error, stackTrace) {
-      emit(ConnectionError(state.mainConnectionState.copyWith(message: '', errorMessage: error.toString()), stackTrace: stackTrace.toString()));
+      emit(
+        ConnectionError(
+          state.mainConnectionState.copyWith(message: '', errorMessage: error.toString()),
+          stackTrace: stackTrace.toString(),
+        ),
+      );
     }
   }
 
@@ -66,7 +80,12 @@ class ConnectionCubit extends Cubit<ConnectionState> {
       }
       emit(LoadedConnections(state.mainConnectionState.copyWith(allUserConnections: connections, selectedConnection: updatedConnection, message: 'Connection updated')));
     } catch (error, stackTrace) {
-      emit(ConnectionError(state.mainConnectionState.copyWith(message: '', errorMessage: error.toString()), stackTrace: stackTrace.toString()));
+      emit(
+        ConnectionError(
+          state.mainConnectionState.copyWith(message: '', errorMessage: error.toString()),
+          stackTrace: stackTrace.toString(),
+        ),
+      );
     }
   }
 }

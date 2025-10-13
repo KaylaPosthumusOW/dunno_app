@@ -1,0 +1,1 @@
+part 'quick_generate_suggestion_flow_state.dart';

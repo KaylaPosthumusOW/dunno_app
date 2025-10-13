@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:dunno/models/collections.dart';
 import 'package:dunno/models/filter_suggestion.dart';
+import 'package:dunno/models/ai_gift_suggestion.dart';
 
 abstract class OpenAiState extends Equatable {
   const OpenAiState();
@@ -9,51 +10,30 @@ abstract class OpenAiState extends Equatable {
   List<Object?> get props => [];
 }
 
-class OpenAiInitial extends OpenAiState {}
-
-class OpenAiLoading extends OpenAiState {
-  final String? loadingMessage;
-
-  const OpenAiLoading({this.loadingMessage});
-
-  @override
-  List<Object?> get props => [loadingMessage];
+/// Initial state - no collection or filters selected
+class OpenAiInitial extends OpenAiState {
+  const OpenAiInitial();
 }
 
-class OpenAiGiftSuggestionsLoaded extends OpenAiState {
-  final List<GiftSuggestionCard> suggestions;
-  final Collections? selectedCollection;
-  final FilterSuggestion? appliedFilters;
+/// Collection has been selected but no filters applied yet
+class OpenAiCollectionSelected extends OpenAiState {
+  final Collections selectedCollection;
 
-  const OpenAiGiftSuggestionsLoaded({
-    required this.suggestions,
-    this.selectedCollection,
-    this.appliedFilters,
+  const OpenAiCollectionSelected({
+    required this.selectedCollection,
   });
 
   @override
-  List<Object?> get props => [suggestions, selectedCollection, appliedFilters];
+  List<Object?> get props => [selectedCollection];
 }
 
-class OpenAiError extends OpenAiState {
-  final String message;
-  final String? errorCode;
-
-  const OpenAiError({
-    required this.message,
-    this.errorCode,
-  });
-
-  @override
-  List<Object?> get props => [message, errorCode];
-}
-
+/// Filters have been applied, ready to generate suggestions
 class OpenAiFiltersApplied extends OpenAiState {
-  final Collections? selectedCollection;
+  final Collections selectedCollection;
   final FilterSuggestion appliedFilters;
 
   const OpenAiFiltersApplied({
-    this.selectedCollection,
+    required this.selectedCollection,
     required this.appliedFilters,
   });
 
@@ -61,63 +41,53 @@ class OpenAiFiltersApplied extends OpenAiState {
   List<Object?> get props => [selectedCollection, appliedFilters];
 }
 
-/// Model for individual gift suggestion cards
-class GiftSuggestionCard extends Equatable {
-  final String title;
-  final String description;
-  final String reason;
-  final double estimatedPrice;
-  final String? imageUrl;
-  final String? purchaseLink;
-  final List<String> tags;
-  final String category;
+/// Currently generating suggestions
+class OpenAiGenerating extends OpenAiState {
+  final Collections selectedCollection;
+  final FilterSuggestion? appliedFilters;
+  final String loadingMessage;
 
-  const GiftSuggestionCard({
-    required this.title,
-    required this.description,
-    required this.reason,
-    required this.estimatedPrice,
-    this.imageUrl,
-    this.purchaseLink,
-    required this.tags,
-    required this.category,
+  const OpenAiGenerating({
+    required this.selectedCollection,
+    this.appliedFilters,
+    this.loadingMessage = 'Generating gift suggestions...',
   });
 
   @override
-  List<Object?> get props => [
-        title,
-        description,
-        reason,
-        estimatedPrice,
-        imageUrl,
-        purchaseLink,
-        tags,
-        category,
-      ];
-
-  factory GiftSuggestionCard.fromJson(Map<String, dynamic> json) {
-    return GiftSuggestionCard(
-      title: json['title'] ?? '',
-      description: json['description'] ?? '',
-      reason: json['reason'] ?? '',
-      estimatedPrice: (json['estimatedPrice'] ?? 0).toDouble(),
-      imageUrl: json['imageUrl'],
-      purchaseLink: json['purchaseLink'],
-      tags: List<String>.from(json['tags'] ?? []),
-      category: json['category'] ?? '',
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'title': title,
-      'description': description,
-      'reason': reason,
-      'estimatedPrice': estimatedPrice,
-      'imageUrl': imageUrl,
-      'purchaseLink': purchaseLink,
-      'tags': tags,
-      'category': category,
-    };
-  }
+  List<Object?> get props => [selectedCollection, appliedFilters, loadingMessage];
 }
+
+/// Suggestions have been successfully generated
+class OpenAiSuggestionsLoaded extends OpenAiState {
+  final List<AiGiftSuggestion> suggestions;
+  final Collections selectedCollection;
+  final FilterSuggestion? appliedFilters;
+
+  const OpenAiSuggestionsLoaded({
+    required this.suggestions,
+    required this.selectedCollection,
+    this.appliedFilters,
+  });
+
+  @override
+  List<Object?> get props => [suggestions, selectedCollection, appliedFilters];
+}
+
+/// Error occurred during any operation
+class OpenAiError extends OpenAiState {
+  final String message;
+  final String? errorCode;
+  final Collections? selectedCollection;
+  final FilterSuggestion? appliedFilters;
+
+  const OpenAiError({
+    required this.message,
+    this.errorCode,
+    this.selectedCollection,
+    this.appliedFilters,
+  });
+
+  @override
+  List<Object?> get props => [message, errorCode, selectedCollection, appliedFilters];
+}
+

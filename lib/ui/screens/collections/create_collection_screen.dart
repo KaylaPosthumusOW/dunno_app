@@ -84,14 +84,12 @@ class _CreateCollectionScreenState extends State<CreateCollectionScreen> {
       final existing = _collectionCubit.state.mainCollectionState.selectedCollection;
 
       if (_isEditing && existing != null) {
-        // --- Update ---
         final updated = existing.copyWith(title: _titleController.text.trim(), eventCollectionDate: _selectedDate != null ? Timestamp.fromDate(_selectedDate!) : null, isDateVisible: _isDateVisible, likes: collectionLikes, updatedAt: Timestamp.now());
 
         await _collectionCubit.updateCollection(updated);
 
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Collection updated successfully!'), backgroundColor: Colors.green));
       } else {
-        // --- Create ---
         final newCollection = Collections(title: _titleController.text.trim(), owner: userProfile, eventCollectionDate: _selectedDate != null ? Timestamp.fromDate(_selectedDate!) : null, isDateVisible: _isDateVisible, createdAt: Timestamp.now(), updatedAt: Timestamp.now(), likes: collectionLikes);
 
         await _collectionCubit.createNewCollection(newCollection);
@@ -188,7 +186,19 @@ class _CreateCollectionScreenState extends State<CreateCollectionScreen> {
                   ],
                 ),
               ),
-              if (_selectedDate != null) ...[const SizedBox(height: 12), SwitchListTile(title: const Text('Make date visible to others'), value: _isDateVisible, onChanged: (v) => setState(() => _isDateVisible = v), contentPadding: EdgeInsets.zero)],
+              if (_selectedDate != null) ...[
+                const SizedBox(height: 12),
+                SwitchListTile(
+                  activeThumbColor: AppColors.cerise,
+                    activeTrackColor: AppColors.pinkLavender,
+                    inactiveThumbColor: AppColors.pinkLavender,
+                    inactiveTrackColor: AppColors.pinkLavender.withValues(alpha: 0.4),
+                    trackOutlineColor: WidgetStateProperty.all(Colors.transparent),
+                    title: const Text('Make date visible to others'),
+                    value: _isDateVisible, onChanged: (v) => setState(() => _isDateVisible = v),
+                    contentPadding: EdgeInsets.zero,
+                ),
+              ],
 
               const SizedBox(height: 32),
 

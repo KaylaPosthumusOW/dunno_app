@@ -64,4 +64,8 @@ class Connection extends Equatable {
       createdAt: createdAt,
     );
   }
+
+  AppUserProfile? toAppUserProfile() {
+    return user;
+  }
 }

@@ -3,6 +3,7 @@ import 'package:dunno/constants/routes.dart';
 import 'package:dunno/constants/themes.dart';
 import 'package:dunno/cubits/app_user_profile/app_user_profile_cubit.dart';
 import 'package:dunno/cubits/collections/collection_cubit.dart';
+import 'package:dunno/cubits/connections/connection_cubit.dart';
 import 'package:dunno/models/app_user_profile.dart';
 import 'package:dunno/ui/widgets/collection_card.dart';
 import 'package:dunno/ui/widgets/dunno_alert_dialog.dart';
@@ -11,7 +12,7 @@ import 'package:dunno/ui/widgets/dunno_extended_image.dart';
 import 'package:dunno/ui/widgets/dunno_image_uploading_tile.dart';
 import 'package:dunno/ui/widgets/loading_indicator.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide ConnectionState;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sp_user_repository/sp_user_repository.dart';
@@ -29,6 +30,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final SPFileUploaderCubit _imageUploaderCubit = sl<SPFileUploaderCubit>();
   final AuthenticationCubit _authenticationCubit = sl<AuthenticationCubit>();
   final CollectionCubit _collectionCubit = sl<CollectionCubit>();
+  final ConnectionCubit _connectionCubit = sl<ConnectionCubit>();
 
   String? _downloadUrl;
 
@@ -287,7 +289,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           content: 'Are you sure you want to log out of this profile?',
           action: () {
             _authenticationCubit.loggedOut(clearPreferences: true);
-            Navigator.popUntil(context, ModalRoute.withName(Navigator.defaultRouteName));
+            Navigator.pop(context);
           },
         );
       },
@@ -390,16 +392,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
                 SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.people),
-                    SizedBox(width: 8),
-                    Text(
-                      '${profile.connectionCount ?? '0'}',
-                      style: Theme.of(context).textTheme.displayLarge?.copyWith(fontWeight: FontWeight.bold, color: AppColors.black),
-                    ),
-                  ],
+                BlocBuilder<ConnectionCubit, ConnectionState>(
+                  bloc: _connectionCubit,
+                  builder: (context, state) {
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.people),
+                        SizedBox(width: 8),
+                        Text(
+                          '${state.mainConnectionState.numberOfUserConnections ?? '0'}',
+                          style: Theme.of(context).textTheme.displayLarge?.copyWith(fontWeight: FontWeight.bold, color: AppColors.black),
+                        ),
+                      ],
+                    );
+                  }
                 ),
                 SizedBox(height: 20),
                 DunnoButton(
@@ -424,6 +431,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void initState() {
     super.initState();
     _collectionCubit.loadAllCollectionsForUser(userUid: _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile?.uid ?? '');
+    _connectionCubit.countAllUserConnections(userUid: _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile?.uid ?? '');
   }
 
   @override

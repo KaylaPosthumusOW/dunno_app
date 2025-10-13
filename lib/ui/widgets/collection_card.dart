@@ -11,8 +11,9 @@ import 'package:sp_utilities/utilities.dart';
 class CollectionCard extends StatefulWidget {
   final bool? isPink;
   final Collections? collection;
+  final Function? onPressed;
 
-  const CollectionCard({super.key, this.collection, this.isPink = false});
+  const CollectionCard({super.key, this.collection, this.isPink = false, this.onPressed});
 
   @override
   State<CollectionCard> createState() => _CollectionCardState();
@@ -48,8 +49,13 @@ class _CollectionCardState extends State<CollectionCard> {
               label: 'View Collection',
               type: widget.isPink == true ? ButtonType.primary : ButtonType.secondary,
               onPressed: () {
-                _collectionCubit.setSelectedCollection(widget.collection ?? Collections());
-                context.pushNamed(COLLECTION_DETAIL_SCREEN);
+                if (widget.onPressed != null) {
+                  _collectionCubit.setSelectedCollection(widget.collection ?? Collections());
+                  widget.onPressed!();
+                } else {
+                  _collectionCubit.setSelectedCollection(widget.collection ?? Collections());
+                  context.pushNamed(COLLECTION_DETAIL_SCREEN);
+                }
               },
             )
           ],

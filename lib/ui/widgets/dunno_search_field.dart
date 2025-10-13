@@ -69,7 +69,6 @@ class DunnoSearchFieldState extends State<DunnoSearchField> {
   Widget build(BuildContext context) {
     return SizedBox(
       child: TextField(
-
         autocorrect: false,
         controller: widget.controller,
         style: Theme.of(context).textTheme.labelLarge,
@@ -91,7 +90,7 @@ class DunnoSearchFieldState extends State<DunnoSearchField> {
           contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
           hintStyle: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.cerise),
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
-          fillColor: widget.color ?? AppColors.pinkLavender,
+          fillColor: widget.color ?? AppColors.pinkLavender.withValues(alpha: 0.6),
           filled: true,
         ),
         onChanged: (value) {

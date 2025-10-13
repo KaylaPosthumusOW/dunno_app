@@ -21,7 +21,7 @@ class ConnectionFirebaseRepository implements ConnectionStore {
   @override
   Future<List<Connection>> loadAllConnectionsForUser({required String userUid}) async {
     List<Connection> connections = [];
-    QuerySnapshot<Connection> query = await _connectionCollection.where('owner.uid', isEqualTo: userUid).orderBy('createdAt', descending: true).get();
+    QuerySnapshot<Connection> query = await _connectionCollection.where('user.uid', isEqualTo: userUid).orderBy('createdAt', descending: true).get();
     for (var doc in query.docs) {
       connections.add(doc.data());
     }
@@ -48,7 +48,7 @@ class ConnectionFirebaseRepository implements ConnectionStore {
 
   @override
   Future<num?> countConnectionsForUser({required String userUid}) async {
-    AggregateQuerySnapshot query = await _connectionCollection.where('owner.uid', isEqualTo: userUid).count().get();
+    AggregateQuerySnapshot query = await _connectionCollection.where('user.uid', isEqualTo: userUid).count().get();
     return query.count;
   }
 

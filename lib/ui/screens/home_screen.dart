@@ -71,7 +71,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Expanded(
                 child: InkWell(
                   onTap: () {
-                    context.pushNamed(GIFT_SUGGESTION_SCREEN);
+                    context.pushNamed(QUICK_SUGGESTIONS_SCREEN);
                   },
                   child: Container(
                     padding: const EdgeInsets.all(16),

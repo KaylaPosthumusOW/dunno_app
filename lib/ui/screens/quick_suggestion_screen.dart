@@ -1,7 +1,9 @@
+import 'package:dunno/constants/routes.dart';
 import 'package:dunno/ui/widgets/dunno_button.dart';
 import 'package:dunno/ui/widgets/dunno_search_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 
 class QuickSuggestionScreen extends StatefulWidget {
   const QuickSuggestionScreen({super.key});
@@ -11,7 +13,6 @@ class QuickSuggestionScreen extends StatefulWidget {
 }
 
 class _QuickSuggestionScreenState extends State<QuickSuggestionScreen> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,7 +39,13 @@ class _QuickSuggestionScreenState extends State<QuickSuggestionScreen> {
                 SizedBox(height: 60),
                 Text('No profile? No problem. Get instant gift ideas', style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w700)),
                 SizedBox(height: 10),
-                DunnoButton(type: ButtonType.secondary, label: 'Get Quick Suggestions', onPressed: () {}),
+                DunnoButton(
+                  type: ButtonType.secondary,
+                  label: 'Get Quick Suggestions',
+                  onPressed: () {
+                    context.pushNamed(GIFT_SUGGESTION_MANAGEMENT);
+                  },
+                ),
                 SizedBox(height: 130),
               ],
             ),

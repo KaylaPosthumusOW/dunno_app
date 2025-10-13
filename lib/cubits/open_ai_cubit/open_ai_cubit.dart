@@ -2,63 +2,77 @@ import 'dart:convert';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dunno/models/collections.dart';
 import 'package:dunno/models/filter_suggestion.dart';
+import 'package:dunno/models/ai_gift_suggestion.dart';
 import 'package:dunno/services/openai_client.dart';
 import 'open_ai_state.dart';
 
 class OpenAiCubit extends Cubit<OpenAiState> {
   final OpenAiClient _openAiClient;
-  
-  Collections? _selectedCollection;
-  FilterSuggestion? _appliedFilters;
 
-  OpenAiCubit({required OpenAiClient openAiClient})
-      : _openAiClient = openAiClient,
-        super(OpenAiInitial());
+  OpenAiCubit(this._openAiClient) : super(const OpenAiInitial());
 
-  Collections? get selectedCollection => _selectedCollection;
-  FilterSuggestion? get appliedFilters => _appliedFilters;
+  /// Select a collection for gift suggestions
+  void selectCollection(Collections collection) {
+    emit(OpenAiCollectionSelected(selectedCollection: collection));
+  }
 
-  /// Set the selected collection for gift suggestions
-  void setSelectedCollection(Collections collection) {
-    _selectedCollection = collection;
-    if (_appliedFilters != null) {
+  /// Apply filters to the currently selected collection
+  void applyFilters(FilterSuggestion filters) {
+    final currentState = state;
+    
+    if (currentState is OpenAiCollectionSelected) {
       emit(OpenAiFiltersApplied(
-        selectedCollection: _selectedCollection,
-        appliedFilters: _appliedFilters!,
+        selectedCollection: currentState.selectedCollection,
+        appliedFilters: filters,
+      ));
+    } else if (currentState is OpenAiFiltersApplied) {
+      emit(OpenAiFiltersApplied(
+        selectedCollection: currentState.selectedCollection,
+        appliedFilters: filters,
+      ));
+    } else if (currentState is OpenAiSuggestionsLoaded) {
+      emit(OpenAiFiltersApplied(
+        selectedCollection: currentState.selectedCollection,
+        appliedFilters: filters,
+      ));
+    } else {
+      emit(OpenAiError(
+        message: 'Please select a collection before applying filters',
+        errorCode: 'NO_COLLECTION_SELECTED',
       ));
     }
   }
 
-  /// Apply filters for gift suggestions
-  void applyFilters(FilterSuggestion filters) {
-    _appliedFilters = filters;
-    emit(OpenAiFiltersApplied(
-      selectedCollection: _selectedCollection,
-      appliedFilters: filters,
-    ));
-  }
-
-  /// Clear all selections and filters
-  void clearSelections() {
-    _selectedCollection = null;
-    _appliedFilters = null;
-    emit(OpenAiInitial());
-  }
-
-  /// Generate gift suggestions based on selected collection and filters
-  Future<void> generateGiftSuggestions() async {
-    if (_selectedCollection == null) {
+  /// Generate gift suggestions based on current state
+  Future<void> generateSuggestions() async {
+    final currentState = state;
+    
+    Collections? selectedCollection;
+    FilterSuggestion? appliedFilters;
+    
+    if (currentState is OpenAiCollectionSelected) {
+      selectedCollection = currentState.selectedCollection;
+    } else if (currentState is OpenAiFiltersApplied) {
+      selectedCollection = currentState.selectedCollection;
+      appliedFilters = currentState.appliedFilters;
+    } else if (currentState is OpenAiSuggestionsLoaded) {
+      selectedCollection = currentState.selectedCollection;
+      appliedFilters = currentState.appliedFilters;
+    } else {
       emit(const OpenAiError(
-        message: 'Please select a collection first',
-        errorCode: 'NO_COLLECTION',
+        message: 'Please select a collection before generating suggestions',
+        errorCode: 'NO_COLLECTION_SELECTED',
       ));
       return;
     }
 
     try {
-      emit(const OpenAiLoading(loadingMessage: 'Generating gift suggestions...'));
+      emit(OpenAiGenerating(
+        selectedCollection: selectedCollection,
+        appliedFilters: appliedFilters,
+      ));
 
-      final prompt = _buildPrompt(_selectedCollection!, _appliedFilters);
+      final prompt = _buildPrompt(selectedCollection, appliedFilters);
       
       final response = await _openAiClient.sendResponsesGeneration(
         model: 'gpt-3.5-turbo',
@@ -68,16 +82,43 @@ class OpenAiCubit extends Cubit<OpenAiState> {
 
       final suggestions = _parseAiResponse(response);
       
-      emit(OpenAiGiftSuggestionsLoaded(
+      emit(OpenAiSuggestionsLoaded(
         suggestions: suggestions,
-        selectedCollection: _selectedCollection,
-        appliedFilters: _appliedFilters,
+        selectedCollection: selectedCollection,
+        appliedFilters: appliedFilters,
       ));
     } catch (error) {
       emit(OpenAiError(
         message: 'Failed to generate gift suggestions: ${error.toString()}',
-        errorCode: 'GENERATION_ERROR',
+        errorCode: 'GENERATION_FAILED',
+        selectedCollection: selectedCollection,
+        appliedFilters: appliedFilters,
       ));
+    }
+  }
+
+  /// Clear all selections and return to initial state
+  void clearSelections() {
+    emit(const OpenAiInitial());
+  }
+
+  /// Retry suggestion generation after error
+  Future<void> retryGeneration() async {
+    final currentState = state;
+    
+    if (currentState is OpenAiError) {
+      if (currentState.selectedCollection != null) {
+        emit(OpenAiFiltersApplied(
+          selectedCollection: currentState.selectedCollection!,
+          appliedFilters: currentState.appliedFilters ?? const FilterSuggestion(),
+        ));
+        await generateSuggestions();
+      } else {
+        emit(const OpenAiError(
+          message: 'Cannot retry without a selected collection',
+          errorCode: 'NO_COLLECTION_FOR_RETRY',
+        ));
+      }
     }
   }
 
@@ -134,7 +175,7 @@ Requirements:
   }
 
   /// Parse the AI response and extract gift suggestions
-  List<GiftSuggestionCard> _parseAiResponse(Map<String, dynamic> response) {
+  List<AiGiftSuggestion> _parseAiResponse(Map<String, dynamic> response) {
     try {
       // Extract the content from the OpenAI response
       final content = response['choices']?[0]?['message']?['content'] ?? 
@@ -166,7 +207,7 @@ Requirements:
       }
 
       final suggestions = suggestionsData
-          .map((suggestion) => GiftSuggestionCard.fromJson(suggestion as Map<String, dynamic>))
+          .map((suggestion) => AiGiftSuggestion.fromJson(suggestion as Map<String, dynamic>))
           .toList();
 
       // Ensure we have exactly 3 suggestions
@@ -180,20 +221,54 @@ Requirements:
     }
   }
 
-  /// Regenerate suggestions with the same parameters
-  Future<void> regenerateSuggestions() async {
-    if (_selectedCollection != null) {
-      await generateGiftSuggestions();
+  /// Get the current selected collection from state
+  Collections? get selectedCollection {
+    final currentState = state;
+    if (currentState is OpenAiCollectionSelected) {
+      return currentState.selectedCollection;
+    } else if (currentState is OpenAiFiltersApplied) {
+      return currentState.selectedCollection;
+    } else if (currentState is OpenAiGenerating) {
+      return currentState.selectedCollection;
+    } else if (currentState is OpenAiSuggestionsLoaded) {
+      return currentState.selectedCollection;
+    } else if (currentState is OpenAiError) {
+      return currentState.selectedCollection;
     }
+    return null;
+  }
+
+  /// Get the current applied filters from state
+  FilterSuggestion? get appliedFilters {
+    final currentState = state;
+    if (currentState is OpenAiFiltersApplied) {
+      return currentState.appliedFilters;
+    } else if (currentState is OpenAiGenerating) {
+      return currentState.appliedFilters;
+    } else if (currentState is OpenAiSuggestionsLoaded) {
+      return currentState.appliedFilters;
+    } else if (currentState is OpenAiError) {
+      return currentState.appliedFilters;
+    }
+    return null;
+  }
+
+  /// Get the current suggestions from state
+  List<AiGiftSuggestion>? get suggestions {
+    final currentState = state;
+    if (currentState is OpenAiSuggestionsLoaded) {
+      return currentState.suggestions;
+    }
+    return null;
   }
 
   /// Get a single suggestion by index
-  GiftSuggestionCard? getSuggestionAt(int index) {
-    final currentState = state;
-    if (currentState is OpenAiGiftSuggestionsLoaded && 
+  AiGiftSuggestion? getSuggestionAt(int index) {
+    final currentSuggestions = suggestions;
+    if (currentSuggestions != null && 
         index >= 0 && 
-        index < currentState.suggestions.length) {
-      return currentState.suggestions[index];
+        index < currentSuggestions.length) {
+      return currentSuggestions[index];
     }
     return null;
   }

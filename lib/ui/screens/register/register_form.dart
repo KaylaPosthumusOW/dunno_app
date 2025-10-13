@@ -2,6 +2,7 @@ import 'package:dunno/constants/constants.dart';
 import 'package:dunno/cubits/app_user_profile/app_user_profile_cubit.dart';
 import 'package:dunno/models/app_user_profile.dart';
 import 'package:dunno/ui/screens/register/register_button.dart';
+import 'package:dunno/ui/widgets/dunno_button.dart';
 import 'package:dunno/ui/widgets/dunno_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -37,16 +38,10 @@ class _RegisterFormState extends State<RegisterForm> {
     String name = nameParts.isNotEmpty ? nameParts.first : '';
     String surname = nameParts.length > 1 ? nameParts.sublist(1).join(' ') : '';
     await _appUserProfileCubit.saveAppUserProfileDetailsToState(
-      appUserProfile: AppUserProfile(
-        name: name,
-        surname: surname,
-      ),
+      appUserProfile: AppUserProfile(name: name, surname: surname),
     );
 
-    _registerCubit.registerSubmitted(
-      email: _emailController.text.trim(),
-      password: _passwordController.text,
-    );
+    _registerCubit.registerSubmitted(email: _emailController.text.trim(), password: _passwordController.text);
   }
 
   @override
@@ -57,7 +52,17 @@ class _RegisterFormState extends State<RegisterForm> {
         if (state.isInProgress) {
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
-            ..showSnackBar(const SnackBar(content: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text('Registering...', style: TextStyle(color: Colors.white)), CircularProgressIndicator(color: Colors.white)])));
+            ..showSnackBar(
+              const SnackBar(
+                content: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Registering...', style: TextStyle(color: Colors.white)),
+                    CircularProgressIndicator(color: Colors.white),
+                  ],
+                ),
+              ),
+            );
         }
 
         if (state.isSuccess) {
@@ -67,13 +72,37 @@ class _RegisterFormState extends State<RegisterForm> {
         if (state.isFailure) {
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
-            ..showSnackBar(SnackBar(content: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Expanded(child: Text('Registration Failure\n${state.errorMessage ?? state.message ?? ''}', style: const TextStyle(color: Colors.white))), const Icon(Icons.error)]), backgroundColor: Colors.red));
+            ..showSnackBar(
+              SnackBar(
+                content: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Text('Registration Failure\n${state.errorMessage ?? state.message ?? ''}', style: const TextStyle(color: Colors.white)),
+                    ),
+                    const Icon(Icons.error),
+                  ],
+                ),
+                backgroundColor: Colors.red,
+              ),
+            );
         }
 
         if (state is RegisterStatePasswordResetSuccess) {
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
-            ..showSnackBar(const SnackBar(content: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text('Password reset email has been sent', style: TextStyle(color: Colors.white)), Icon(Icons.error)]), backgroundColor: Colors.green));
+            ..showSnackBar(
+              const SnackBar(
+                content: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Password reset email has been sent', style: TextStyle(color: Colors.white)),
+                    Icon(Icons.error),
+                  ],
+                ),
+                backgroundColor: Colors.green,
+              ),
+            );
         }
 
         if (state is RegisterStateEmailAlreadyExists) {
@@ -97,13 +126,7 @@ class _RegisterFormState extends State<RegisterForm> {
                   },
                 ),
                 SizedBox(height: 10),
-                DunnoTextField(
-                  isLight: true,
-                  label: 'Email',
-                  controller: _emailController,
-                  keyboardType: TextInputType.emailAddress,
-                  onChanged: (value) => _registerCubit.emailChanged(value),
-                ),
+                DunnoTextField(isLight: true, label: 'Email', controller: _emailController, keyboardType: TextInputType.emailAddress, onChanged: (value) => _registerCubit.emailChanged(value)),
                 SizedBox(height: 10),
                 DunnoTextField(
                   isLight: true,
@@ -138,6 +161,13 @@ class _RegisterFormState extends State<RegisterForm> {
                 ),
                 SizedBox(height: 30),
                 RegisterButton(onPressed: isRegisterButtonEnabled(state) ? _onFormSubmitted : () {}),
+                DunnoButton(
+                  label: 'Back to Login',
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  type: ButtonType.outline,
+                ),
               ],
             ),
           );

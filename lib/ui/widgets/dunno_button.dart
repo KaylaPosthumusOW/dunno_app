@@ -1,7 +1,16 @@
 import 'package:dunno/constants/themes.dart';
 import 'package:flutter/material.dart';
 
-enum ButtonType { primary, secondary, outline }
+enum ButtonType {
+  primary,
+  secondary,
+  outline,
+  pinkLavender,
+  tangerine,
+  cinnabar,
+  outlineCerise,
+  outlineCinnabar,
+}
 
 class DunnoButton extends StatefulWidget {
   final VoidCallback? onPressed;
@@ -37,7 +46,13 @@ class DunnoButton extends StatefulWidget {
 
 class _DunnoButtonState extends State<DunnoButton> {
   Widget _buildLoadingIndicator() {
-    return SizedBox(width: 18, height: 18, child: Center(child: widget.loadingIndicator ?? const CircularProgressIndicator(strokeWidth: 2)));
+    return SizedBox(
+      width: 18,
+      height: 18,
+      child: Center(
+        child: widget.loadingIndicator ?? const CircularProgressIndicator(strokeWidth: 2),
+      ),
+    );
   }
 
   Widget _buildLabel(BuildContext context) {
@@ -51,23 +66,107 @@ class _DunnoButtonState extends State<DunnoButton> {
   ButtonStyle _getButtonStyle(bool isDisabled) {
     switch (widget.type) {
       case ButtonType.primary:
-        return FilledButton.styleFrom(backgroundColor: isDisabled ? AppColors.cerise.withValues(alpha: 0.4) : widget.buttonColor ?? AppColors.cerise, foregroundColor: AppColors.pinkLavender, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)));
-      case ButtonType.secondary:
-        return FilledButton.styleFrom(backgroundColor: isDisabled ? AppColors.cinnabar.withValues(alpha: 0.4) : widget.buttonColor ?? AppColors.cinnabar, foregroundColor: AppColors.antiqueWhite, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)));
-      case ButtonType.outline:
-        return OutlinedButton.styleFrom(backgroundColor: Colors.transparent, side: BorderSide(color: isDisabled ? AppColors.cerise : widget.outlineColor ?? AppColors.cerise), foregroundColor: isDisabled ? AppColors.cerise : AppColors.cerise, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)));
+        return FilledButton.styleFrom(
+          backgroundColor:
+          isDisabled ? AppColors.cerise.withValues(alpha: 0.4) : widget.buttonColor ?? AppColors.cerise,
+          foregroundColor: AppColors.pinkLavender,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+        );
 
+      case ButtonType.secondary:
+        return FilledButton.styleFrom(
+          backgroundColor:
+          isDisabled ? AppColors.cinnabar.withValues(alpha: 0.4) : widget.buttonColor ?? AppColors.cinnabar,
+          foregroundColor: AppColors.antiqueWhite,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+        );
+
+      case ButtonType.outline:
+        return OutlinedButton.styleFrom(
+          backgroundColor: Colors.transparent,
+          side: BorderSide(
+            color: isDisabled ? AppColors.cerise : widget.outlineColor ?? AppColors.cerise,
+          ),
+          foregroundColor: isDisabled ? AppColors.cerise : AppColors.cerise,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+        );
+
+    // 🩷 PinkLavender background, Cerise text
+      case ButtonType.pinkLavender:
+        return FilledButton.styleFrom(
+          backgroundColor:
+          isDisabled ? AppColors.pinkLavender.withValues(alpha: 0.4) : AppColors.pinkLavender,
+          foregroundColor: AppColors.cerise,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+        );
+
+    // 🍊 Tangerine background, OffWhite text
+      case ButtonType.tangerine:
+        return FilledButton.styleFrom(
+          backgroundColor:
+          isDisabled ? AppColors.tangerine.withValues(alpha: 0.4) : AppColors.tangerine,
+          foregroundColor: AppColors.offWhite,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+        );
+
+    // 🔴 Cinnabar background, OffWhite text
+      case ButtonType.cinnabar:
+        return FilledButton.styleFrom(
+          backgroundColor:
+          isDisabled ? AppColors.cinnabar.withValues(alpha: 0.4) : AppColors.cinnabar,
+          foregroundColor: AppColors.offWhite,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+        );
+
+    // 🩷 Outline Cerise
+      case ButtonType.outlineCerise:
+        return OutlinedButton.styleFrom(
+          backgroundColor: Colors.transparent,
+          side: BorderSide(
+            color: isDisabled ? AppColors.cerise.withValues(alpha: 0.4) : AppColors.cerise,
+            width: 1.8,
+          ),
+          foregroundColor: AppColors.cerise,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+        );
+
+    // 🔴 Outline Cinnabar
+      case ButtonType.outlineCinnabar:
+        return OutlinedButton.styleFrom(
+          backgroundColor: Colors.transparent,
+          side: BorderSide(
+            color: isDisabled ? AppColors.cinnabar.withValues(alpha: 0.4) : AppColors.cinnabar,
+            width: 1.8,
+          ),
+          foregroundColor: AppColors.cinnabar,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+        );
     }
   }
 
   Widget _buildButton(Widget? icon, Widget label, VoidCallback? onPressed, ButtonStyle style) {
     switch (widget.type) {
       case ButtonType.primary:
-        return FilledButton.icon(onPressed: onPressed, icon: icon ?? const SizedBox.shrink(), label: label, style: style);
       case ButtonType.secondary:
-        return FilledButton.icon(onPressed: onPressed, icon: icon ?? const SizedBox.shrink(), label: label, style: style);
+      case ButtonType.pinkLavender:
+      case ButtonType.tangerine:
+      case ButtonType.cinnabar:
+        return FilledButton.icon(
+          onPressed: onPressed,
+          icon: icon ?? const SizedBox.shrink(),
+          label: label,
+          style: style,
+        );
+
       case ButtonType.outline:
-        return OutlinedButton.icon(onPressed: onPressed, icon: icon ?? const SizedBox.shrink(), label: label, style: style);
+      case ButtonType.outlineCerise:
+      case ButtonType.outlineCinnabar:
+        return OutlinedButton.icon(
+          onPressed: onPressed,
+          icon: icon ?? const SizedBox.shrink(),
+          label: label,
+          style: style,
+        );
     }
   }
 

@@ -4,7 +4,11 @@ import 'package:dunno/ui/screens/collections/create_collection_screen.dart';
 import 'package:dunno/ui/screens/collections/view_all_collections_screen.dart';
 import 'package:dunno/ui/screens/dunno_landing_screen.dart';
 import 'package:dunno/ui/screens/find_friends_screen.dart';
+import 'package:dunno/ui/screens/friend_gift_suggestion/friend_gift_suggestion_management.dart';
 import 'package:dunno/ui/screens/profile/edit_profile_screen.dart';
+import 'package:dunno/ui/screens/profile/friend_profile_screen.dart';
+import 'package:dunno/ui/screens/quick_gift_suggestion/gift_suggestion_management.dart';
+import 'package:dunno/ui/screens/quick_gift_suggestion/receive_gift_suggestion_screen.dart';
 import 'package:dunno/ui/screens/quick_suggestion_screen.dart';
 import 'package:dunno/ui/screens/search_friends_screen.dart';
 import 'package:flutter/material.dart';
@@ -56,6 +60,26 @@ class AppRouter {
         path: FIND_FRIENDS_SCREEN,
         name: FIND_FRIENDS_SCREEN,
         builder: (BuildContext context, GoRouterState state) => FindFriendsScreen(),
+      ),
+      GoRoute(
+        path: FRIEND_PROFILE_SCREEN,
+        name: FRIEND_PROFILE_SCREEN,
+        builder: (BuildContext context, GoRouterState state) => FriendProfileScreen(),
+      ),
+      GoRoute(
+        path: GIFT_SUGGESTION_MANAGEMENT,
+        name: GIFT_SUGGESTION_MANAGEMENT,
+        builder: (BuildContext context, GoRouterState state) => GiftSuggestionManagement(),
+      ),
+      GoRoute(
+        path: RECEIVE_GIFT_SUGGESTION_SCREEN,
+        name: RECEIVE_GIFT_SUGGESTION_SCREEN,
+        builder: (BuildContext context, GoRouterState state) => ReceiveGiftSuggestionScreen(),
+      ),
+      GoRoute(
+        path: FRIEND_GIFT_SUGGESTION_MANAGEMENT,
+        name: FRIEND_GIFT_SUGGESTION_MANAGEMENT,
+        builder: (BuildContext context, GoRouterState state) => FriendGiftSuggestionManagement(),
       ),
     ],
     redirect: (BuildContext context, GoRouterState state) async {

@@ -6,6 +6,11 @@ const SEARCH_FRIENDS_SCREEN = '/search_friends';
 const COLLECTION_DETAIL_SCREEN = '/collection_details';
 const QUICK_SUGGESTIONS_SCREEN = '/quick_suggestions';
 const FIND_FRIENDS_SCREEN = '/find_friends';
+const FRIEND_PROFILE_SCREEN = '/friend_profile';
 
 //-----------
-const GIFT_SUGGESTION_SCREEN = '/gift_suggestion';
+const GIFT_SUGGESTION_MANAGEMENT = '/gift_suggestion';
+const RECEIVE_GIFT_SUGGESTION_SCREEN = '/receive_gift_suggestion';
+
+//-----------
+const FRIEND_GIFT_SUGGESTION_MANAGEMENT = '/friend_gift_suggestion_management';

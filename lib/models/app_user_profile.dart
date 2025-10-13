@@ -14,13 +14,12 @@ class AppUserProfile extends Equatable {
   final Timestamp? createdAt;
   final bool hasSeenOnboarding;
   final bool hasCreatedFirstCollection;
-  final num? connectionCount;
   final String? profileLink;
 
-  const AppUserProfile({this.uid, this.name, this.surname, this.email, this.phoneNumber, this.pushToken, this.profilePicture, this.createdAt, this.hasSeenOnboarding = false, this.hasCreatedFirstCollection = false, this.connectionCount, this.profileLink});
+  const AppUserProfile({this.uid, this.name, this.surname, this.email, this.phoneNumber, this.pushToken, this.profilePicture, this.createdAt, this.hasSeenOnboarding = false, this.hasCreatedFirstCollection = false, this.profileLink});
 
   @override
-  List<Object?> get props => [uid, name, surname, email, phoneNumber, pushToken, profilePicture, createdAt, hasSeenOnboarding, hasCreatedFirstCollection, connectionCount, profileLink];
+  List<Object?> get props => [uid, name, surname, email, phoneNumber, pushToken, profilePicture, createdAt, hasSeenOnboarding, hasCreatedFirstCollection, profileLink];
 
   bool get isProfileComplete => !StringHelpers.isNullOrEmpty(name) && !StringHelpers.isNullOrEmpty(surname) && !StringHelpers.isNullOrEmpty(email) && !StringHelpers.isNullOrEmpty(phoneNumber);
 
@@ -46,7 +45,6 @@ class AppUserProfile extends Equatable {
     Timestamp? createdAt,
     bool? hasSeenOnboarding,
     bool? hasCreatedFirstCollection,
-    num? connectionCount,
     String? profileLink,
   }) {
     return AppUserProfile(
@@ -60,7 +58,6 @@ class AppUserProfile extends Equatable {
       createdAt: createdAt ?? this.createdAt,
       hasSeenOnboarding: hasSeenOnboarding ?? this.hasSeenOnboarding,
       hasCreatedFirstCollection: hasCreatedFirstCollection ?? this.hasCreatedFirstCollection,
-      connectionCount: connectionCount ?? this.connectionCount,
       profileLink: profileLink ?? this.profileLink,
     );
   }
@@ -76,7 +73,6 @@ class AppUserProfile extends Equatable {
     Timestamp? createdAt,
     bool? hasSeenOnboarding,
     bool? hasCreatedFirstCollection,
-    num? connectionCount,
     String? profileLink,
   }) {
     return AppUserProfile(
@@ -90,7 +86,6 @@ class AppUserProfile extends Equatable {
       createdAt: createdAt ?? this.createdAt,
       hasSeenOnboarding: hasSeenOnboarding ?? this.hasSeenOnboarding,
       hasCreatedFirstCollection: hasCreatedFirstCollection ?? this.hasCreatedFirstCollection,
-      connectionCount: connectionCount,
       profileLink: profileLink,
     );
   }
@@ -108,7 +103,6 @@ class AppUserProfile extends Equatable {
       'isProfileComplete': isProfileComplete,
       'hasSeenOnboarding': hasSeenOnboarding,
       'hasCreatedFirstCollection': hasCreatedFirstCollection,
-      'connectionCount': connectionCount,
       'profileLink': profileLink,
     };
   }
@@ -138,7 +132,6 @@ class AppUserProfile extends Equatable {
       createdAt: createdAt,
       hasSeenOnboarding: map['hasSeenOnboarding'] ?? false,
       hasCreatedFirstCollection: map['hasCreatedFirstCollection'] ?? false,
-      connectionCount: map['connectionCount'],
       profileLink: map['profileLink'],
     );
   }

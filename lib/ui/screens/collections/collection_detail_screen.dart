@@ -157,15 +157,15 @@ class _CollectionDetailsScreenState extends State<CollectionDetailsScreen> {
                     child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [_buildChipsSection('Hobbies', likes.hobbies), _buildChipsSection('Interests', likes.interests), _buildChipsSection('Likes', likes.likes), _buildChipsSection('Aesthetic Preferences', likes.aestheticPreferences)]),
                   ),
                   const SizedBox(height: 24),
-                  DunnoButton(
-                    icon: Icon(Icons.edit, color: AppColors.offWhite),
-                    type: ButtonType.primary,
-                    label: 'Edit your Collections',
-                    onPressed: () {
-                      context.push(CREATE_COLLECTION_SCREEN);
-                    },
-                  ),
                 ],
+                DunnoButton(
+                  icon: Icon(Icons.edit, color: AppColors.offWhite),
+                  type: ButtonType.primary,
+                  label: 'Edit your Collections',
+                  onPressed: () {
+                    context.push(CREATE_COLLECTION_SCREEN);
+                  },
+                ),
               ],
             ),
           ),
