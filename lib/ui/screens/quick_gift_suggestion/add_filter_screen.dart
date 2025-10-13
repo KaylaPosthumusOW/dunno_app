@@ -1,102 +1,214 @@
 import 'package:dunno/constants/themes.dart';
+import 'package:dunno/models/filter_suggestion.dart';
 import 'package:dunno/ui/widgets/dunno_dropdown_field.dart';
 import 'package:dunno/ui/widgets/dunno_text_field.dart';
 import 'package:flutter/material.dart';
 
 class AddFilterPage extends StatefulWidget {
-  const AddFilterPage({super.key});
+  final Function(FilterSuggestion)? onFilterUpdated;
+
+  const AddFilterPage({super.key, this.onFilterUpdated});
 
   @override
   State<AddFilterPage> createState() => _AddFilterPageState();
 }
 
 class _AddFilterPageState extends State<AddFilterPage> {
-  double budget = 200;
-  String? relation;
-  String? giftType;
-  String? giftValue;
-  String? giftCategory;
+  final _relationController = TextEditingController();
+  final _giftTypeController = TextEditingController();
+  final _extraNotesController = TextEditingController();
+
+  double _budget = 200;
+  String? _relation;
+  String? _giftType;
+  GiftValue? _giftValue;
+  GiftCategory? _giftCategory;
+  String? _extraNotes;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(20),
-      child: Column(
-        children: [
-          _buildTextField('Who are you to the person?', (val) => relation = val),
-          SizedBox(height: 10),
-          Align(
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Relationship Field
+            DunnoTextField(
+              controller: _relationController,
+              label: 'What\'s your relationship to them?',
+              supportingText: 'e.g., Friend, Sister, Colleague',
+              keyboardType: TextInputType.text,
+              isLight: true,
+              colorScheme: DunnoTextFieldColor.antiqueWhite,
+              onChanged: (value) {
+                _relation = value;
+                _updateFilter();
+              },
+            ),
+            const SizedBox(height: 20),
+
+            // Budget Slider
+            Align(
               alignment: Alignment.centerLeft,
               child: Padding(
-                padding: const EdgeInsets.only(bottom: 4, left: 15),
-                child: Text('Adjust your Budget', style: TextStyle(fontWeight: FontWeight.bold)),
-              )),
-          Slider(
-            value: budget,
-            min: 0,
-            max: 1000,
-            activeColor: AppColors.tangerine,
-            label: budget.toStringAsFixed(0),
-            onChanged: (val) => setState(() => budget = val),
-          ),
-          SizedBox(height: 10),
-          DunnoDropdownField(
-            label: 'Select',
-            hintText: 'Select Analysis Type',
-            value: null,
-            onChanged: (type) {},
-            dropDownColor: AppColors.offWhite,
-            dropDownTextColor: AppColors.black,
-            items: ['Birthday', 'Anniversary', 'Graduation', 'Holiday'].map((type) {
-              return DropdownMenuItem(
-                value: type,
+                padding: const EdgeInsets.only(bottom: 8, left: 15),
                 child: Text(
-                  type,
-                  style: Theme.of(context).textTheme.labelLarge?.copyWith(color: Colors.white),
+                  'Budget: \$${_budget.toStringAsFixed(0)}',
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
                 ),
-              );
-            }).toList(),
-          ),
-          SizedBox(height: 10),
-          DunnoDropdownField(
-            label: 'Select',
-            hintText: 'Select Analysis Type',
-            value: null,
-            onChanged: (type) {},
-            dropDownColor: AppColors.offWhite,
-            dropDownTextColor: AppColors.black,
-            items: ['Birthday', 'Anniversary', 'Graduation', 'Holiday'].map((type) {
-              return DropdownMenuItem(
-                value: type,
-                child: Text(
-                  type,
-                  style: Theme.of(context).textTheme.labelLarge?.copyWith(color: Colors.white),
-                ),
-              );
-            }).toList(),
-          ),
-          const Spacer(),
-          // _buildGenerateButton(),
-        ],
+              ),
+            ),
+            Slider(
+              value: _budget,
+              min: 10,
+              max: 1000,
+              divisions: 99,
+              activeColor: AppColors.tangerine,
+              label: '\$${_budget.toStringAsFixed(0)}',
+              onChanged: (value) {
+                setState(() {
+                  _budget = value;
+                });
+                _updateFilter();
+              },
+            ),
+            const SizedBox(height: 16),
+
+            // Gift Category Dropdown
+            DunnoDropdownField<GiftCategory>(
+              label: 'Gift Category',
+              hintText: 'Select category',
+              value: _giftCategory,
+              onChanged: (value) {
+                setState(() {
+                  _giftCategory = value;
+                });
+                _updateFilter();
+              },
+              dropDownColor: AppColors.offWhite,
+              dropDownTextColor: AppColors.black,
+              items: GiftCategory.values.map((category) {
+                return DropdownMenuItem<GiftCategory>(
+                  value: category,
+                  child: Text(
+                    _getCategoryDisplayName(category),
+                    style: Theme.of(
+                      context,
+                    ).textTheme.labelLarge?.copyWith(color: AppColors.black),
+                  ),
+                );
+              }).toList(),
+            ),
+            const SizedBox(height: 16),
+
+            // Gift Value Dropdown
+            DunnoDropdownField<GiftValue>(
+              label: 'Gift Value Type',
+              hintText: 'Select value type',
+              value: _giftValue,
+              onChanged: (value) {
+                setState(() {
+                  _giftValue = value;
+                });
+                _updateFilter();
+              },
+              dropDownColor: AppColors.offWhite,
+              dropDownTextColor: AppColors.black,
+              items: GiftValue.values.map((value) {
+                return DropdownMenuItem<GiftValue>(
+                  value: value,
+                  child: Text(
+                    _getValueDisplayName(value),
+                    style: Theme.of(
+                      context,
+                    ).textTheme.labelLarge?.copyWith(color: AppColors.black),
+                  ),
+                );
+              }).toList(),
+            ),
+            const SizedBox(height: 16),
+
+            // Gift Type Field
+            DunnoTextField(
+              controller: _giftTypeController,
+              label: 'Type of gift?',
+              supportingText: 'e.g., Practical, Sentimental, Fun',
+              keyboardType: TextInputType.text,
+              isLight: true,
+              colorScheme: DunnoTextFieldColor.antiqueWhite,
+              onChanged: (value) {
+                _giftType = value;
+                _updateFilter();
+              },
+            ),
+            const SizedBox(height: 16),
+
+            // Extra Notes Field
+            DunnoTextField(
+              controller: _extraNotesController,
+              label: 'Additional preferences?',
+              supportingText: 'Any specific requirements or restrictions',
+              keyboardType: TextInputType.text,
+              isLight: true,
+              colorScheme: DunnoTextFieldColor.antiqueWhite,
+              maxLines: 3,
+              onChanged: (value) {
+                _extraNotes = value;
+                _updateFilter();
+              },
+            ),
+            const SizedBox(height: 20),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildTextField(String label, Function(String) onChanged) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: DunnoTextField(
-        controller: TextEditingController(),
-        label: label,
-        keyboardType: TextInputType.text,
-        onChanged: onChanged,
-        isLight: true,
-        colorScheme: DunnoTextFieldColor.antiqueWhite,
-      ),
+  void _updateFilter() {
+    final filterSuggestion = FilterSuggestion(
+      title: _relation ?? '',
+      minBudget: _budget * 0.8, // 80% of selected budget as min
+      maxBudget: _budget,
+      category: _giftCategory,
+      giftValue: _giftValue,
+      giftType: _giftType,
+      extraNote: _extraNotes,
     );
+
+    widget.onFilterUpdated?.call(filterSuggestion);
   }
 
-  _setFilter() {
-    // Implement filter logic here
+  String _getCategoryDisplayName(GiftCategory category) {
+    switch (category) {
+      case GiftCategory.tech:
+        return 'Technology';
+      case GiftCategory.fashion:
+        return 'Fashion';
+      case GiftCategory.home:
+        return 'Home & Garden';
+      case GiftCategory.sports:
+        return 'Sports & Outdoors';
+      case GiftCategory.books:
+        return 'Books & Media';
+      case GiftCategory.toys:
+        return 'Toys & Games';
+      case GiftCategory.other:
+        return 'Other';
+    }
+  }
+
+  String _getValueDisplayName(GiftValue value) {
+    switch (value) {
+      case GiftValue.low:
+        return 'Budget-Friendly';
+      case GiftValue.medium:
+        return 'Mid-Range';
+      case GiftValue.high:
+        return 'Premium';
+    }
   }
 }

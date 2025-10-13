@@ -438,15 +438,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: Container(
-          decoration: BoxDecoration(color: AppColors.cinnabar, shape: BoxShape.circle),
-          child: IconButton(
-            icon: const Icon(Icons.arrow_back, color: Colors.white),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-        ),
         backgroundColor: AppColors.tangerine,
         actions: [
           PopupMenuButton(

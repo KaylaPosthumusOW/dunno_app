@@ -23,7 +23,7 @@ dependencies:
   cloud_firestore: ^6.0.2
   equatable: ^2.0.7
   file_picker: ^10.3.3
-  flutter_dotenv: ^5.0.2
+  flutter_dotenv:  ^6.0.0
   firebase_analytics: ^12.0.2
   firebase_messaging: ^16.0.2
   firebase_remote_config: ^6.0.2
@@ -62,3 +62,4 @@ flutter:
     - assets/
     - assets/svg/
     - assets/images/
+    - .env

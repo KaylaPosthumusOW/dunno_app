@@ -10,7 +10,6 @@ part 'connection_state.dart';
 
 class ConnectionCubit extends Cubit<ConnectionState> {
   final ConnectionFirebaseRepository _connectionFirebaseRepository = sl<ConnectionFirebaseRepository>();
-  final AppUserProfileCubit _appUserProfileCubit = sl<AppUserProfileCubit>();
 
   ConnectionCubit() : super(const ConnectionInitial());
 

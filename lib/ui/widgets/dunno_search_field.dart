@@ -6,7 +6,7 @@ import 'package:dunno/cubits/app_user_profile/app_user_profile_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:sp_utilities/utilities.dart';
 
-enum TypeSearch { friends }
+enum TypeSearch { friends, collections }
 
 class DunnoSearchField extends StatefulWidget {
   final String? hintText;
@@ -43,6 +43,8 @@ class DunnoSearchFieldState extends State<DunnoSearchField> {
     switch (widget.typeSearch) {
       case TypeSearch.friends:
         _appUserProfileCubit.searchUsers(query);
+      case TypeSearch.collections:
+        // _appUserProfileCubit.searchUsers(query);
     }
   }
 
@@ -76,8 +78,8 @@ class DunnoSearchFieldState extends State<DunnoSearchField> {
           hintText: widget.hintText ?? 'Search',
           suffixIcon: StringHelpers.isNullOrEmpty(widget.controller.text)
               ? Container(
-                  margin: const EdgeInsets.only(right: 5, top: 3, bottom: 3),
-                  decoration: BoxDecoration(color: AppColors.cerise, borderRadius: BorderRadius.circular(10),),
+                  margin: const EdgeInsets.only(right: 6, top: 3, bottom: 3),
+                  decoration: BoxDecoration(color: AppColors.cerise, borderRadius: BorderRadius.circular(30),),
                   child: Icon(Icons.search, color: AppColors.offWhite),
                 )
               : IconButton(
@@ -89,7 +91,7 @@ class DunnoSearchFieldState extends State<DunnoSearchField> {
                 ),
           contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
           hintStyle: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.cerise),
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(30), borderSide: BorderSide.none),
           fillColor: widget.color ?? AppColors.pinkLavender.withValues(alpha: 0.6),
           filled: true,
         ),

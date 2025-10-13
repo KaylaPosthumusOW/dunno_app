@@ -1,39 +1,72 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:dunno/models/ai_gift_suggestion.dart';
 
-class OpenAiClient {
+class AiTextGenerationRepository {
   final String apiKey;
-  final http.Client _http;
 
-  OpenAiClient({required this.apiKey, http.Client? httpClient})
-      : _http = httpClient ?? http.Client();
+  AiTextGenerationRepository(this.apiKey);
 
-  Map<String, String> get _headers => {
-    'Content-Type': 'application/json',
-    'Authorization': 'Bearer $apiKey',
-  };
-
-  /// Use the Responses API (modern assistant-style). Returns raw decoded JSON.
-  Future<Map<String, dynamic>> sendResponsesGeneration({
-    required String model,
-    required String prompt,
-    int? maxTokens,
+  Future<List<AiGiftSuggestion>> generateGiftSuggestions({
+    required Map<String, dynamic> profile,
+    required Map<String, dynamic> filters,
   }) async {
-    final uri = Uri.parse('https://api.openai.com/v1/responses');
-    final body = jsonEncode({
-      'model': model,
-      'input': prompt,
-      if (maxTokens != null) 'max_output_tokens': maxTokens,
-    });
+    final prompt = '''
+Generate 3 personalized gift ideas based on the following profile and filters.
+Return valid JSON ONLY in this format:
 
-    final res = await _http.post(uri, headers: _headers, body: body).timeout(
-      const Duration(seconds: 30),
+[
+  {
+    "title": "Gift Title",
+    "description": "Gift description",
+    "reason": "Why this gift fits the person",
+    "estimatedPrice": 250,
+    "imageUrl": "Optional image URL",
+    "purchaseLink": "Optional purchase link",
+    "tags": ["tag1", "tag2"],
+    "category": "Category name"
+  }
+]
+
+Profile: $profile
+Filters: $filters
+''';
+
+    final response = await http.post(
+      Uri.parse('https://api.openai.com/v1/chat/completions'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $apiKey',
+      },
+      body: jsonEncode({
+        "model": "gpt-4o-mini",
+        "messages": [
+          {"role": "user", "content": prompt}
+        ],
+        "temperature": 0.8,
+        "max_tokens": 500,
+      }),
     );
 
-    if (res.statusCode >= 200 && res.statusCode < 300) {
-      return jsonDecode(res.body) as Map<String, dynamic>;
-    } else {
-      throw Exception('OpenAI error ${res.statusCode}: ${res.body}');
+    if (response.statusCode != 200) {
+      throw Exception('AI API error: ${response.statusCode} - ${response.body}');
+    }
+
+    final data = jsonDecode(response.body);
+    final content = data["choices"]?[0]?["message"]?["content"];
+    if (content == null) throw Exception('No content returned from AI');
+
+    try {
+      final parsed = jsonDecode(content);
+      if (parsed is List) {
+        return parsed.map((e) => AiGiftSuggestion.fromJson(e)).toList();
+      } else {
+        throw Exception('AI returned invalid format');
+      }
+    } catch (e) {
+      print('❌ JSON parse error: $e');
+      print('Raw AI response: $content');
+      return [];
     }
   }
 }

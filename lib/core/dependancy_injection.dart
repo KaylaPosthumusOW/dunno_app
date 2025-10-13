@@ -1,11 +1,12 @@
 import 'package:dunno/constants/constants.dart';
+import 'package:dunno/cubits/ai_gift_suggestion/ai_gift_suggestion_cubit.dart';
 import 'package:dunno/cubits/app_user_profile/app_user_profile_cubit.dart';
 import 'package:dunno/cubits/collections/collection_cubit.dart';
 import 'package:dunno/cubits/connections/connection_cubit.dart';
 import 'package:dunno/cubits/general/general_cubit.dart';
-import 'package:dunno/cubits/open_ai_cubit/open_ai_cubit.dart';
+import 'package:dunno/cubits/quick_generate_suggestion_flow_cubit/quick_generate_suggestion_flow_cubit.dart';
 import 'package:dunno/firebase_options.dart';
-import 'package:dunno/services/openai_client.dart';
+import 'package:dunno/repositories/ai_text_generation_repository.dart';
 import 'package:dunno/stores/firebase/app_user_profile_firebase_repository.dart';
 import 'package:dunno/stores/firebase/collection_firebase_repository.dart';
 import 'package:dunno/stores/firebase/connection_firebase_repository.dart';
@@ -29,6 +30,9 @@ class DependencyInjection {
     sl.registerLazySingleton<AppUserProfileFirebaseRepository>(() => AppUserProfileFirebaseRepository());
     sl.registerLazySingleton<CollectionFirebaseRepository>(() => CollectionFirebaseRepository());
     sl.registerLazySingleton<ConnectionFirebaseRepository>(() => ConnectionFirebaseRepository());
+    
+    // AI Repository
+    sl.registerLazySingleton<AiTextGenerationRepository>(() => AiTextGenerationRepository());
   }
 
   static _cubits() async {
@@ -36,7 +40,12 @@ class DependencyInjection {
     sl.registerLazySingleton<GeneralCubit>(() => GeneralCubit()..checkIfLatestAppVersion());
     sl.registerSingleton<CollectionCubit>(CollectionCubit());
     sl.registerSingleton<ConnectionCubit>(ConnectionCubit());
+
+    sl.registerLazySingleton<AiGiftSuggestionCubit>(() => AiGiftSuggestionCubit(sl<AiTextGenerationRepository>()));
+
+    sl.registerSingleton<QuickGiftGenerationCubit>(QuickGiftGenerationCubit());
   }
+
 
   static _packages() async {
     await SPFirebaseInitialiser.initialiseDI(name: '[DEFAULT]', options: DefaultFirebaseOptions.currentPlatform);

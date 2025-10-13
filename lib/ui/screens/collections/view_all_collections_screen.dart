@@ -1,9 +1,13 @@
 import 'package:dunno/constants/constants.dart';
+import 'package:dunno/constants/routes.dart';
 import 'package:dunno/cubits/app_user_profile/app_user_profile_cubit.dart';
 import 'package:dunno/cubits/collections/collection_cubit.dart';
 import 'package:dunno/ui/widgets/collection_card.dart';
+import 'package:dunno/ui/widgets/dunno_button.dart';
+import 'package:dunno/ui/widgets/dunno_search_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class ViewAllCollectionsScreen extends StatefulWidget {
   const ViewAllCollectionsScreen({super.key});
@@ -15,6 +19,8 @@ class ViewAllCollectionsScreen extends StatefulWidget {
 class _ViewAllCollectionsScreenState extends State<ViewAllCollectionsScreen> {
   final AppUserProfileCubit _appUserProfileCubit = sl<AppUserProfileCubit>();
   final CollectionCubit _collectionCubit = sl<CollectionCubit>();
+
+  final TextEditingController _searchCollection = TextEditingController();
 
   @override
   void initState() {
@@ -49,31 +55,56 @@ class _ViewAllCollectionsScreenState extends State<ViewAllCollectionsScreen> {
             final collection = collections[index];
             return Container(
               margin: const EdgeInsets.only(bottom: 16.0),
-              child: CollectionCard(collection: collection));
+              child: CollectionCard(collection: collection),
+            );
           },
         );
-      }
+      },
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('All Collections'),
-      ),
+      appBar: AppBar(title: const Text('All Collections')),
       body: Column(
         children: [
           Expanded(
             child: SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
-                child: _displayCollections(),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          flex: 2,
+                          child: DunnoSearchField(hintText: 'Search Collections', typeSearch: TypeSearch.collections, controller: _searchCollection),
+                        ),
+                        SizedBox(width: 10),
+                        Expanded(
+                          flex: 1,
+                          child: DunnoButton(
+                            label: 'Create',
+                            type: ButtonType.primary,
+                            icon: Icon(Icons.add, color: Colors.white),
+                            onPressed: () {
+                              context.pushNamed(CREATE_COLLECTION_SCREEN);
+                            },
+                          ),
+                        )
+                      ],
+                    ),
+                    SizedBox(height: 20),
+                    _displayCollections(),
+                  ],
+                ),
               ),
             ),
           ),
         ],
-      )
+      ),
     );
   }
 }

@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
 
-/// Model for individual AI-generated gift suggestion cards
 class AiGiftSuggestion extends Equatable {
   final String title;
   final String description;
