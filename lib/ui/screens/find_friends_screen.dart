@@ -1,5 +1,6 @@
 import 'package:dunno/constants/constants.dart';
 import 'package:dunno/cubits/app_user_profile/app_user_profile_cubit.dart';
+import 'package:dunno/cubits/collections/collection_cubit.dart';
 import 'package:dunno/cubits/connections/connection_cubit.dart';
 import 'package:dunno/models/app_user_profile.dart';
 import 'package:dunno/ui/widgets/dunno_search_field.dart';
@@ -20,7 +21,6 @@ class _FindFriendsScreenState extends State<FindFriendsScreen> {
   final ConnectionCubit _connectionCubit = sl<ConnectionCubit>();
 
   final TextEditingController _searchFriendController = TextEditingController();
-
   bool _isSearching = false;
 
   void _enterSearchMode() {
@@ -70,60 +70,89 @@ class _FindFriendsScreenState extends State<FindFriendsScreen> {
   }
 
   Widget _buildDefaultMode(BuildContext context) {
-    return BlocBuilder<ConnectionCubit, ConnectionState>(
-      bloc: _connectionCubit,
-      builder: (context, state) {
-        return SingleChildScrollView(
-          key: const ValueKey('defaultMode'),
-          padding: const EdgeInsets.all(20),
-          child: ConstrainedBox(
-            constraints: BoxConstraints(minHeight: MediaQuery.of(context).size.height),
-            child: IntrinsicHeight(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+    return SingleChildScrollView(
+      key: const ValueKey('defaultMode'),
+      padding: const EdgeInsets.all(20),
+      child: ConstrainedBox(
+        constraints: BoxConstraints(minHeight: MediaQuery.of(context).size.height),
+        child: IntrinsicHeight(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Spacer(),
+              Stack(
+                clipBehavior: Clip.none,
                 children: [
-                  const Spacer(),
-                  Stack(
-                    clipBehavior: Clip.none,
-                    children: [
-                      Row(mainAxisAlignment: MainAxisAlignment.end, children: [SvgPicture.asset('assets/svg/find_friends.svg', width: 230, height: 230)]),
-                      const Positioned(
-                        left: 0,
-                        top: 170,
-                        child: Text('Find \nFriends', style: TextStyle(fontSize: 48, fontWeight: FontWeight.w600, height: 1.2)),
-                      ),
-                    ],
+                  Row(mainAxisAlignment: MainAxisAlignment.end, children: [SvgPicture.asset('assets/svg/find_friends.svg', width: 230, height: 230)]),
+                  const Positioned(
+                    left: 0,
+                    top: 170,
+                    child: Text('Find \nFriends', style: TextStyle(fontSize: 48, fontWeight: FontWeight.w600, height: 1.2)),
                   ),
-                  const SizedBox(height: 80),
-                  Text('Search Friends, Family & Colleagues', style: Theme.of(context).textTheme.titleMedium),
-                  const SizedBox(height: 10),
-                  GestureDetector(
-                    onTap: _enterSearchMode,
-                    child: AbsorbPointer(
-                      child: DunnoSearchField(controller: _searchFriendController, typeSearch: TypeSearch.friends, hintText: 'Tap to search...'),
-                    ),
-                  ),
-                  Offstage(
-                    offstage: state.mainConnectionState.allUserConnections == null || state.mainConnectionState.allUserConnections!.isEmpty,
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: state.mainConnectionState.allUserConnections?.length ?? 0,
-                      itemBuilder: (context, index) {
-                        return Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                          child: UserProfileCard(userProfile: state.mainConnectionState.allUserConnections![index].toAppUserProfile()),
-                        );
-                      },
-                    ),
-                  ),
-                  const SizedBox(height: 130),
                 ],
               ),
-            ),
+              const SizedBox(height: 80),
+              Text('Search Friends, Family & Colleagues', style: Theme.of(context).textTheme.titleMedium),
+              const SizedBox(height: 10),
+              GestureDetector(
+                onTap: _enterSearchMode,
+                child: AbsorbPointer(
+                  child: DunnoSearchField(controller: _searchFriendController, typeSearch: TypeSearch.friends, hintText: 'Tap to search...'),
+                ),
+              ),
+              // BlocBuilder<ConnectionCubit, ConnectionState>(
+              //   bloc: _connectionCubit,
+              //   builder: (context, state) {
+              //     if (state is LoadingAllCollections) {
+              //       return const Center(child: CircularProgressIndicator());
+              //     }
+              //
+              //     if (state is ConnectionError) {
+              //       return Center(child: Text('Error: ${state.mainConnectionState.message}'));
+              //     }
+              //
+              //     final connections = state.mainConnectionState.allUserConnections ?? [];
+              //
+              //     if (connections.isEmpty) {
+              //       return const Padding(
+              //         padding: EdgeInsets.only(top: 12.0),
+              //         child: Text('No connections found'),
+              //       );
+              //     }
+              //
+              //     return Column(
+              //       crossAxisAlignment: CrossAxisAlignment.start,
+              //       children: [
+              //         Text('Your Connections', style: Theme.of(context).textTheme.titleMedium),
+              //         const SizedBox(height: 10),
+              //         ListView.builder(
+              //           shrinkWrap: true,
+              //           physics: const NeverScrollableScrollPhysics(),
+              //           itemCount: connections.length,
+              //           itemBuilder: (context, index) {
+              //             final connection = connections[index];
+              //             final allProfiles = _appUserProfileCubit.state.mainAppUserProfileState.allProfiles ?? [];
+              //             final userProfile = allProfiles.firstWhere(
+              //                   (profile) => profile.uid == connection.connectedUser?.uid,
+              //               orElse: () => AppUserProfile(),
+              //             );
+              //
+              //             return Container(
+              //               margin: const EdgeInsets.symmetric(vertical: 8),
+              //               child: UserProfileCard(userProfile: userProfile),
+              //             );
+              //           },
+              //         ),
+              //       ],
+              //     );
+              //   },
+              // ),
+
+              const SizedBox(height: 130),
+            ],
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 
@@ -155,13 +184,18 @@ class _FindFriendsScreenState extends State<FindFriendsScreen> {
                   return const Center(child: Text('No users found'));
                 }
 
-                return ListView.builder(
-                  itemCount: users.length,
-                  itemBuilder: (context, index) {
-                    final user = users[index];
-                    return Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                      child: UserProfileCard(userProfile: user),
+                return BlocBuilder<ConnectionCubit, ConnectionState>(
+                  bloc: _connectionCubit,
+                  builder: (context, state) {
+                    return ListView.builder(
+                      itemCount: users.length,
+                      itemBuilder: (context, index) {
+                        final user = users[index];
+                        return Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                          child: UserProfileCard(userProfile: user),
+                        );
+                      },
                     );
                   },
                 );

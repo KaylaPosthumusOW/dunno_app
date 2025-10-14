@@ -2,32 +2,28 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dunno/models/app_user_profile.dart';
 import 'package:equatable/equatable.dart';
 
-enum ConnectionType { pending, accepted }
 
 class Connection extends Equatable {
   final String? uid;
   final AppUserProfile? user;
   final AppUserProfile? connectedUser;
-  final ConnectionType? connectionType;
   final Timestamp? createdAt;
 
-  const Connection({this.uid, this.user, this.connectedUser, this.connectionType, this.createdAt});
+  const Connection({this.uid, this.user, this.connectedUser, this.createdAt});
 
   @override
-  List<Object?> get props => [uid, user, connectedUser, connectionType, createdAt];
+  List<Object?> get props => [uid, user, connectedUser, createdAt];
 
   Connection copyWith({
     String? uid,
     AppUserProfile? user,
     AppUserProfile? connectedUser,
-    ConnectionType? connectionType,
     Timestamp? createdAt,
   }) {
     return Connection(
       uid: uid ?? this.uid,
       user: user ?? this.user,
       connectedUser: connectedUser ?? this.connectedUser,
-      connectionType: connectionType ?? this.connectionType,
       createdAt: createdAt ?? this.createdAt,
     );
   }
@@ -37,7 +33,6 @@ class Connection extends Equatable {
       'uid': uid,
       'user': user?.toMap(),
       'connectedUser': connectedUser?.toMap(),
-      'connectionType': connectionType?.name,
       'createdAt': timeStampSafe ? createdAt?.toDate().toIso8601String() : createdAt,
     };
   }
@@ -60,12 +55,19 @@ class Connection extends Equatable {
       uid: map['uid'],
       user: map['user'] != null ? AppUserProfile.fromMap(map['user']) : null,
       connectedUser: map['connectedUser'] != null ? AppUserProfile.fromMap(map['connectedUser']) : null,
-      connectionType: map['connectionType'] != null ? ConnectionType.values.firstWhere((e) => e.name == map['connectionType']) : null,
       createdAt: createdAt,
     );
   }
 
   AppUserProfile? toAppUserProfile() {
     return user;
+  }
+
+  AppUserProfile? getOtherUser(String currentUserUid) {
+    if (user?.uid == currentUserUid) {
+      return connectedUser;
+    } else {
+      return user;
+    }
   }
 }

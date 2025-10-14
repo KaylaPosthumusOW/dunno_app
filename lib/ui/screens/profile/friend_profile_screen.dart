@@ -28,9 +28,18 @@ class _FriendProfileScreenState extends State<FriendProfileScreen> {
   @override
   void initState() {
     super.initState();
-    _collectionCubit.loadAllCollectionsForUser(userUid: _appUserProfileCubit.state.mainAppUserProfileState.selectedProfile?.uid ?? '');
-    _connectionCubit.countAllUserConnections(userUid: _appUserProfileCubit.state.mainAppUserProfileState.selectedProfile?.uid ?? '');
-    _connectionCubit.loadAllUserConnections(userUid: _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile?.uid ?? '');
+    
+    final selectedProfile = _appUserProfileCubit.state.mainAppUserProfileState.selectedProfile;
+    final currentUser = _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile;
+
+    if (selectedProfile?.uid != null && selectedProfile!.uid!.isNotEmpty) {
+      _collectionCubit.loadAllCollectionsForUser(userUid: selectedProfile.uid!);
+      _connectionCubit.countAllUserConnections(userUid: selectedProfile.uid!);
+    }
+
+    if (currentUser?.uid != null && currentUser!.uid!.isNotEmpty) {
+      _connectionCubit.loadAllUserConnections(userUid: currentUser.uid!);
+    }
   }
 
   bool _isAlreadyConnected(ConnectionState connectionState, String? friendUid) {
@@ -38,8 +47,7 @@ class _FriendProfileScreenState extends State<FriendProfileScreen> {
     
     final connections = connectionState.mainConnectionState.allUserConnections ?? [];
     return connections.any((connection) =>
-      (connection.connectedUser?.uid == friendUid || connection.user?.uid == friendUid) &&
-      connection.connectionType == ConnectionType.accepted
+      (connection.connectedUser?.uid == friendUid || connection.user?.uid == friendUid)
     );
   }
 
@@ -143,6 +151,27 @@ class _FriendProfileScreenState extends State<FriendProfileScreen> {
   Widget _buildBody(AppUserProfileState state) {
     final profile = state.mainAppUserProfileState.selectedProfile;
 
+    if (profile == null) {
+      return const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.person_off, size: 64, color: Colors.grey),
+            SizedBox(height: 16),
+            Text(
+              'No profile selected',
+              style: TextStyle(fontSize: 18, color: Colors.grey),
+            ),
+            SizedBox(height: 8),
+            Text(
+              'Please go back and select a user profile.',
+              style: TextStyle(fontSize: 14, color: Colors.grey),
+            ),
+          ],
+        ),
+      );
+    }
+
     return ListView(
       children: [
         Stack(
@@ -167,7 +196,7 @@ class _FriendProfileScreenState extends State<FriendProfileScreen> {
             Container(
               margin: const EdgeInsets.only(top: 105),
               child: Text(
-                '${profile?.name ?? ''} ${profile?.surname ?? ''}',
+                '${profile.name ?? ''} ${profile.surname ?? ''}',
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.displayLarge?.copyWith(
                   fontWeight: FontWeight.bold,
@@ -216,24 +245,29 @@ class _FriendProfileScreenState extends State<FriendProfileScreen> {
             BlocBuilder<ConnectionCubit, ConnectionState>(
               bloc: _connectionCubit,
               builder: (context, connectionState) {
-                // Check connection states
-                bool isConnected = _isAlreadyConnected(connectionState, state.mainAppUserProfileState.selectedProfile?.uid);
+                final currentUser = state.mainAppUserProfileState.appUserProfile;
+                final selectedProfile = state.mainAppUserProfileState.selectedProfile;
+
+                if (currentUser?.uid == selectedProfile?.uid) {
+                  return const SizedBox.shrink();
+                }
+
+                bool isConnected = _isAlreadyConnected(connectionState, selectedProfile?.uid);
                 bool isConnecting = connectionState is CreatingConnection;
-                bool justCreated = connectionState is CreatedConnection;
-                
+
                 String buttonText;
                 Color buttonColor;
                 Icon buttonIcon;
                 bool isButtonDisabled;
                 Color textColor;
-                
+
                 if (isConnecting) {
                   buttonText = 'Connecting...';
                   buttonColor = AppColors.tangerine;
                   buttonIcon = Icon(Icons.person_add_alt_1, color: AppColors.offWhite);
                   textColor = AppColors.offWhite;
                   isButtonDisabled = true;
-                } else if (isConnected || justCreated) {
+                } else if (isConnected) {
                   buttonText = 'Connected';
                   buttonColor = AppColors.cerise;
                   buttonIcon = Icon(Icons.check_circle, color: AppColors.offWhite);
@@ -246,15 +280,16 @@ class _FriendProfileScreenState extends State<FriendProfileScreen> {
                   textColor = AppColors.offWhite;
                   isButtonDisabled = false;
                 }
-                
+
                 return DunnoButton(
-                  onPressed: isButtonDisabled ? null : () {
+                  onPressed: isButtonDisabled
+                      ? () {}
+                      : () {
                     _connectionCubit.createNewConnection(
                       Connection(
-                        connectedUser: state.mainAppUserProfileState.selectedProfile ?? AppUserProfile(),
-                        connectionType: ConnectionType.accepted,
-                        user: state.mainAppUserProfileState.appUserProfile ?? AppUserProfile(),
-                      )
+                        connectedUser: selectedProfile ?? AppUserProfile(),
+                        user: currentUser ?? AppUserProfile(),
+                      ),
                     );
                   },
                   type: ButtonType.secondary,

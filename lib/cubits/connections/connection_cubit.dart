@@ -113,4 +113,16 @@ class ConnectionCubit extends Cubit<ConnectionState> {
       );
     }
   }
+
+  bool isConnectedWith(String otherUserUid) {
+    final connections = state.mainConnectionState.allUserConnections ?? [];
+    final currentUserUid = _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile?.uid ?? '';
+
+    return connections.any((connection) =>
+    connection.user!.uid!.contains(currentUserUid) &&
+        connection.user!.uid!.contains(otherUserUid)
+    );
+  }
+
+
 }
