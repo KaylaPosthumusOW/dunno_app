@@ -5,4 +5,6 @@ abstract class CalenderEventStore {
   Future<List<CalenderEvent>> loadAllEventsForUser({required String userId});
   Future<void> updateEvent({required CalenderEvent event});
   Future<void> deleteEvent({required String eventId});
+  Future<List<CalenderEvent>> getUpcomingEvents({required String userId});
+
 }

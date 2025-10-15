@@ -25,7 +25,7 @@ class _ViewAllCollectionsScreenState extends State<ViewAllCollectionsScreen> {
   @override
   void initState() {
     super.initState();
-    _collectionCubit.loadAllCollectionsForUser(userUid: _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile?.uid ?? '');
+    _collectionCubit.loadAllCollectionsForUser(userUid: _appUserProfileCubit.state.mainAppUserProfileState.selectedProfile?.uid ?? '');
   }
 
   _displayCollections() {
@@ -65,46 +65,54 @@ class _ViewAllCollectionsScreenState extends State<ViewAllCollectionsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('All Collections')),
-      body: Column(
-        children: [
-          Expanded(
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return BlocBuilder<AppUserProfileCubit, AppUserProfileState>(
+      bloc: _appUserProfileCubit,
+      builder: (context, state) {
+        return Scaffold(
+          appBar: AppBar(title: const Text('All Collections')),
+          body: Column(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
                       children: [
-                        Expanded(
-                          flex: 2,
-                          child: DunnoSearchField(hintText: 'Search Collections', typeSearch: TypeSearch.collections, controller: _searchCollection),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              flex: 2,
+                              child: DunnoSearchField(hintText: 'Search Collections', typeSearch: TypeSearch.collections, controller: _searchCollection),
+                            ),
+                            SizedBox(width: 10),
+                            Offstage(
+                              offstage: state.mainAppUserProfileState.appUserProfile?.uid != state.mainAppUserProfileState.selectedProfile?.uid,
+                              child: Expanded(
+                                flex: 1,
+                                child: DunnoButton(
+                                  label: 'Create',
+                                  type: ButtonType.primary,
+                                  icon: Icon(Icons.add, color: Colors.white),
+                                  onPressed: () {
+                                    context.pushNamed(CREATE_COLLECTION_SCREEN);
+                                  },
+                                ),
+                              ),
+                            )
+                          ],
                         ),
-                        SizedBox(width: 10),
-                        Expanded(
-                          flex: 1,
-                          child: DunnoButton(
-                            label: 'Create',
-                            type: ButtonType.primary,
-                            icon: Icon(Icons.add, color: Colors.white),
-                            onPressed: () {
-                              context.pushNamed(CREATE_COLLECTION_SCREEN);
-                            },
-                          ),
-                        )
+                        SizedBox(height: 20),
+                        _displayCollections(),
                       ],
                     ),
-                    SizedBox(height: 20),
-                    _displayCollections(),
-                  ],
+                  ),
                 ),
               ),
-            ),
+            ],
           ),
-        ],
-      ),
+        );
+      }
     );
   }
 }

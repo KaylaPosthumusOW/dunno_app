@@ -66,77 +66,76 @@ class AiTextGenerationRepository {
 
   String _buildPrompt(Map<String, dynamic> profile, Map<String, dynamic> filters) {
     final profileInfo = '''
-Profile Information:
-- Occasion: ${profile['occasion'] ?? 'Not specified'}
-- Gender: ${profile['gender'] ?? 'Not specified'}
-- Interests/Likes: ${profile['likes'] ?? 'Not specified'}
-- Extra Notes: ${profile['extraNotes'] ?? 'None'}
-''';
+      Profile Information:
+      - Occasion: ${profile['occasion'] ?? 'Not specified'}
+      - Gender: ${profile['gender'] ?? 'Not specified'}
+      - Interests/Likes: ${profile['likes'] ?? 'Not specified'}
+      - Extra Notes: ${profile['extraNotes'] ?? 'None'}
+      ''';
 
     final filterInfo = '''
-Filter Preferences:
-- Relationship: ${filters['relation'] ?? 'Not specified'}
-- Budget: \$${filters['budget'] ?? '200'}
-- Gift Type: ${filters['giftType'] ?? 'Any'}
-- Gift Category: ${filters['giftCategory'] ?? 'Any'}
-- Gift Value: ${filters['giftValue'] ?? 'Any'}
-''';
+      Filter Preferences:
+      - Relationship: ${filters['relation'] ?? 'Not specified'}
+      - Budget: \$${filters['budget'] ?? '200'}
+      - Gift Type: ${filters['giftType'] ?? 'Any'}
+      - Gift Category: ${filters['giftCategory'] ?? 'Any'}
+      - Gift Value: ${filters['giftValue'] ?? 'Any'}
+      ''';
 
     return '''
-Based on the following profile and filter information, generate exactly 3 personalized gift suggestions.
-
-$profileInfo
-
-$filterInfo
-
-Please respond with ONLY a valid JSON array in this exact format (no additional text or formatting):
-
-[
-  {
-    "title": "Gift Name",
-    "description": "Detailed description of the gift (50-100 words)",
-    "reason": "Why this gift is perfect for this person (30-50 words)",
-    "estimatedPrice": 0.0,
-    "imageUrl": null,
-    "purchaseLink": null,
-    "tags": ["tag1", "tag2", "tag3"],
-    "category": "category_name"
-  },
-  {
-    "title": "Gift Name 2",
-    "description": "Detailed description of the second gift",
-    "reason": "Why this gift fits the person",
-    "estimatedPrice": 0.0,
-    "imageUrl": null,
-    "purchaseLink": null,
-    "tags": ["tag1", "tag2"],
-    "category": "category_name"
-  },
-  {
-    "title": "Gift Name 3", 
-    "description": "Detailed description of the third gift",
-    "reason": "Why this gift is suitable",
-    "estimatedPrice": 0.0,
-    "imageUrl": null,
-    "purchaseLink": null,
-    "tags": ["tag1", "tag2", "tag3"],
-    "category": "category_name"
-  }
-]
-
-Requirements:
-- Provide exactly 3 unique suggestions
-- Each suggestion should be thoughtful and personalized based on the profile
-- Price should be within or close to the specified budget
-- Tags should be relevant keywords (2-5 per suggestion)
-- Categories should be descriptive and relevant
-- Be creative but practical
-''';
-  }
+      Based on the following profile and filter information, generate exactly 3 personalized gift suggestions.
+      
+      $profileInfo
+      
+      $filterInfo
+      
+      Please respond with ONLY a valid JSON array in this exact format (no additional text or formatting):
+      
+      [
+        {
+          "title": "Gift Name",
+          "description": "Detailed description of the gift (15-20 words)",
+          "reason": "Why this gift is perfect for this person (15-20 words)",
+          "estimatedPrice": 0.0,
+          "imageUrl": null,
+          "purchaseLink": null,
+          "tags": ["tag1", "tag2", "tag3"],
+          "category": "category_name"
+        },
+        {
+          "title": "Gift Name 2",
+          "description": "Detailed description of the second gift",
+          "reason": "Why this gift fits the person",
+          "estimatedPrice": 0.0,
+          "imageUrl": null,
+          "purchaseLink": null,
+          "tags": ["tag1", "tag2"],
+          "category": "category_name"
+        },
+        {
+          "title": "Gift Name 3", 
+          "description": "Detailed description of the third gift",
+          "reason": "Why this gift is suitable",
+          "estimatedPrice": 0.0,
+          "imageUrl": null,
+          "purchaseLink": null,
+          "tags": ["tag1", "tag2", "tag3"],
+          "category": "category_name"
+        }
+      ]
+      
+      Requirements:
+      - Provide exactly 3 unique suggestions
+      - Each suggestion should be thoughtful and personalized based on the profile
+      - Price should be within or close to the specified budget
+      - Tags should be relevant keywords (2-5 per suggestion)
+      - Categories should be descriptive and relevant
+      - Be creative but practical
+      ''';
+        }
 
   List<AiGiftSuggestion> _parseAiResponse(String content) {
     try {
-      // Clean the content and extract JSON
       final cleanContent = content.trim();
       final jsonStart = cleanContent.indexOf('[');
       final jsonEnd = cleanContent.lastIndexOf(']') + 1;
@@ -145,7 +144,6 @@ Requirements:
       if (jsonStart >= 0 && jsonEnd > jsonStart) {
         jsonString = cleanContent.substring(jsonStart, jsonEnd);
       } else {
-        // If no array brackets found, try to parse the whole content
         jsonString = cleanContent;
       }
 

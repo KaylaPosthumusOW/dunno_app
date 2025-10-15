@@ -6,11 +6,12 @@ class MainCalenderEventState extends Equatable {
   final List<CalenderEvent>? allUserCalenderEvents;
   final CalenderEvent? selectedCalenderEvent;
   final num? numberOfUserCalenderEvents;
+  final List<CalenderEvent>? upcomingEventsNotifications;
 
-  const MainCalenderEventState({this.message, this.errorMessage, this.allUserCalenderEvents, this.selectedCalenderEvent, this.numberOfUserCalenderEvents});
+  const MainCalenderEventState({this.message, this.errorMessage, this.allUserCalenderEvents, this.selectedCalenderEvent, this.numberOfUserCalenderEvents, this.upcomingEventsNotifications});
 
   @override
-  List<Object?> get props => [message, errorMessage, allUserCalenderEvents, selectedCalenderEvent, numberOfUserCalenderEvents];
+  List<Object?> get props => [message, errorMessage, allUserCalenderEvents, selectedCalenderEvent, numberOfUserCalenderEvents, upcomingEventsNotifications];
 
   MainCalenderEventState copyWith({
     String? message,
@@ -18,6 +19,7 @@ class MainCalenderEventState extends Equatable {
     List<CalenderEvent>? allUserCalenderEvents,
     CalenderEvent? selectedCalenderEvent,
     num? numberOfUserCalenderEvents,
+    List<CalenderEvent>? upcomingEventsNotifications,
   }) {
     return MainCalenderEventState(
       message: message ?? this.message,
@@ -25,6 +27,7 @@ class MainCalenderEventState extends Equatable {
       allUserCalenderEvents: allUserCalenderEvents ?? this.allUserCalenderEvents,
       selectedCalenderEvent: selectedCalenderEvent ?? this.selectedCalenderEvent,
       numberOfUserCalenderEvents: numberOfUserCalenderEvents ?? this.numberOfUserCalenderEvents,
+      upcomingEventsNotifications: upcomingEventsNotifications ?? this.upcomingEventsNotifications,
     );
   }
 
@@ -34,6 +37,7 @@ class MainCalenderEventState extends Equatable {
     List<CalenderEvent>? allUserCalenderEvents,
     CalenderEvent? selectedCalenderEvent,
     num? numberOfUserCalenderEvents,
+    List<CalenderEvent>? upcomingEventsNotifications,
   }) {
     return MainCalenderEventState(
       message: message ?? this.message,
@@ -41,6 +45,7 @@ class MainCalenderEventState extends Equatable {
       allUserCalenderEvents: allUserCalenderEvents ?? this.allUserCalenderEvents,
       selectedCalenderEvent: selectedCalenderEvent,
       numberOfUserCalenderEvents: numberOfUserCalenderEvents ?? this.numberOfUserCalenderEvents,
+      upcomingEventsNotifications: upcomingEventsNotifications ?? this.upcomingEventsNotifications,
     );
   }
 }
@@ -76,6 +81,14 @@ class CreatedCalenderEvent extends CalenderEventState {
 
 class SelectedCalenderEvent extends CalenderEventState {
   const SelectedCalenderEvent(super.mainCalenderEventState);
+}
+
+class LoadingUpcomingEventsNotifications extends CalenderEventState {
+  const LoadingUpcomingEventsNotifications(super.mainCalenderEventState);
+}
+
+class LoadedUpcomingEventsNotifications extends CalenderEventState {
+  const LoadedUpcomingEventsNotifications(super.mainCalenderEventState);
 }
 
 class CalenderError extends CalenderEventState {

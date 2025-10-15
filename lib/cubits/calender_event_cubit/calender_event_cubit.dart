@@ -32,4 +32,14 @@ class CalenderEventCubit extends Cubit<CalenderEventState> {
       emit(CalenderError(state.mainCalenderEventState.copyWith(message: '', errorMessage: error.toString()), stackTrace: stackTrace.toString()));
     }
   }
+
+  Future<void> loadUpcomingEventsNotifications({required String userUid}) async {
+    emit(LoadingUpcomingEventsNotifications(state.mainCalenderEventState.copyWith(message: 'Loading upcoming events notifications')));
+    try {
+      List<CalenderEvent> events = await _calenderEventFirebaseRepository.getUpcomingEvents(userId: userUid);
+      emit(LoadedUpcomingEventsNotifications(state.mainCalenderEventState.copyWith(upcomingEventsNotifications: events, message: 'Loaded ${events.length} upcoming events notifications')));
+    } catch (error, stackTrace) {
+      emit(CalenderError(state.mainCalenderEventState.copyWith(message: '', errorMessage: error.toString()), stackTrace: stackTrace.toString()));
+    }
+  }
 }

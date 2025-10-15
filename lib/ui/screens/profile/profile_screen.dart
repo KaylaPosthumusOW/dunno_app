@@ -320,7 +320,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold, color: AppColors.black),
                   ),
                   InkWell(
-                    onTap: () => context.pushNamed(COLLECTIONS_SCREEN),
+                    onTap: () {
+                      _appUserProfileCubit.selectProfile(_appUserProfileCubit.state.mainAppUserProfileState.appUserProfile ?? AppUserProfile());
+                      context.pushNamed(COLLECTIONS_SCREEN);
+                    },
                     child: Text(
                       'View All',
                       style: Theme.of(context).textTheme.bodyLarge?.copyWith(

@@ -46,4 +46,26 @@ class CalenderEventFirebaseRepository implements CalenderEventStore {
     }
   }
 
+  @override
+  Future<List<CalenderEvent>> getUpcomingEvents({required String userId}) async {
+    try {
+      final dateNow = Timestamp.now().toDate();
+      final dateOneWeekAgo = dateNow.subtract(const Duration(days: 7));
+
+      final snapshot = await _calenderCollection
+          .where('user.uid', isEqualTo: userId)
+          .where('collection.eventCollectionDate', isGreaterThanOrEqualTo: dateOneWeekAgo)
+          .where('collection.eventCollectionDate', isLessThanOrEqualTo: dateNow)
+          .get();
+
+      return snapshot.docs.map((doc) {
+        return CalenderEvent.fromMap(doc.data().toMap()..['uid'] = doc.id);
+      }).toList();
+    } catch (e) {
+      print('Error fetching upcoming events: $e');
+      rethrow;
+    }
+  }
+
+
 }
