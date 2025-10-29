@@ -83,50 +83,35 @@ class AiTextGenerationRepository {
       ''';
 
     return '''
-      Based on the following profile and filter information, generate exactly 3 personalized gift suggestions.
+      You are a South African gift recommendation assistant.
+      Based on the following profile and filter information, generate **exactly 3 personalised gift suggestions** that are locally relevant and available in South Africa.
+      Respond in ZAR currency, and US english.
+
       
       $profileInfo
       
       $filterInfo
       
-      Please respond with ONLY a valid JSON array in this exact format (no additional text or formatting):
-      
+      Please respond with ONLY a valid JSON array of exactly 3 items, each following this structure:
+
       [
         {
           "title": "Gift Name",
-          "description": "Detailed description of the gift (15-20 words)",
-          "reason": "Why this gift is perfect for this person (15-20 words)",
-          "estimatedPrice": 0.0,
-          "imageUrl": null,
-          "purchaseLink": null,
-          "tags": ["tag1", "tag2", "tag3"],
-          "category": "category_name"
-        },
-        {
-          "title": "Gift Name 2",
-          "description": "Detailed description of the second gift",
-          "reason": "Why this gift fits the person",
-          "estimatedPrice": 0.0,
-          "imageUrl": null,
-          "purchaseLink": null,
-          "tags": ["tag1", "tag2"],
-          "category": "category_name"
-        },
-        {
-          "title": "Gift Name 3", 
-          "description": "Detailed description of the third gift",
-          "reason": "Why this gift is suitable",
-          "estimatedPrice": 0.0,
-          "imageUrl": null,
-          "purchaseLink": null,
+          "description": "Detailed description of the gift (15–20 words)",
+          "reason": "Why this gift is perfect for this person (15–20 words)",
+          "estimatedPrice": 0.00,
+          "imageUrl": "https://link-to-gift-image.com/image.jpg",
           "tags": ["tag1", "tag2", "tag3"],
           "category": "category_name"
         }
       ]
       
+      Do not include any text or comments outside the JSON array.
+
+      
       Requirements:
       - Provide exactly 3 unique suggestions
-      - Each suggestion should be thoughtful and personalized based on the profile
+      - Each suggestion should be thoughtful and personalised based on the profile
       - Price should be within or close to the specified budget
       - Tags should be relevant keywords (2-5 per suggestion)
       - Categories should be descriptive and relevant

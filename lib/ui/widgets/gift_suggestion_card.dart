@@ -38,34 +38,34 @@ class _GiftSuggestionCardState extends State<GiftSuggestionCard> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  width: 32,
-                  height: 32,
-                  decoration: BoxDecoration(
-                    color: AppColors.cinnabar,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Center(
-                    child: Text(
-                      '${widget.index + 1}',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 12),
+                // Container(
+                //   width: 32,
+                //   height: 32,
+                //   decoration: BoxDecoration(
+                //     color: AppColors.cinnabar,
+                //     shape: BoxShape.circle,
+                //   ),
+                //   child: Center(
+                //     child: Text(
+                //       '${widget.index + 1}',
+                //       style: const TextStyle(
+                //         color: Colors.white,
+                //         fontWeight: FontWeight.bold,
+                //         fontSize: 16,
+                //       ),
+                //     ),
+                //   ),
+                // ),
+                // const SizedBox(width: 12),
                 Expanded(
                   child: Text(
                     widget.suggestion?.title ?? '',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.black,
-                    ),
+                    style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+                          color: AppColors.cinnabar,
+                          fontWeight: FontWeight.w700,
+                        ),
                   ),
                 ),
                 if ((widget.suggestion?.estimatedPrice ?? 0) > 0)
@@ -75,30 +75,21 @@ class _GiftSuggestionCardState extends State<GiftSuggestionCard> {
                       vertical: 6,
                     ),
                     decoration: BoxDecoration(
-                      color: AppColors.cerise.withValues(alpha: 0.1),
+                      color: AppColors.tangerine.withValues(alpha: 0.3),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
-                      '\$${(widget.suggestion?.estimatedPrice ?? 0).toStringAsFixed(0)}',
-                      style: TextStyle(
-                        color: AppColors.cerise,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 14,
-                      ),
+                      '\R${(widget.suggestion?.estimatedPrice ?? 0).toStringAsFixed(0)}',
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(color: AppColors.cinnabar, fontWeight: FontWeight.w700),
                     ),
                   ),
               ],
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 10),
             Text(
-              'Why this gift?',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: AppColors.black,
-              ),
+              'WHY?',
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600, color: AppColors.cinnabar),
             ),
-            const SizedBox(height: 8),
             Text(
               widget.suggestion?.reason ?? '',
               style: const TextStyle(
@@ -107,24 +98,24 @@ class _GiftSuggestionCardState extends State<GiftSuggestionCard> {
                 height: 1.5,
               ),
             ),
-            const SizedBox(height: 16),
-            Text(
-              'Description',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: AppColors.black,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              widget.suggestion?.description ?? '',
-              style: const TextStyle(
-                fontSize: 14,
-                color: Colors.grey,
-                height: 1.5,
-              ),
-            ),
+            // const SizedBox(height: 16),
+            // Text(
+            //   'Description',
+            //   style: TextStyle(
+            //     fontSize: 16,
+            //     fontWeight: FontWeight.w600,
+            //     color: AppColors.black,
+            //   ),
+            // ),
+            // // const SizedBox(height: 8),
+            // // Text(
+            // //   widget.suggestion?.description ?? '',
+            // //   style: const TextStyle(
+            // //     fontSize: 14,
+            // //     color: Colors.grey,
+            // //     height: 1.5,
+            // //   ),
+            // // ),
             if ((widget.suggestion?.tags ?? []).isNotEmpty) ...[
               const SizedBox(height: 16),
               Wrap(
@@ -138,14 +129,14 @@ class _GiftSuggestionCardState extends State<GiftSuggestionCard> {
                           vertical: 6,
                         ),
                         decoration: BoxDecoration(
-                          color: AppColors.tangerine.withValues(alpha: 0.1),
+                          color: AppColors.cinnabar,
                           borderRadius: BorderRadius.circular(16),
                         ),
                         child: Text(
                           tag,
                           style: TextStyle(
                             fontSize: 12,
-                            color: AppColors.tangerine,
+                            color: AppColors.antiqueWhite,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
