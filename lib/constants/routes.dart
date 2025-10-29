@@ -14,3 +14,4 @@ const RECEIVE_GIFT_SUGGESTION_SCREEN = '/receive_gift_suggestion';
 
 //-----------
 const FRIEND_GIFT_SUGGESTION_MANAGEMENT = '/friend_gift_suggestion_management';
+const FRIEND_GIFT_SUGGESTION_SCREEN = '/friend_gift_suggestion_screen';

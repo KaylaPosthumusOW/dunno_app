@@ -25,7 +25,7 @@ class FriendGiftSuggestionsScreen extends StatefulWidget {
 }
 
 class _FriendGiftSuggestionsScreenState extends State<FriendGiftSuggestionsScreen> {
-  
+
   Map<String, dynamic> _buildProfileFromFriendData() {
     if (widget.friendData == null || widget.collectionData == null) {
       return {};
@@ -33,10 +33,10 @@ class _FriendGiftSuggestionsScreenState extends State<FriendGiftSuggestionsScree
 
     final friend = widget.friendData!;
     final collection = widget.collectionData!;
-    
+
     // Extract collection likes data
     final likes = collection['likes'] as Map<String, dynamic>?;
-    
+
     return {
       'eventType': 'Gift for Friend',
       'gender': _inferGenderFromName(friend['name']),
@@ -49,31 +49,46 @@ class _FriendGiftSuggestionsScreenState extends State<FriendGiftSuggestionsScree
     // Simple gender inference - in a real app, you might want to store this in the profile
     // or use a more sophisticated method
     if (name == null) return 'Not specified';
-    
-    final femaleNames = ['sarah', 'emma', 'olivia', 'ava', 'isabella', 'sophia', 'mia', 'charlotte'];
+
+    final femaleNames = ['sarah', 'emma', 'olivia', 'ava', 'isabella', 'sophia', 'mia', 'charlotte', 'amelia', 'harper'];
     final maleNames = ['james', 'robert', 'john', 'michael', 'david', 'william', 'richard', 'joseph'];
-    
+
     final lowerName = name.toLowerCase();
-    
+
     if (femaleNames.any((n) => lowerName.contains(n))) {
       return 'Woman';
     } else if (maleNames.any((n) => lowerName.contains(n))) {
       return 'Man';
     }
-    
+
     return 'Not specified';
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => sl<AiGiftSuggestionCubit>(),
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: BlocBuilder<AiGiftSuggestionCubit, AiGiftSuggestionState>(
+    return Scaffold(
+      backgroundColor: AppColors.offWhite,
+      appBar: AppBar(
+        backgroundColor: AppColors.offWhite,
+        elevation: 0,
+        surfaceTintColor: Colors.transparent,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        title: Text(
+          'Gift Ideas for ${widget.friendData?['name'] ?? 'Friend'}',
+          style: const TextStyle(fontWeight: FontWeight.w600),
+        ),
+        centerTitle: true,
+      ),
+      body: BlocProvider(
+        create: (_) => sl<AiGiftSuggestionCubit>(),
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: BlocBuilder<AiGiftSuggestionCubit, AiGiftSuggestionState>(
           builder: (context, state) {
             if (state is AiGiftSuggestionInitial) {
-              // Auto-generate suggestions when screen loads
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 final profile = _buildProfileFromFriendData();
                 final filters = widget.filterData ?? {};
@@ -133,15 +148,6 @@ class _FriendGiftSuggestionsScreenState extends State<FriendGiftSuggestionsScree
                       ),
                       textAlign: TextAlign.center,
                     ),
-                    const SizedBox(height: 8),
-                    Text(
-                      "Analyzing ${widget.friendData?['name']}'s preferences...",
-                      style: const TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
                   ],
                 ),
               );
@@ -190,19 +196,11 @@ class _FriendGiftSuggestionsScreenState extends State<FriendGiftSuggestionsScree
 
             if (state is AiGiftSuggestionLoaded) {
               return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Text(
-                    "Gift Ideas for ${widget.friendData?['name']}",
-                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.black,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'Based on their collection preferences',
-                    style: const TextStyle(fontSize: 16, color: Colors.grey),
+                    'Gift ideas for their collection preferences',
+                    style: const TextStyle(fontSize: 16, color: Colors.grey), textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 20),
                   Expanded(
@@ -239,6 +237,7 @@ class _FriendGiftSuggestionsScreenState extends State<FriendGiftSuggestionsScree
           },
         ),
       ),
+    ),
     );
   }
 }
