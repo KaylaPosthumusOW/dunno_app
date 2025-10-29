@@ -69,7 +69,13 @@ class AppRouter {
       GoRoute(
         path: FRIEND_GIFT_SUGGESTION_MANAGEMENT,
         name: FRIEND_GIFT_SUGGESTION_MANAGEMENT,
-        builder: (BuildContext context, GoRouterState state) => FriendGiftSuggestionManagement(),
+        builder: (BuildContext context, GoRouterState state) {
+          final extra = state.extra as Map<String, dynamic>?;
+          return FriendGiftSuggestionManagement(
+            friendData: extra?['friend'],
+            collectionData: extra?['collection'],
+          );
+        },
       ),
       GoRoute(
         path: GIFT_SUGGESTION_MANAGEMENT,
@@ -79,7 +85,13 @@ class AppRouter {
       GoRoute(
         path: RECEIVE_GIFT_SUGGESTION_SCREEN,
         name: RECEIVE_GIFT_SUGGESTION_SCREEN,
-        builder: (BuildContext context, GoRouterState state) => ReceiveGiftSuggestionScreen(),
+        builder: (BuildContext context, GoRouterState state) {
+          final extra = state.extra as Map<String, dynamic>?;
+          return ReceiveGiftSuggestionScreen(
+            profile: extra?['profile'],
+            filters: extra?['filters'],
+          );
+        },
       ),
     ],
     redirect: (BuildContext context, GoRouterState state) async {

@@ -134,7 +134,14 @@ class _FriendProfileScreenState extends State<FriendProfileScreen> {
                           collection: collection,
                           isPink: true,
                           onPressed: () {
-                            context.pushNamed(FRIEND_GIFT_SUGGESTION_MANAGEMENT);
+                            final selectedProfile = _appUserProfileCubit.state.mainAppUserProfileState.selectedProfile;
+                            context.pushNamed(
+                              FRIEND_GIFT_SUGGESTION_MANAGEMENT,
+                              extra: {
+                                'friend': selectedProfile?.toMap(),
+                                'collection': collection.toMap(),
+                              },
+                            );
                           },
                         ),
                       );

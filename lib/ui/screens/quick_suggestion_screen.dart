@@ -1,6 +1,5 @@
 import 'package:dunno/constants/routes.dart';
 import 'package:dunno/ui/widgets/dunno_button.dart';
-import 'package:dunno/ui/widgets/dunno_search_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';

@@ -1,11 +1,19 @@
 import 'package:dunno/constants/themes.dart';
+import 'package:dunno/models/filter_suggestion.dart';
 import 'package:dunno/ui/screens/friend_gift_suggestion/friend_gift_suggestions_screen.dart';
 import 'package:dunno/ui/screens/quick_gift_suggestion/add_filter_screen.dart';
 import 'package:dunno/ui/widgets/dunno_button.dart';
 import 'package:flutter/material.dart';
 
 class FriendGiftSuggestionManagement extends StatefulWidget {
-  const FriendGiftSuggestionManagement({super.key});
+  final Map<String, dynamic>? friendData;
+  final Map<String, dynamic>? collectionData;
+  
+  const FriendGiftSuggestionManagement({
+    super.key,
+    this.friendData,
+    this.collectionData,
+  });
 
   @override
   State<FriendGiftSuggestionManagement> createState() => _FriendGiftSuggestionManagementState();
@@ -13,10 +21,17 @@ class FriendGiftSuggestionManagement extends StatefulWidget {
 
 class _FriendGiftSuggestionManagementState extends State<FriendGiftSuggestionManagement> {
   int _selectedTab = 0;
+  FilterSuggestion? _filterData;
 
   void _goToStep(int step) {
     setState(() {
       _selectedTab = step;
+    });
+  }
+
+  void _handleFilterData(FilterSuggestion data) {
+    setState(() {
+      _filterData = data;
     });
   }
 
@@ -29,7 +44,8 @@ class _FriendGiftSuggestionManagementState extends State<FriendGiftSuggestionMan
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.pop(context),
         ),
-        title: Text('Add Profile Details',
+        title: Text(
+          'Gift Ideas for ${widget.friendData?['name'] ?? 'Friend'}',
           style: const TextStyle(color: Colors.black),
         ),
         backgroundColor: Colors.white,
@@ -71,8 +87,12 @@ class _FriendGiftSuggestionManagementState extends State<FriendGiftSuggestionMan
             child: AnimatedSwitcher(
               duration: const Duration(milliseconds: 300),
               child: _selectedTab == 0
-                  ? const AddFilterPage()
-                  : const FriendGiftSuggestionsScreen(),
+                  ? AddFilterPage(onFilterUpdated: _handleFilterData)
+                  : FriendGiftSuggestionsScreen(
+                      friendData: widget.friendData,
+                      collectionData: widget.collectionData,
+                      filterData: _filterData?.toMap(),
+                    ),
             ),
           ),
 

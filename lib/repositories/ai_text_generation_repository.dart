@@ -22,7 +22,12 @@ class AiTextGenerationRepository {
     required Map<String, dynamic> filters,
   }) async {
     try {
+      print('=== AI Generation Debug ===');
+      print('Profile data: $profile');
+      print('Filters data: $filters');
+      
       final prompt = _buildPrompt(profile, filters);
+      print('Generated prompt length: ${prompt.length}');
       
       final response = await _httpClient.post(
         Uri.parse('https://api.openai.com/v1/chat/completions'),
@@ -48,79 +53,113 @@ class AiTextGenerationRepository {
       ).timeout(const Duration(seconds: 30));
 
       if (response.statusCode != 200) {
+        print('OpenAI API Error - Status: ${response.statusCode}');
+        print('Response body: ${response.body}');
         throw Exception('OpenAI API error: ${response.statusCode} - ${response.body}');
       }
 
       final data = jsonDecode(response.body);
+      print('OpenAI API Response structure: ${data.keys}');
+      
       final content = data["choices"]?[0]?["message"]?["content"];
       
       if (content == null) {
-        throw Exception('No content returned from OpenAI API');
+        print('OpenAI API Response: $data');
+        throw Exception('No content returned from OpenAI API. Response structure: ${data.keys}');
       }
 
+      print('AI Content received (length: ${content.length})');
       return _parseAiResponse(content);
     } catch (e) {
+      print('Generate gift suggestions error: $e');
+      if (e.toString().contains('Failed to generate gift suggestions:')) {
+        rethrow;
+      }
       throw Exception('Failed to generate gift suggestions: $e');
     }
   }
 
   String _buildPrompt(Map<String, dynamic> profile, Map<String, dynamic> filters) {
+    // Extract and format profile data
+    final occasion = profile['eventType'] ?? 'Not specified';
+    final gender = _formatGender(profile['gender']);
+    final age = profile['age'] != null ? 'Age ${profile['age']}' : 'Age not specified';
+    final likes = _formatLikes(profile['likes']);
+    final extraNotes = profile['extraNotes'] ?? 'None';
+
+    // Extract and format filter data
+    final relationship = filters['title'] ?? 'Not specified';
+    final minBudget = filters['minBudget'] ?? 200;
+    final maxBudget = filters['maxBudget'] ?? 1000;
+    final budget = 'R$minBudget - R$maxBudget';
+    final giftType = filters['giftType'] ?? 'Any';
+    final category = _formatCategory(filters['category']);
+    final giftValue = _formatGiftValue(filters['giftValue']);
+    final filterNotes = filters['extraNote'] ?? 'None';
+
     final profileInfo = '''
-      Profile Information:
-      - Occasion: ${profile['occasion'] ?? 'Not specified'}
-      - Gender: ${profile['gender'] ?? 'Not specified'}
-      - Interests/Likes: ${profile['likes'] ?? 'Not specified'}
-      - Extra Notes: ${profile['extraNotes'] ?? 'None'}
-      ''';
+    Profile Information:
+    - Occasion: $occasion
+    - Gender: $gender
+    - $age
+    - Interests/Likes: $likes
+    - Extra Notes: $extraNotes
+    ''';
 
     final filterInfo = '''
-      Filter Preferences:
-      - Relationship: ${filters['relation'] ?? 'Not specified'}
-      - Budget: \$${filters['budget'] ?? '200'}
-      - Gift Type: ${filters['giftType'] ?? 'Any'}
-      - Gift Category: ${filters['giftCategory'] ?? 'Any'}
-      - Gift Value: ${filters['giftValue'] ?? 'Any'}
-      ''';
+    Filter Preferences:
+    - Relationship: $relationship
+    - Budget: $budget
+    - Gift Type: $giftType
+    - Gift Category: $category
+    - Gift Value: $giftValue
+    - Additional Notes: $filterNotes
+    ''';
 
     return '''
-      You are a South African gift recommendation assistant.
-      Based on the following profile and filter information, generate **exactly 3 personalised gift suggestions** that are locally relevant and available in South Africa.
-      Respond in ZAR currency, and US english.
+    You are a South African gift recommendation assistant.
+    Based on the following profile and filter information, generate **exactly 3 personalised gift suggestions** that are locally relevant and available in South Africa.
+    Respond in **ZAR currency** and **US English**.
 
-      
-      $profileInfo
-      
-      $filterInfo
-      
-      Please respond with ONLY a valid JSON array of exactly 3 items, each following this structure:
+    $profileInfo
 
-      [
-        {
-          "title": "Gift Name",
-          "description": "Detailed description of the gift (15–20 words)",
-          "reason": "Why this gift is perfect for this person (15–20 words)",
-          "estimatedPrice": 0.00,
-          "imageUrl": "https://link-to-gift-image.com/image.jpg",
-          "tags": ["tag1", "tag2", "tag3"],
-          "category": "category_name"
-        }
-      ]
-      
-      Do not include any text or comments outside the JSON array.
+    $filterInfo
 
-      
-      Requirements:
-      - Provide exactly 3 unique suggestions
-      - Each suggestion should be thoughtful and personalised based on the profile
-      - Price should be within or close to the specified budget
-      - Tags should be relevant keywords (2-5 per suggestion)
-      - Categories should be descriptive and relevant
-      - Be creative but practical
-      ''';
-        }
+    Please respond with ONLY a valid JSON array of exactly 3 items, each following this structure:
+
+    [
+      {
+        "title": "Gift Name",
+        "reason": "Why this gift is perfect for this person (15–20 words)",
+        "estimatedPrice": 0.00,
+        "imageUrl": "https://link-to-gift-image.com/image.jpg",
+        "purchaseLink": "https://store-link-or-product-page.com",
+        "tags": ["tag1", "tag2", "tag3"],
+        "category": "category_name",
+        "location": "Suggested store or location (e.g., Takealot, Cape Town, Woolworths, Yuppiechef, local market)"
+      }
+    ]
+
+    Do not include any text or comments outside the JSON array.
+
+    Requirements:
+    - Provide exactly 3 unique suggestions
+    - Each suggestion should be thoughtful and personalised based on the profile
+    - Price must be within or close to the specified budget (in ZAR)
+    - Tags should be relevant keywords (2–5 per suggestion)
+    - Categories must be descriptive and relevant
+    - Use real or realistic South African stores and brands (e.g., Takealot, Superbalist, Woolworths, Yuppiechef, Typo, NetFlorist, Pick n Pay, local craft markets)
+    - Be creative but practical
+    ''';
+  }
+
 
   List<AiGiftSuggestion> _parseAiResponse(String content) {
     try {
+      if (content.isEmpty) {
+        throw Exception('Empty response content');
+      }
+
       final cleanContent = content.trim();
       final jsonStart = cleanContent.indexOf('[');
       final jsonEnd = cleanContent.lastIndexOf(']') + 1;
@@ -129,18 +168,28 @@ class AiTextGenerationRepository {
       if (jsonStart >= 0 && jsonEnd > jsonStart) {
         jsonString = cleanContent.substring(jsonStart, jsonEnd);
       } else {
-        jsonString = cleanContent;
+        throw Exception('No valid JSON array found in response');
       }
 
       final parsed = jsonDecode(jsonString);
       
       if (parsed is List) {
-        final suggestions = parsed
-            .map((suggestion) => AiGiftSuggestion.fromJson(suggestion as Map<String, dynamic>))
-            .toList();
+        final suggestions = <AiGiftSuggestion>[];
         
-        if (suggestions.length != 3) {
-          throw Exception('Expected exactly 3 suggestions, got ${suggestions.length}');
+        for (int i = 0; i < parsed.length; i++) {
+          try {
+            final suggestionData = parsed[i] as Map<String, dynamic>;
+            final suggestion = AiGiftSuggestion.fromJson(suggestionData);
+            suggestions.add(suggestion);
+          } catch (e) {
+            print('Error parsing suggestion $i: $e');
+            print('Suggestion data: ${parsed[i]}');
+            throw Exception('Failed to parse suggestion ${i + 1}: $e');
+          }
+        }
+        
+        if (suggestions.isEmpty) {
+          throw Exception('No valid suggestions could be parsed from response');
         }
         
         return suggestions;
@@ -148,8 +197,88 @@ class AiTextGenerationRepository {
         throw Exception('Expected JSON array, got ${parsed.runtimeType}');
       }
     } catch (e) {
-      throw Exception('Failed to parse AI response: $e. Raw content: $content');
+      print('Parse error details: $e');
+      print('Raw content length: ${content.length}');
+      print('Raw content preview: ${content.length > 500 ? content.substring(0, 500) : content}');
+      throw Exception('Failed to parse AI response: $e');
     }
+  }
+
+  String _formatGender(dynamic gender) {
+    if (gender == null) return 'Not specified';
+    if (gender is String) return gender;
+    // Handle enum values
+    if (gender.toString().contains('GenderType.')) {
+      final genderStr = gender.toString().split('.').last;
+      switch (genderStr) {
+        case 'woman':
+          return 'Woman';
+        case 'man':
+          return 'Man';
+        case 'other':
+          return 'Other';
+        default:
+          return 'Not specified';
+      }
+    }
+    return gender.toString();
+  }
+
+  String _formatLikes(dynamic likes) {
+    if (likes == null) return 'Not specified';
+    if (likes is Map) {
+      final interests = (likes['interests'] as List?)?.join(', ') ?? '';
+      final hobbies = (likes['hobbies'] as List?)?.join(', ') ?? '';
+      final likesStr = (likes['likes'] as List?)?.join(', ') ?? '';
+      
+      final combined = [interests, hobbies, likesStr].where((s) => s.isNotEmpty).join(', ');
+      return combined.isNotEmpty ? combined : 'Not specified';
+    }
+    return likes.toString();
+  }
+
+  String _formatCategory(dynamic category) {
+    if (category == null) return 'Any';
+    if (category.toString().contains('GiftCategory.')) {
+      final categoryStr = category.toString().split('.').last;
+      switch (categoryStr) {
+        case 'tech':
+          return 'Technology';
+        case 'fashion':
+          return 'Fashion';
+        case 'home':
+          return 'Home & Garden';
+        case 'sports':
+          return 'Sports & Outdoors';
+        case 'books':
+          return 'Books & Media';
+        case 'toys':
+          return 'Toys & Games';
+        case 'other':
+          return 'Other';
+        default:
+          return 'Any';
+      }
+    }
+    return category.toString();
+  }
+
+  String _formatGiftValue(dynamic giftValue) {
+    if (giftValue == null) return 'Any';
+    if (giftValue.toString().contains('GiftValue.')) {
+      final valueStr = giftValue.toString().split('.').last;
+      switch (valueStr) {
+        case 'low':
+          return 'Budget-Friendly';
+        case 'medium':
+          return 'Mid-Range';
+        case 'high':
+          return 'Premium';
+        default:
+          return 'Any';
+      }
+    }
+    return giftValue.toString();
   }
 
   void dispose() {

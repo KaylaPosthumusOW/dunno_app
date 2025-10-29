@@ -5,11 +5,13 @@ import 'package:flutter/material.dart';
 class GiftSuggestionCard extends StatefulWidget {
   final AiGiftSuggestion? suggestion;
   final int index;
+  final bool isPink;
 
   const GiftSuggestionCard({
     super.key,
     required this.suggestion,
     required this.index,
+    this.isPink = true,
   });
 
   @override
@@ -19,18 +21,21 @@ class GiftSuggestionCard extends StatefulWidget {
 class _GiftSuggestionCardState extends State<GiftSuggestionCard> {
   @override
   Widget build(BuildContext context) {
+    final mainColor = widget.isPink ? AppColors.cerise : AppColors.cinnabar;
+    final textColor = widget.isPink ? AppColors.cerise : AppColors.cinnabar;
+
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
-          color: AppColors.offWhite,
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.cinnabar,
-              offset: const Offset(3, 4),
-            ),
-          ],
-          border: Border.all(width: 1.5, color: AppColors.cinnabar)
+        color: AppColors.offWhite,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: mainColor,
+            offset: const Offset(3, 4),
+          ),
+        ],
+        border: Border.all(width: 1.5, color: mainColor),
       ),
       child: Padding(
         padding: const EdgeInsets.all(20),
@@ -38,36 +43,18 @@ class _GiftSuggestionCardState extends State<GiftSuggestionCard> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                // Container(
-                //   width: 32,
-                //   height: 32,
-                //   decoration: BoxDecoration(
-                //     color: AppColors.cinnabar,
-                //     shape: BoxShape.circle,
-                //   ),
-                //   child: Center(
-                //     child: Text(
-                //       '${widget.index + 1}',
-                //       style: const TextStyle(
-                //         color: Colors.white,
-                //         fontWeight: FontWeight.bold,
-                //         fontSize: 16,
-                //       ),
-                //     ),
-                //   ),
-                // ),
-                // const SizedBox(width: 12),
                 Expanded(
                   child: Text(
                     widget.suggestion?.title ?? '',
                     style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                          color: AppColors.cinnabar,
-                          fontWeight: FontWeight.w700,
-                        ),
+                      color: textColor,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                 ),
+                const SizedBox(width: 10),
                 if ((widget.suggestion?.estimatedPrice ?? 0) > 0)
                   Container(
                     padding: const EdgeInsets.symmetric(
@@ -75,12 +62,15 @@ class _GiftSuggestionCardState extends State<GiftSuggestionCard> {
                       vertical: 6,
                     ),
                     decoration: BoxDecoration(
-                      color: AppColors.tangerine.withValues(alpha: 0.3),
+                      color: mainColor.withValues(alpha: 0.3),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
-                      '\R${(widget.suggestion?.estimatedPrice ?? 0).toStringAsFixed(0)}',
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(color: AppColors.cinnabar, fontWeight: FontWeight.w700),
+                      'R${(widget.suggestion?.estimatedPrice ?? 0).toStringAsFixed(0)}',
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: textColor,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                   ),
               ],
@@ -88,7 +78,10 @@ class _GiftSuggestionCardState extends State<GiftSuggestionCard> {
             const SizedBox(height: 10),
             Text(
               'WHY?',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600, color: AppColors.cinnabar),
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.w600,
+                color: textColor,
+              ),
             ),
             Text(
               widget.suggestion?.reason ?? '',
@@ -98,24 +91,6 @@ class _GiftSuggestionCardState extends State<GiftSuggestionCard> {
                 height: 1.5,
               ),
             ),
-            // const SizedBox(height: 16),
-            // Text(
-            //   'Description',
-            //   style: TextStyle(
-            //     fontSize: 16,
-            //     fontWeight: FontWeight.w600,
-            //     color: AppColors.black,
-            //   ),
-            // ),
-            // // const SizedBox(height: 8),
-            // // Text(
-            // //   widget.suggestion?.description ?? '',
-            // //   style: const TextStyle(
-            // //     fontSize: 14,
-            // //     color: Colors.grey,
-            // //     height: 1.5,
-            // //   ),
-            // // ),
             if ((widget.suggestion?.tags ?? []).isNotEmpty) ...[
               const SizedBox(height: 16),
               Wrap(
@@ -124,24 +99,24 @@ class _GiftSuggestionCardState extends State<GiftSuggestionCard> {
                 children: (widget.suggestion?.tags ?? [])
                     .map(
                       (tag) => Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 6,
-                        ),
-                        decoration: BoxDecoration(
-                          color: AppColors.cinnabar,
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        child: Text(
-                          tag,
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: AppColors.antiqueWhite,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 6,
+                    ),
+                    decoration: BoxDecoration(
+                      color: mainColor,
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Text(
+                      tag,
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: AppColors.antiqueWhite,
+                        fontWeight: FontWeight.w500,
                       ),
-                    )
+                    ),
+                  ),
+                )
                     .toList(),
               ),
             ],

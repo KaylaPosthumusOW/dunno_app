@@ -1,14 +1,12 @@
+import 'package:dunno/constants/routes.dart';
 import 'package:dunno/constants/themes.dart';
-import 'package:dunno/cubits/ai_gift_suggestion/ai_gift_suggestion_cubit.dart';
 import 'package:dunno/models/filter_suggestion.dart';
 import 'package:dunno/models/quick_suggestion.dart';
 import 'package:dunno/ui/screens/quick_gift_suggestion/add_filter_screen.dart';
 import 'package:dunno/ui/screens/quick_gift_suggestion/add_profile_details_screen.dart';
-import 'package:dunno/ui/screens/quick_gift_suggestion/receive_gift_suggestion_screen.dart';
 import 'package:dunno/ui/widgets/dunno_button.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get_it/get_it.dart';
+import 'package:go_router/go_router.dart';
 
 class GiftSuggestionManagement extends StatefulWidget {
   const GiftSuggestionManagement({super.key});
@@ -22,7 +20,6 @@ class _GiftSuggestionManagementState extends State<GiftSuggestionManagement> {
   int _selectedTab = 0;
   QuickSuggestion? _profileData;
   FilterSuggestion? _filterData;
-  bool _suggestionsGenerated = false;
 
   void _goToStep(int step) {
     setState(() {
@@ -42,12 +39,6 @@ class _GiftSuggestionManagementState extends State<GiftSuggestionManagement> {
     });
   }
 
-  void _handleBackToEdit() {
-    setState(() {
-      _selectedTab = 1;
-    });
-  }
-
   void _generateSuggestions() {
     if (_profileData == null || _filterData == null) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -61,10 +52,14 @@ class _GiftSuggestionManagementState extends State<GiftSuggestionManagement> {
       return;
     }
 
-    setState(() {
-      _suggestionsGenerated = true;
-      _selectedTab = 2;
-    });
+    // Navigate to the receive gift suggestion screen with the data
+    context.pushNamed(
+      RECEIVE_GIFT_SUGGESTION_SCREEN, 
+      extra: {
+        'profile': _profileData?.toMap(),
+        'filters': _filterData?.toMap(),
+      },
+    );
   }
 
   @override
@@ -84,43 +79,46 @@ class _GiftSuggestionManagementState extends State<GiftSuggestionManagement> {
       ),
       body: Column(
         children: [
-          Row(
-            children: [
-              _buildStepButton(
-                stepNumber: 1,
-                title: 'Profile',
-                isActive: _selectedTab == 0,
-                onTap: () => _goToStep(0),
-              ),
-              Expanded(
-                child: Divider(
-                  color: _selectedTab >= 1
-                      ? AppColors.tangerine
-                      : Colors.grey[300],
-                  thickness: 2,
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 60),
+            child: Row(
+              children: [
+                _buildStepButton(
+                  stepNumber: 1,
+                  title: 'Profile',
+                  isActive: _selectedTab == 0,
+                  onTap: () => _goToStep(0),
                 ),
-              ),
-              _buildStepButton(
-                stepNumber: 2,
-                title: 'Filter',
-                isActive: _selectedTab == 1,
-                onTap: () => _goToStep(1),
-              ),
-              Expanded(
-                child: Divider(
-                  color: _selectedTab >= 2
-                      ? AppColors.tangerine
-                      : Colors.grey[300],
-                  thickness: 2,
+                Expanded(
+                  child: Divider(
+                    color: _selectedTab >= 1
+                        ? AppColors.tangerine
+                        : Colors.grey[300],
+                    thickness: 2,
+                  ),
                 ),
-              ),
-              _buildStepButton(
-                stepNumber: 3,
-                title: 'Gifts',
-                isActive: _selectedTab == 2,
-                onTap: _suggestionsGenerated ? () => _goToStep(2) : null,
-              ),
-            ],
+                _buildStepButton(
+                  stepNumber: 2,
+                  title: 'Filter',
+                  isActive: _selectedTab == 1,
+                  onTap: () => _goToStep(1),
+                ),
+                // Expanded(
+                //   child: Divider(
+                //     color: _selectedTab >= 2
+                //         ? AppColors.tangerine
+                //         : Colors.grey[300],
+                //     thickness: 2,
+                //   ),
+                // ),
+                // _buildStepButton(
+                //   stepNumber: 3,
+                //   title: 'Gifts',
+                //   isActive: _selectedTab == 2,
+                //   onTap: _suggestionsGenerated ? () => _goToStep(2) : null,
+                // ),
+              ],
+            ),
           ),
 
           Expanded(
@@ -128,21 +126,11 @@ class _GiftSuggestionManagementState extends State<GiftSuggestionManagement> {
               duration: const Duration(milliseconds: 300),
               child: _selectedTab == 0
                   ? AddProfileDetailsPage(onProfileUpdated: _handleProfileData)
-                  : _selectedTab == 1
-                  ? AddFilterPage(onFilterUpdated: _handleFilterData)
-                  : BlocProvider(
-                      create: (_) => GetIt.instance<AiGiftSuggestionCubit>(),
-                      child: ReceiveGiftSuggestionScreen(
-                        profile: _profileData?.toMap(),
-                        filters: _filterData?.toMap(),
-                        onBackToEdit: _handleBackToEdit,
-                      ),
-                    ),
+                  : AddFilterPage(onFilterUpdated: _handleFilterData),
             ),
           ),
 
-          if (_selectedTab <
-              2)
+          if (_selectedTab < 2)
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Row(

@@ -12,7 +12,6 @@ class AiGiftSuggestionCubit extends Cubit<AiGiftSuggestionState> {
 
   String? _currentRequestId;
 
-
   static const int _maxRetryAttempts = 3;
 
   int _retryCount = 0;
@@ -225,11 +224,7 @@ class AiGiftSuggestionCubit extends Cubit<AiGiftSuggestionState> {
       if (suggestion.title.isEmpty) {
         return 'Suggestion ${i + 1} has empty title';
       }
-      
-      if (suggestion.description.length < 20) {
-        return 'Suggestion ${i + 1} has insufficient description';
-      }
-      
+
       if (suggestion.reason.length < 10) {
         return 'Suggestion ${i + 1} has insufficient reasoning';
       }
