@@ -47,7 +47,7 @@ class _CollectionCardState extends State<CollectionCard> {
       case CollectionColorType.orange:
         return ButtonType.secondary;
       case CollectionColorType.yellow:
-        return ButtonType.primary;
+        return ButtonType.saffron;
     }
   }
 

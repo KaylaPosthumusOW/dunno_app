@@ -60,55 +60,57 @@ class _UserFriendScreenState extends State<UserFriendScreen> {
 
         return Scaffold(
           appBar: AppBar(title: const Text('Your Friends')),
-          body: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                DunnoSearchField(
-                  controller: _searchFriendController,
-                  typeSearch: TypeSearch.friends,
-                  onChanged: _onSearchChanged,
-                ),
-                const SizedBox(height: 12),
-                if (state is LoadingConnections)
-                  const Expanded(
-                    child: Center(child: CircularProgressIndicator()),
-                  )
-                else if (connections.isEmpty)
-                  const Expanded(
-                    child: Center(
-                      child: Text(
-                        'No friends yet. Connect with someone to see them here!',
-                        style: TextStyle(fontSize: 16),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  )
-                else
-                  Expanded(
-                    child: RefreshIndicator(
-                      onRefresh: _refresh,
-                      child: ListView.separated(
-                        physics: const AlwaysScrollableScrollPhysics(),
-                        itemCount: connections.length,
-                        separatorBuilder: (_, __) => const SizedBox(height: 10),
-                        itemBuilder: (context, index) {
-                          final Connection connection = connections[index];
-
-                          final AppUserProfile? friendProfile =
-                          (connection.user?.uid == currentUserUid)
-                              ? connection.connectedUser
-                              : connection.user;
-
-                          return UserProfileCard(
-                            userProfile: friendProfile ?? AppUserProfile(),
-                          );
-                        },
-                      ),
-                    ),
+          body: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  DunnoSearchField(
+                    controller: _searchFriendController,
+                    typeSearch: TypeSearch.friends,
+                    onChanged: _onSearchChanged,
                   ),
-              ],
+                  const SizedBox(height: 12),
+                  if (state is LoadingConnections)
+                    const Expanded(
+                      child: Center(child: CircularProgressIndicator()),
+                    )
+                  else if (connections.isEmpty)
+                    const Expanded(
+                      child: Center(
+                        child: Text(
+                          'No friends yet. Connect with someone to see them here!',
+                          style: TextStyle(fontSize: 16),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    )
+                  else
+                    Expanded(
+                      child: RefreshIndicator(
+                        onRefresh: _refresh,
+                        child: ListView.separated(
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          itemCount: connections.length,
+                          separatorBuilder: (_, __) => const SizedBox(height: 10),
+                          itemBuilder: (context, index) {
+                            final Connection connection = connections[index];
+            
+                            final AppUserProfile? friendProfile =
+                            (connection.user?.uid == currentUserUid)
+                                ? connection.connectedUser
+                                : connection.user;
+            
+                            return UserProfileCard(
+                              userProfile: friendProfile ?? AppUserProfile(),
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                ],
+              ),
             ),
           ),
         );

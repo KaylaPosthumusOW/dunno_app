@@ -10,6 +10,7 @@ enum ButtonType {
   cinnabar,
   outlineCerise,
   outlineCinnabar,
+  saffron,
 }
 
 class DunnoButton extends StatefulWidget {
@@ -67,16 +68,18 @@ class _DunnoButtonState extends State<DunnoButton> {
     switch (widget.type) {
       case ButtonType.primary:
         return FilledButton.styleFrom(
-          backgroundColor:
-          isDisabled ? AppColors.cerise.withValues(alpha: 0.4) : widget.buttonColor ?? AppColors.cerise,
+          backgroundColor: isDisabled
+              ? AppColors.cerise.withValues(alpha: 0.4)
+              : widget.buttonColor ?? AppColors.cerise,
           foregroundColor: AppColors.pinkLavender,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
         );
 
       case ButtonType.secondary:
         return FilledButton.styleFrom(
-          backgroundColor:
-          isDisabled ? AppColors.cinnabar.withValues(alpha: 0.4) : widget.buttonColor ?? AppColors.cinnabar,
+          backgroundColor: isDisabled
+              ? AppColors.cinnabar.withValues(alpha: 0.4)
+              : widget.buttonColor ?? AppColors.cinnabar,
           foregroundColor: AppColors.antiqueWhite,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
         );
@@ -91,30 +94,39 @@ class _DunnoButtonState extends State<DunnoButton> {
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
         );
 
-    // 🩷 PinkLavender background, Cerise text
       case ButtonType.pinkLavender:
         return FilledButton.styleFrom(
-          backgroundColor:
-          isDisabled ? AppColors.pinkLavender.withValues(alpha: 0.4) : AppColors.pinkLavender,
+          backgroundColor: isDisabled
+              ? AppColors.pinkLavender.withValues(alpha: 0.4)
+              : AppColors.pinkLavender,
           foregroundColor: AppColors.cerise,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
         );
 
-    // 🍊 Tangerine background, OffWhite text
       case ButtonType.tangerine:
         return FilledButton.styleFrom(
-          backgroundColor:
-          isDisabled ? AppColors.tangerine.withValues(alpha: 0.4) : AppColors.tangerine,
+          backgroundColor: isDisabled
+              ? AppColors.tangerine.withValues(alpha: 0.4)
+              : AppColors.tangerine,
           foregroundColor: AppColors.offWhite,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
         );
 
-    // 🔴 Cinnabar background, OffWhite text
       case ButtonType.cinnabar:
         return FilledButton.styleFrom(
-          backgroundColor:
-          isDisabled ? AppColors.cinnabar.withValues(alpha: 0.4) : AppColors.cinnabar,
+          backgroundColor: isDisabled
+              ? AppColors.cinnabar.withValues(alpha: 0.4)
+              : AppColors.cinnabar,
           foregroundColor: AppColors.offWhite,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+        );
+
+      case ButtonType.saffron:
+        return FilledButton.styleFrom(
+          backgroundColor: isDisabled
+              ? AppColors.yellow.withValues(alpha: 0.4)
+              : AppColors.yellow,
+          foregroundColor: AppColors.black,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
         );
 
@@ -151,6 +163,7 @@ class _DunnoButtonState extends State<DunnoButton> {
       case ButtonType.pinkLavender:
       case ButtonType.tangerine:
       case ButtonType.cinnabar:
+      case ButtonType.saffron: // 🟡 include in filled variants
         return FilledButton.icon(
           onPressed: onPressed,
           icon: icon ?? const SizedBox.shrink(),
@@ -182,7 +195,7 @@ class _DunnoButtonState extends State<DunnoButton> {
         widget.isLoading ? const SizedBox.shrink() : _buildLabel(context),
         effectiveIsDisabled
             ? () {
-          widget.onDisabledPress != null ? widget.onDisabledPress!() : () {};
+          if (widget.onDisabledPress != null) widget.onDisabledPress!();
         }
             : widget.onPressed,
         buttonStyle,
