@@ -1,19 +1,20 @@
 import 'dart:async';
 import 'dart:developer' as developer;
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:dunno/models/ai_gift_suggestion.dart';
 import 'package:dunno/repositories/ai_text_generation_repository.dart';
-import 'friend_gift_suggestion_state.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:equatable/equatable.dart';
+
+part 'friend_gift_suggestion_state.dart';
 
 class FriendGiftSuggestionCubit extends Cubit<FriendGiftSuggestionState> {
-  final AiTextGenerationRepository _repository;
+  final AiTextGenerationRepository _aiRepo;
 
   Timer? _timeoutTimer;
-
   static const int _maxRetryAttempts = 3;
-
   int _retryCount = 0;
 
-  FriendGiftSuggestionCubit(this._repository) : super(const FriendGiftSuggestionInitial()) {
+  FriendGiftSuggestionCubit(this._aiRepo) : super(const FriendGiftSuggestionInitial()) {
     developer.log('FriendGiftSuggestionCubit initialized', name: 'FriendGiftSuggestionCubit');
   }
 
@@ -23,30 +24,37 @@ class FriendGiftSuggestionCubit extends Cubit<FriendGiftSuggestionState> {
   }) async {
     try {
       _retryCount = 0;
-      
       developer.log('Starting friend gift suggestion generation', name: 'FriendGiftSuggestionCubit');
 
       final validationError = _validateInputData(profile, filters);
       if (validationError != null) {
-        emit(FriendGiftSuggestionError(
-          message: validationError,
-          errorCode: 'VALIDATION_ERROR',
-          profile: profile,
-          filters: filters,
-          isRetryable: false,
-        ));
+        emit(
+          FriendGiftSuggestionError(
+            state.main.copyWith(
+              message: '',
+              errorMessage: validationError,
+              profile: profile,
+              filters: filters,
+              isRetryable: false,
+            ),
+            errorCode: 'VALIDATION_ERROR',
+          ),
+        );
         return;
       }
 
-      emit(FriendGiftSuggestionLoading(
-        message: 'Analysing friend\'s preferences...',
-        progress: 0.1,
-        profile: profile,
-        filters: filters,
-      ));
+      emit(
+        FriendGiftSuggestionLoading(
+          state.main.copyWith(
+            message: 'Analysing friend\'s preferences...',
+            progress: 0.1,
+            profile: profile,
+            filters: filters,
+          ),
+        ),
+      );
 
       _startTimeout();
-
       await _performGeneration(profile, filters);
     } catch (e, stackTrace) {
       developer.log(
@@ -55,25 +63,39 @@ class FriendGiftSuggestionCubit extends Cubit<FriendGiftSuggestionState> {
         error: e,
         stackTrace: stackTrace,
       );
-      emit(FriendGiftSuggestionError(
-        message: 'An unexpected error occurred. Please try again.',
-        errorCode: 'UNEXPECTED_ERROR',
-        profile: profile,
-        filters: filters,
-      ));
+      emit(
+        FriendGiftSuggestionError(
+          state.main.copyWith(
+            message: '',
+            errorMessage: 'An unexpected error occurred. Please try again.',
+            profile: profile,
+            filters: filters,
+            isRetryable: true,
+          ),
+          errorCode: 'UNEXPECTED_ERROR',
+          stackTraceString: stackTrace.toString(),
+        ),
+      );
     }
   }
 
-  Future<void> _performGeneration(Map<String, dynamic> profile, Map<String, dynamic> filters) async {
+  Future<void> _performGeneration(
+      Map<String, dynamic> profile,
+      Map<String, dynamic> filters,
+      ) async {
     try {
-      emit(FriendGiftSuggestionLoading(
-        message: 'Creating personalised gift ideas...',
-        progress: 0.5,
-        profile: profile,
-        filters: filters,
-      ));
+      emit(
+        FriendGiftSuggestionLoading(
+          state.main.copyWith(
+            message: 'Creating personalised gift ideas...',
+            progress: 0.5,
+            profile: profile,
+            filters: filters,
+          ),
+        ),
+      );
 
-      final suggestions = await _repository.generateGiftSuggestions(
+      final List<AiGiftSuggestion> suggestions = await _aiRepo.generateGiftSuggestions(
         profile: profile,
         filters: filters,
       );
@@ -81,23 +103,36 @@ class FriendGiftSuggestionCubit extends Cubit<FriendGiftSuggestionState> {
       _cancelTimeout();
 
       if (suggestions.isEmpty) {
-        emit(FriendGiftSuggestionError(
-          message: 'No suggestions could be generated. Please try adjusting your preferences.',
-          errorCode: 'NO_SUGGESTIONS',
-          profile: profile,
-          filters: filters,
-          isRetryable: true,
-        ));
+        emit(
+          FriendGiftSuggestionError(
+            state.main.copyWith(
+              message: '',
+              errorMessage: 'No suggestions could be generated. Please try adjusting your preferences.',
+              profile: profile,
+              filters: filters,
+              isRetryable: true,
+            ),
+            errorCode: 'NO_SUGGESTIONS',
+          ),
+        );
         return;
       }
 
-      developer.log('Successfully generated ${suggestions.length} friend gift suggestions', name: 'FriendGiftSuggestionCubit');
+      developer.log(
+          'Successfully generated ${suggestions.length} friend gift suggestions',
+          name: 'FriendGiftSuggestionCubit');
 
-      emit(FriendGiftSuggestionLoaded(
-        suggestions: suggestions,
-        profile: profile,
-        filters: filters,
-      ));
+      emit(
+        FriendGiftSuggestionLoaded(
+          state.main.copyWith(
+            suggestions: suggestions,
+            profile: profile,
+            filters: filters,
+            message: '',
+            errorMessage: null,
+          ),
+        ),
+      );
     } catch (e, stackTrace) {
       _cancelTimeout();
       developer.log(
@@ -113,23 +148,28 @@ class FriendGiftSuggestionCubit extends Cubit<FriendGiftSuggestionState> {
         await Future.delayed(Duration(seconds: _retryCount));
         await _performGeneration(profile, filters);
       } else {
-        emit(FriendGiftSuggestionError(
-          message: 'Unable to generate suggestions after multiple attempts. Please try again later.',
-          errorCode: 'GENERATION_FAILED',
-          profile: profile,
-          filters: filters,
-          isRetryable: true,
-        ));
+        emit(
+          FriendGiftSuggestionError(
+            state.main.copyWith(
+              message: '',
+              errorMessage: 'Unable to generate suggestions after multiple attempts. Please try again later.',
+              profile: profile,
+              filters: filters,
+              isRetryable: true,
+            ),
+            errorCode: 'GENERATION_FAILED',
+            stackTraceString: stackTrace.toString(),
+          ),
+        );
       }
     }
   }
 
   Future<void> retryGeneration() async {
-    final currentState = state;
-    if (currentState is FriendGiftSuggestionError) {
+    if (state is FriendGiftSuggestionError) {
       await generateSuggestions(
-        profile: currentState.profile,
-        filters: currentState.filters,
+        profile: state.main.profile ?? {},
+        filters: state.main.filters ?? {},
       );
     }
   }
@@ -152,13 +192,16 @@ class FriendGiftSuggestionCubit extends Cubit<FriendGiftSuggestionState> {
     _cancelTimeout();
     _timeoutTimer = Timer(const Duration(seconds: 45), () {
       if (!isClosed) {
-        emit(const FriendGiftSuggestionError(
-          message: 'Request timed out. Please try again.',
-          errorCode: 'TIMEOUT',
-          profile: {},
-          filters: {},
-          isRetryable: true,
-        ));
+        emit(
+          FriendGiftSuggestionError(
+            state.main.copyWith(
+              message: '',
+              errorMessage: 'Request timed out. Please try again.',
+              isRetryable: true,
+            ),
+            errorCode: 'TIMEOUT',
+          ),
+        );
       }
     });
   }

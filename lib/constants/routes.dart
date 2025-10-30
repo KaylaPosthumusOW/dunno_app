@@ -7,6 +7,7 @@ const COLLECTION_DETAIL_SCREEN = '/collection_details';
 const QUICK_SUGGESTIONS_SCREEN = '/quick_suggestions';
 const FIND_FRIENDS_SCREEN = '/find_friends';
 const FRIEND_PROFILE_SCREEN = '/friend_profile';
+const USER_FRIENDS_SCREEN = '/user_friends';
 
 //-----------
 const GIFT_SUGGESTION_MANAGEMENT = '/gift_suggestion';

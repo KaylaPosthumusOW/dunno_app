@@ -1,7 +1,6 @@
 import 'package:dunno/constants/constants.dart';
 import 'package:dunno/constants/themes.dart';
 import 'package:dunno/cubits/friend_gift_suggestion/friend_gift_suggestion_cubit.dart';
-import 'package:dunno/cubits/friend_gift_suggestion/friend_gift_suggestion_state.dart';
 import 'package:dunno/ui/widgets/dunno_button.dart';
 import 'package:dunno/ui/widgets/dunno_text_field.dart';
 import 'package:dunno/ui/widgets/gift_suggestion_card.dart';
@@ -150,7 +149,7 @@ class _FriendGiftSuggestionsScreenState extends State<FriendGiftSuggestionsScree
                       LoadingIndicator(color: AppColors.cerise),
                       const SizedBox(height: 20),
                       Text(
-                        state.message,
+                        state.main.message ?? '',
                         style: const TextStyle(
                           fontSize: 16,
                           color: Colors.grey,
@@ -189,7 +188,7 @@ class _FriendGiftSuggestionsScreenState extends State<FriendGiftSuggestionsScree
                         ),
                         const SizedBox(height: 12),
                         Text(
-                          state.message,
+                          state.main.errorMessage ?? 'Unknown error occurred',
                           style: const TextStyle(fontSize: 16, color: Colors.grey),
                           textAlign: TextAlign.center,
                         ),
@@ -217,7 +216,7 @@ class _FriendGiftSuggestionsScreenState extends State<FriendGiftSuggestionsScree
                       child: Column(
                         children: [
                           Text(
-                            'We found ${state.suggestions.length} perfect gifts for ${widget.friendData?['name'] ?? 'your friend'}',
+                            'We found ${state.main.suggestions?.length ?? 0} perfect gifts for ${widget.friendData?['name'] ?? 'your friend'}',
                             style: const TextStyle(fontSize: 16, color: Colors.grey),
                             textAlign: TextAlign.center,
                           ),
@@ -229,9 +228,9 @@ class _FriendGiftSuggestionsScreenState extends State<FriendGiftSuggestionsScree
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
                     padding: const EdgeInsets.symmetric(horizontal: 20),
-                    itemCount: state.suggestions.length,
+                    itemCount: state.main.suggestions?.length ?? 0,
                     itemBuilder: (context, index) {
-                      final suggestion = state.suggestions[index];
+                      final suggestion = state.main.suggestions![index];
                       return GiftSuggestionCard(
                         suggestion: suggestion,
                         index: index,

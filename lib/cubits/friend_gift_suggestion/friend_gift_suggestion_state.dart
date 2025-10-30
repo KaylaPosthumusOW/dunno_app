@@ -1,126 +1,138 @@
-import 'package:equatable/equatable.dart';
-import 'package:dunno/models/ai_gift_suggestion.dart';
+part of 'friend_gift_suggestion_cubit.dart';
 
-/// Base state class for Friend AI gift suggestion flow
-abstract class FriendGiftSuggestionState extends Equatable {
-  const FriendGiftSuggestionState();
+/// Holds all friend suggestion domain data.
+/// This persists across status state changes.
+class MainFriendGiftSuggestionState extends Equatable {
+  final String? message;
+  final String? errorMessage;
+
+  final List<AiGiftSuggestion>? suggestions;
+
+  /// Optional context for generation
+  final Map<String, dynamic>? profile;
+  final Map<String, dynamic>? filters;
+
+  /// Optional progress for long-running generation
+  final double? progress;
+
+  /// Whether current error is retryable (only meaningful when in an error status)
+  final bool? isRetryable;
+
+  const MainFriendGiftSuggestionState({
+    this.message,
+    this.errorMessage,
+    this.suggestions,
+    this.profile,
+    this.filters,
+    this.progress,
+    this.isRetryable,
+  });
 
   @override
-  List<Object?> get props => [];
+  List<Object> get props => [
+    message ?? '',
+    errorMessage ?? '',
+    suggestions ?? <AiGiftSuggestion>[],
+    profile ?? <String, dynamic>{},
+    filters ?? <String, dynamic>{},
+    progress ?? 0.0,
+    isRetryable ?? false,
+  ];
+
+  MainFriendGiftSuggestionState copyWith({
+    String? message,
+    String? errorMessage,
+    List<AiGiftSuggestion>? suggestions,
+    Map<String, dynamic>? profile,
+    Map<String, dynamic>? filters,
+    double? progress,
+    bool? isRetryable,
+  }) {
+    return MainFriendGiftSuggestionState(
+      message: message ?? this.message,
+      errorMessage: errorMessage ?? this.errorMessage,
+      suggestions: suggestions ?? this.suggestions,
+      profile: profile ?? this.profile,
+      filters: filters ?? this.filters,
+      progress: progress ?? this.progress,
+      isRetryable: isRetryable ?? this.isRetryable,
+    );
+  }
+
+  /// Same as copyWith, but lets you explicitly null-out selected fields.
+  MainFriendGiftSuggestionState copyWithNull({
+    String? message,
+    String? errorMessage,
+    List<AiGiftSuggestion>? suggestions,
+    Map<String, dynamic>? profile,
+    Map<String, dynamic>? filters,
+    double? progress,
+    bool? isRetryable,
+  }) {
+    return MainFriendGiftSuggestionState(
+      message: message ?? this.message,
+      errorMessage: errorMessage ?? this.errorMessage,
+      suggestions: suggestions, // explicit null allowed
+      profile: profile,         // explicit null allowed
+      filters: filters,         // explicit null allowed
+      progress: progress,       // explicit null allowed
+      isRetryable: isRetryable, // explicit null allowed
+    );
+  }
 }
 
-/// Initial state when no friend suggestions have been requested
+/// Base status class that carries the shared main state.
+abstract class FriendGiftSuggestionState extends Equatable {
+  final MainFriendGiftSuggestionState main;
+
+  const FriendGiftSuggestionState(this.main);
+
+  @override
+  List<Object> get props => [main];
+}
+
+/// Initial status (no generation requested yet)
 class FriendGiftSuggestionInitial extends FriendGiftSuggestionState {
-  const FriendGiftSuggestionInitial();
+  const FriendGiftSuggestionInitial()
+      : super(const MainFriendGiftSuggestionState());
 
   @override
   String toString() => 'FriendGiftSuggestionInitial';
 }
 
-/// Loading state while generating friend suggestions
+/// Loading/generating status (progress may be present in `main.progress`)
 class FriendGiftSuggestionLoading extends FriendGiftSuggestionState {
-  final String message;
-  final double? progress;
-  final Map<String, dynamic>? profile;
-  final Map<String, dynamic>? filters;
-  
-  const FriendGiftSuggestionLoading({
-    this.message = 'Generating gift suggestions for your friend...',
-    this.progress,
-    this.profile,
-    this.filters,
-  });
+  const FriendGiftSuggestionLoading(super.main);
 
   @override
-  List<Object?> get props => [message, progress, profile, filters];
-
-  @override
-  String toString() => 'FriendGiftSuggestionLoading(message: $message, progress: $progress)';
-
-  /// Create a copy with updated progress
-  FriendGiftSuggestionLoading copyWith({
-    String? message,
-    double? progress,
-    Map<String, dynamic>? profile,
-    Map<String, dynamic>? filters,
-  }) {
-    return FriendGiftSuggestionLoading(
-      message: message ?? this.message,
-      progress: progress ?? this.progress,
-      profile: profile ?? this.profile,
-      filters: filters ?? this.filters,
-    );
-  }
+  String toString() =>
+      'FriendGiftSuggestionLoading(progress: ${main.progress}, message: ${main.message})';
 }
 
-/// State when friend suggestions have been successfully loaded
+/// Loaded status with suggestions in `main.suggestions`
 class FriendGiftSuggestionLoaded extends FriendGiftSuggestionState {
-  final List<AiGiftSuggestion> suggestions;
-  final Map<String, dynamic> profile;
-  final Map<String, dynamic> filters;
-  
-  const FriendGiftSuggestionLoaded({
-    required this.suggestions,
-    required this.profile,
-    required this.filters,
-  });
+  const FriendGiftSuggestionLoaded(super.main);
 
   @override
-  List<Object?> get props => [suggestions, profile, filters];
-
-  @override
-  String toString() => 'FriendGiftSuggestionLoaded(suggestions: ${suggestions.length} items)';
-
-  /// Create a copy with updated suggestions
-  FriendGiftSuggestionLoaded copyWith({
-    List<AiGiftSuggestion>? suggestions,
-    Map<String, dynamic>? profile,
-    Map<String, dynamic>? filters,
-  }) {
-    return FriendGiftSuggestionLoaded(
-      suggestions: suggestions ?? this.suggestions,
-      profile: profile ?? this.profile,
-      filters: filters ?? this.filters,
-    );
-  }
+  String toString() =>
+      'FriendGiftSuggestionLoaded(suggestions: ${main.suggestions?.length ?? 0})';
 }
 
-/// Error state when friend suggestion generation fails
+/// Error status; data is in `main.errorMessage` and optional extra fields below.
 class FriendGiftSuggestionError extends FriendGiftSuggestionState {
-  final String message;
   final String? errorCode;
-  final Map<String, dynamic> profile;
-  final Map<String, dynamic> filters;
-  final bool isRetryable;
-  
-  const FriendGiftSuggestionError({
-    required this.message,
-    this.errorCode,
-    required this.profile,
-    required this.filters,
-    this.isRetryable = true,
-  });
+  final String? stackTraceString;
+
+  const FriendGiftSuggestionError(
+      super.main, {
+        this.errorCode,
+        this.stackTraceString,
+      });
 
   @override
-  List<Object?> get props => [message, errorCode, profile, filters, isRetryable];
+  List<Object> get props => [main, errorCode ?? '', stackTraceString ?? ''];
 
   @override
-  String toString() => 'FriendGiftSuggestionError(message: $message, errorCode: $errorCode, isRetryable: $isRetryable)';
-
-  /// Create a copy with updated error details
-  FriendGiftSuggestionError copyWith({
-    String? message,
-    String? errorCode,
-    Map<String, dynamic>? profile,
-    Map<String, dynamic>? filters,
-    bool? isRetryable,
-  }) {
-    return FriendGiftSuggestionError(
-      message: message ?? this.message,
-      errorCode: errorCode ?? this.errorCode,
-      profile: profile ?? this.profile,
-      filters: filters ?? this.filters,
-      isRetryable: isRetryable ?? this.isRetryable,
-    );
-  }
+  String toString() =>
+      'FriendGiftSuggestionError(message: ${main.errorMessage}, errorCode: $errorCode, retryable: ${main.isRetryable})';
 }

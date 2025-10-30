@@ -12,6 +12,7 @@ import 'package:dunno/ui/screens/quick_gift_suggestion/gift_suggestion_managemen
 import 'package:dunno/ui/screens/quick_gift_suggestion/receive_gift_suggestion_screen.dart';
 import 'package:dunno/ui/screens/quick_suggestion_screen.dart';
 import 'package:dunno/ui/screens/search_friends_screen.dart';
+import 'package:dunno/ui/screens/user_friend_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -66,6 +67,11 @@ class AppRouter {
         path: FRIEND_PROFILE_SCREEN,
         name: FRIEND_PROFILE_SCREEN,
         builder: (BuildContext context, GoRouterState state) => FriendProfileScreen(),
+      ),
+      GoRoute(
+        path: USER_FRIENDS_SCREEN,
+        name: USER_FRIENDS_SCREEN,
+        builder: (BuildContext context, GoRouterState state) => UserFriendScreen(),
       ),
       GoRoute(
         path: FRIEND_GIFT_SUGGESTION_SCREEN,

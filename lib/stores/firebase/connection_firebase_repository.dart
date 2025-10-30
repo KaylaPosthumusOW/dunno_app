@@ -3,7 +3,7 @@ import 'package:dunno/models/connections.dart';
 import 'package:dunno/stores/connection_store.dart';
 import 'package:get_it/get_it.dart';
 
-class ConnectionFirebaseRepository implements ConnectionStore {
+class ConnectionFirebaseRepository extends ConnectionStore {
   static final FirebaseFirestore _firebaseFirestore = GetIt.instance<FirebaseFirestore>();
 
   final CollectionReference<Connection> _connectionCollection = _firebaseFirestore.collection('connections').withConverter<Connection>(

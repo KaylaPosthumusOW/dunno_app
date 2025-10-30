@@ -3,6 +3,7 @@ import 'package:dunno/constants/routes.dart';
 import 'package:dunno/constants/themes.dart';
 import 'package:dunno/cubits/app_user_profile/app_user_profile_cubit.dart';
 import 'package:dunno/cubits/calender_event_cubit/calender_event_cubit.dart';
+import 'package:dunno/models/app_user_profile.dart';
 import 'package:dunno/ui/widgets/calender.dart';
 import 'package:dunno/ui/widgets/calender_notification_card.dart';
 import 'package:flutter/material.dart';
@@ -84,6 +85,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   Expanded(
                     child: InkWell(
                       onTap: () {
+                        _appUserProfileCubit.selectProfile(state.mainAppUserProfileState.appUserProfile ?? AppUserProfile());
                         context.pushNamed(COLLECTIONS_SCREEN);
                       },
                       child: Container(
@@ -144,7 +146,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   Expanded(
                     child: InkWell(
                       onTap: () {
-                        context.pushNamed(COLLECTIONS_SCREEN);
+                        context.pushNamed(USER_FRIENDS_SCREEN);
                       },
                       child: Container(
                         padding: const EdgeInsets.all(16),
