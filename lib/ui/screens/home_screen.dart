@@ -89,7 +89,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Container(
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
-                          color: AppColors.cinnabar,
+                          color: AppColors.yellow,
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Column(
@@ -98,11 +98,11 @@ class _HomeScreenState extends State<HomeScreen> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                Icon(Icons.folder_copy_outlined, color: AppColors.antiqueWhite),
+                                Icon(Icons.folder_copy_outlined, color: AppColors.offWhite),
                               ],
                             ),
                             SizedBox(height: 5),
-                            Text('Your \nCollections', style: Theme.of(context).textTheme.displayMedium?.copyWith(color: AppColors.antiqueWhite)),
+                            Text('Your \nCollections', style: Theme.of(context).textTheme.displayMedium?.copyWith(color: AppColors.offWhite)),
                           ],
                         ),
                       ),
@@ -112,13 +112,72 @@ class _HomeScreenState extends State<HomeScreen> {
                   Expanded(
                     child: InkWell(
                       onTap: () {
-                        // Navigate to QuickSuggestionScreen (index 2)
                         DefaultTabController.of(context).animateTo(2);
                       },
                       child: Container(
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
-                          color: AppColors.tangerine,
+                          color: AppColors.pinkLavender,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Icon(Icons.card_giftcard_rounded, color: AppColors.cerise),
+                              ],
+                            ),
+                            SizedBox(height: 5),
+                            Text('Your \nGift Boards', style: Theme.of(context).textTheme.displayMedium?.copyWith(color: AppColors.cerise)),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 10),
+              Row(
+                children: [
+                  Expanded(
+                    child: InkWell(
+                      onTap: () {
+                        context.pushNamed(COLLECTIONS_SCREEN);
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: AppColors.cerise,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Icon(Icons.people_outline_rounded, color: AppColors.pinkLavender),
+                              ],
+                            ),
+                            SizedBox(height: 5),
+                            Text('Your \nFriends/Family', style: Theme.of(context).textTheme.displayMedium?.copyWith(color: AppColors.pinkLavender)),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 10),
+                  Expanded(
+                    child: InkWell(
+                      onTap: () {
+                        DefaultTabController.of(context).animateTo(2);
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: AppColors.cinnabar,
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Column(
@@ -138,32 +197,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                 ],
-              ),
-              SizedBox(height: 10),
-              InkWell(
-                onTap: () {
-                  // Navigate to FindFriendsScreen (index 1)
-                  DefaultTabController.of(context).animateTo(1);
-                },
-                child: Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: AppColors.cerise,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Icon(Icons.lightbulb_outline_rounded, color: AppColors.pinkLavender),
-                        ],
-                      ),
-                      Text('Find \nFriends/Family', style: Theme.of(context).textTheme.displayMedium?.copyWith(color: AppColors.pinkLavender)),
-                    ],
-                  ),
-                ),
               ),
               SizedBox(height: 20),
               Text('All Your Friends Events', style: Theme.of(context).textTheme.titleMedium),

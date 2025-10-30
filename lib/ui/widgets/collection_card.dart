@@ -8,12 +8,19 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sp_utilities/utilities.dart';
 
+enum CollectionColorType { pink, orange, yellow }
+
 class CollectionCard extends StatefulWidget {
-  final bool? isPink;
+  final CollectionColorType colorType;
   final Collections? collection;
   final Function? onPressed;
 
-  const CollectionCard({super.key, this.collection, this.isPink = false, this.onPressed});
+  const CollectionCard({
+    super.key,
+    this.collection,
+    this.onPressed,
+    this.colorType = CollectionColorType.pink,
+  });
 
   @override
   State<CollectionCard> createState() => _CollectionCardState();
@@ -21,6 +28,28 @@ class CollectionCard extends StatefulWidget {
 
 class _CollectionCardState extends State<CollectionCard> {
   final CollectionCubit _collectionCubit = sl<CollectionCubit>();
+
+  Color get borderColor {
+    switch (widget.colorType) {
+      case CollectionColorType.pink:
+        return AppColors.cerise;
+      case CollectionColorType.orange:
+        return AppColors.cinnabar;
+      case CollectionColorType.yellow:
+        return AppColors.yellow;
+    }
+  }
+
+  ButtonType get buttonType {
+    switch (widget.colorType) {
+      case CollectionColorType.pink:
+        return ButtonType.primary;
+      case CollectionColorType.orange:
+        return ButtonType.secondary;
+      case CollectionColorType.yellow:
+        return ButtonType.primary;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,31 +62,43 @@ class _CollectionCardState extends State<CollectionCard> {
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: widget.isPink == true ? AppColors.cerise : AppColors.cinnabar,
+              color: borderColor,
               offset: const Offset(3, 4),
             ),
           ],
-          border: Border.all(width: 1.5, color: widget.isPink == true ? AppColors.cerise : AppColors.cinnabar)
+          border: Border.all(width: 1.5, color: borderColor),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(widget.collection?.title ?? '', style: Theme.of(context).textTheme.headlineLarge?.copyWith(color: widget.isPink == true ? AppColors.cerise : AppColors.cinnabar)),
-            Text('Date: ${StringHelpers.printFirebaseTimeStamp(widget.collection?.createdAt, format: 'dd MMMM, yyyy')}', style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: AppColors.black)),
-            SizedBox(height: 10),
+            Text(
+              widget.collection?.title ?? '',
+              style: Theme.of(context)
+                  .textTheme
+                  .headlineLarge
+                  ?.copyWith(color: borderColor),
+            ),
+            Text(
+              'Date: ${StringHelpers.printFirebaseTimeStamp(widget.collection?.createdAt, format: 'dd MMMM, yyyy')}',
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyLarge
+                  ?.copyWith(color: AppColors.black),
+            ),
+            const SizedBox(height: 10),
             DunnoButton(
               label: 'View Collection',
-              type: widget.isPink == true ? ButtonType.primary : ButtonType.secondary,
+              type: buttonType,
               onPressed: () {
+                _collectionCubit
+                    .setSelectedCollection(widget.collection ?? Collections());
                 if (widget.onPressed != null) {
-                  _collectionCubit.setSelectedCollection(widget.collection ?? Collections());
                   widget.onPressed!();
                 } else {
-                  _collectionCubit.setSelectedCollection(widget.collection ?? Collections());
                   context.pushNamed(COLLECTION_DETAIL_SCREEN);
                 }
               },
-            )
+            ),
           ],
         ),
       ),

@@ -132,7 +132,7 @@ class _FriendProfileScreenState extends State<FriendProfileScreen> {
                         margin: EdgeInsets.only(right: index == displayCount - 1 ? 0 : 15),
                         child: CollectionCard(
                           collection: collection,
-                          isPink: true,
+                          colorType: CollectionColorType.pink,
                           onPressed: () {
                             final selectedProfile = _appUserProfileCubit.state.mainAppUserProfileState.selectedProfile;
                             context.pushNamed(

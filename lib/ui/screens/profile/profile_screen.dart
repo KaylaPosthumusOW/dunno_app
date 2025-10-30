@@ -353,7 +353,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       final collection = collections[index];
                       return Container(
                         margin: EdgeInsets.only(right: index == displayCount - 1 ? 0 : 15),
-                        child: CollectionCard(collection: collection));
+                        child: CollectionCard(
+                          collection: collection,
+                          colorType: CollectionColorType.yellow,
+                        ),
+                      );
                     },
                   ),
                 ),
@@ -375,9 +379,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
               children: [
                 Column(
                   children: [
-                    Container(height: 130, decoration: BoxDecoration(color: AppColors.tangerine)),
+                    Container(height: 130, decoration: BoxDecoration(color: AppColors.yellow)),
                     SizedBox(height: 15),
-                    Divider(height: 0, color: AppColors.tangerine),
+                    Divider(height: 0, color: AppColors.yellow),
                   ],
                 ),
                 Positioned(top: 30, left: 0, right: 0, child: _profilePicture()),
@@ -419,6 +423,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   type: ButtonType.secondary,
                   label: 'Edit Profile',
                   icon: Icon(Icons.edit),
+                  buttonColor: AppColors.yellow,
                 ),
               ],
             ),
@@ -441,7 +446,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: AppColors.tangerine,
+        backgroundColor: AppColors.yellow,
         actions: [
           PopupMenuButton(
             icon: Icon(Icons.logout),
