@@ -112,7 +112,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   Expanded(
                     child: InkWell(
                       onTap: () {
-                        context.pushNamed(QUICK_SUGGESTIONS_SCREEN);
+                        // Navigate to QuickSuggestionScreen (index 2)
+                        DefaultTabController.of(context).animateTo(2);
                       },
                       child: Container(
                         padding: const EdgeInsets.all(16),
@@ -141,7 +142,8 @@ class _HomeScreenState extends State<HomeScreen> {
               SizedBox(height: 10),
               InkWell(
                 onTap: () {
-                  context.pushNamed(FIND_FRIENDS_SCREEN);
+                  // Navigate to FindFriendsScreen (index 1)
+                  DefaultTabController.of(context).animateTo(1);
                 },
                 child: Container(
                   padding: const EdgeInsets.all(16),

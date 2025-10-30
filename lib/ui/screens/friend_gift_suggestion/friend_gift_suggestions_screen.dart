@@ -217,8 +217,8 @@ class _FriendGiftSuggestionsScreenState extends State<FriendGiftSuggestionsScree
                   ),
                   const SizedBox(height: 20),
                   DunnoButton(
-                    type: ButtonType.secondary,
-                    label: 'Generate New Suggestions',
+                    type: ButtonType.primary,
+                    label: 'Regenerate Suggestions',
                     onPressed: () {
                       final profile = _buildProfileFromFriendData();
                       final filters = widget.filterData ?? {};

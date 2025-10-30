@@ -59,6 +59,24 @@ class _ReceiveGiftSuggestionScreenState extends State<ReceiveGiftSuggestionScree
         child: SingleChildScrollView(
           child: BlocBuilder<AiGiftSuggestionCubit, AiGiftSuggestionState>(
             builder: (context, state) {
+            if (state is AiGiftSuggestionInitial) {
+              // Auto-generate suggestions when screen loads
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                context.read<AiGiftSuggestionCubit>().generateSuggestions(
+                  profile: widget.profile ?? {},
+                  filters: widget.filters ?? {},
+                );
+              });
+              
+              return const Center(
+                child: Text(
+                  'Ready to generate gift suggestions',
+                  style: TextStyle(fontSize: 16, color: Colors.grey),
+                  textAlign: TextAlign.center,
+                ),
+              );
+            }
+
             if (state is AiGiftSuggestionLoading) {
               return Center(
                 child: Column(
@@ -157,6 +175,7 @@ class _ReceiveGiftSuggestionScreenState extends State<ReceiveGiftSuggestionScree
                       return GiftSuggestionCard(
                         suggestion: suggestion,
                         index: index,
+                        isPink: false,
                       );
                     },
                   ),

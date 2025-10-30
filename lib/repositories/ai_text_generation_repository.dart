@@ -22,9 +22,6 @@ class AiTextGenerationRepository {
     required Map<String, dynamic> filters,
   }) async {
     try {
-      print('=== AI Generation Debug ===');
-      print('Profile data: $profile');
-      print('Filters data: $filters');
       
       final prompt = _buildPrompt(profile, filters);
       print('Generated prompt length: ${prompt.length}');
@@ -80,14 +77,12 @@ class AiTextGenerationRepository {
   }
 
   String _buildPrompt(Map<String, dynamic> profile, Map<String, dynamic> filters) {
-    // Extract and format profile data
     final occasion = profile['eventType'] ?? 'Not specified';
     final gender = _formatGender(profile['gender']);
     final age = profile['age'] != null ? 'Age ${profile['age']}' : 'Age not specified';
     final likes = _formatLikes(profile['likes']);
     final extraNotes = profile['extraNotes'] ?? 'None';
 
-    // Extract and format filter data
     final relationship = filters['title'] ?? 'Not specified';
     final minBudget = filters['minBudget'] ?? 200;
     final maxBudget = filters['maxBudget'] ?? 1000;
@@ -96,6 +91,7 @@ class AiTextGenerationRepository {
     final category = _formatCategory(filters['category']);
     final giftValue = _formatGiftValue(filters['giftValue']);
     final filterNotes = filters['extraNote'] ?? 'None';
+    final refinement = filters['refinement']?.toString().trim() ?? '';
 
     final profileInfo = '''
     Profile Information:
@@ -114,6 +110,7 @@ class AiTextGenerationRepository {
     - Gift Category: $category
     - Gift Value: $giftValue
     - Additional Notes: $filterNotes
+    - Refinement Instructions: ${refinement.isNotEmpty ? refinement : 'None'}
     ''';
 
     return '''
@@ -125,7 +122,12 @@ class AiTextGenerationRepository {
 
     $filterInfo
 
-    Please respond with ONLY a valid JSON array of exactly 3 items, each following this structure:
+    ${refinement.isNotEmpty ? '''
+    IMPORTANT REFINEMENT:
+    The user has provided specific feedback or refinement instructions: "$refinement"
+    Please carefully consider this feedback and adjust your suggestions accordingly. This refinement should take priority over general preferences.
+    
+    ''' : ''}Please respond with ONLY a valid JSON array of exactly 3 items, each following this structure:
 
     [
       {

@@ -8,12 +8,10 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Load environment variables
   try {
     await dotenv.load(fileName: ".env");
   } catch (e) {
     print('Warning: Could not load .env file: $e');
-    // Continue anyway - the app can still run without .env in development
   }
 
   await DependencyInjection.init();

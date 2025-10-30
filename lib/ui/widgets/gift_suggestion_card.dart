@@ -55,31 +55,13 @@ class _GiftSuggestionCardState extends State<GiftSuggestionCard> {
                   ),
                 ),
                 const SizedBox(width: 10),
-                if ((widget.suggestion?.estimatedPrice ?? 0) > 0)
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 6,
-                    ),
-                    decoration: BoxDecoration(
-                      color: mainColor.withValues(alpha: 0.3),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Text(
-                      'R${(widget.suggestion?.estimatedPrice ?? 0).toStringAsFixed(0)}',
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        color: textColor,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ),
+                Icon(Icons.bookmark_add_outlined)
               ],
             ),
-            const SizedBox(height: 10),
             Text(
               'WHY?',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w600,
+              style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                fontWeight: FontWeight.w700,
                 color: textColor,
               ),
             ),
@@ -123,21 +105,44 @@ class _GiftSuggestionCardState extends State<GiftSuggestionCard> {
             if ((widget.suggestion?.category ?? '').isNotEmpty) ...[
               const SizedBox(height: 12),
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Icon(
-                    Icons.category_outlined,
-                    size: 16,
-                    color: Colors.grey,
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.category_outlined,
+                        size: 16,
+                        color: Colors.grey,
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        widget.suggestion?.category ?? '',
+                        style: const TextStyle(
+                          fontSize: 14,
+                          color: Colors.grey,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(width: 8),
-                  Text(
-                    widget.suggestion?.category ?? '',
-                    style: const TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey,
-                      fontWeight: FontWeight.w500,
+                  if ((widget.suggestion?.estimatedPrice ?? 0) > 0)
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 6,
+                      ),
+                      decoration: BoxDecoration(
+                        color: mainColor.withValues(alpha: 0.3),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Text(
+                        'R${(widget.suggestion?.estimatedPrice ?? 0).toStringAsFixed(0)}',
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          color: textColor,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
                     ),
-                  ),
                 ],
               ),
             ],
