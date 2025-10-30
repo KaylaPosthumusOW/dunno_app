@@ -1,5 +1,6 @@
 import 'package:dunno/constants/constants.dart';
 import 'package:dunno/cubits/ai_gift_suggestion/ai_gift_suggestion_cubit.dart';
+import 'package:dunno/cubits/friend_gift_suggestion/friend_gift_suggestion_cubit.dart';
 import 'package:dunno/cubits/app_user_profile/app_user_profile_cubit.dart';
 import 'package:dunno/cubits/calender_event_cubit/calender_event_cubit.dart';
 import 'package:dunno/cubits/collections/collection_cubit.dart';
@@ -44,7 +45,8 @@ class DependencyInjection {
     sl.registerSingleton<CollectionCubit>(CollectionCubit());
     sl.registerSingleton<ConnectionCubit>(ConnectionCubit());
 
-    sl.registerLazySingleton<AiGiftSuggestionCubit>(() => AiGiftSuggestionCubit(sl<AiTextGenerationRepository>()));
+    sl.registerFactory<AiGiftSuggestionCubit>(() => AiGiftSuggestionCubit(sl<AiTextGenerationRepository>()));
+    sl.registerFactory<FriendGiftSuggestionCubit>(() => FriendGiftSuggestionCubit(sl<AiTextGenerationRepository>()));
   }
 
 

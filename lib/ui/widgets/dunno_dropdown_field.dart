@@ -10,12 +10,26 @@ class DunnoDropdownField<T> extends StatelessWidget {
   final String? hintText;
   final Widget? suffixIcon;
   final Color? fillColor;
-
   final Color? dropDownColor;
-
   final Color? dropDownTextColor;
+  final Color? borderColor;
+  final Color? focusedBorderColor;
 
-  const DunnoDropdownField({super.key, required this.items, this.label, this.value, this.onChanged, this.isDense, this.hintText, this.suffixIcon, this.fillColor, this.dropDownColor, this.dropDownTextColor});
+  const DunnoDropdownField({
+    super.key, 
+    required this.items, 
+    this.label, 
+    this.value, 
+    this.onChanged, 
+    this.isDense, 
+    this.hintText, 
+    this.suffixIcon, 
+    this.fillColor, 
+    this.dropDownColor, 
+    this.dropDownTextColor,
+    this.borderColor,
+    this.focusedBorderColor,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -47,15 +61,15 @@ class DunnoDropdownField<T> extends StatelessWidget {
             counterText: "",
             disabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(30),
-              borderSide: BorderSide(color: AppColors.tangerine.withValues(alpha: 0.4)),
+              borderSide: BorderSide(color: borderColor ?? AppColors.tangerine.withValues(alpha: 0.4)),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(30),
-              borderSide: BorderSide(color: AppColors.antiqueWhite),
+              borderSide: BorderSide(color: borderColor ?? AppColors.antiqueWhite),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(30),
-              borderSide: BorderSide(color: AppColors.antiqueWhite, width: 1.5),
+              borderSide: BorderSide(color: focusedBorderColor ?? AppColors.antiqueWhite, width: 1.5),
             ),
             errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(30),
@@ -63,7 +77,7 @@ class DunnoDropdownField<T> extends StatelessWidget {
             ),
             focusedErrorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(30),
-              borderSide: BorderSide(color: AppColors.antiqueWhite, width: 1.5),
+              borderSide: BorderSide(color: focusedBorderColor ?? AppColors.antiqueWhite, width: 1.5),
             ),
           ),
           isExpanded: true,

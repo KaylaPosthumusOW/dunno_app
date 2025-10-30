@@ -33,7 +33,11 @@ class DunnoTextField extends StatefulWidget {
   final bool readOnly;
   final bool isLight;
 
+  /// Existing enum color system
   final DunnoTextFieldColor colorScheme;
+
+  /// New quick toggle
+  final bool isPink;
 
   const DunnoTextField({
     super.key,
@@ -62,6 +66,7 @@ class DunnoTextField extends StatefulWidget {
     this.readOnly = false,
     this.isLight = false,
     this.colorScheme = DunnoTextFieldColor.pink,
+    this.isPink = false, // default false
   });
 
   @override
@@ -74,7 +79,12 @@ class DunnoTextFieldState extends State<DunnoTextField> {
     final theme = Theme.of(context);
     final isErrorState = widget.errorText != null && widget.errorText!.isNotEmpty;
 
-    final ColorSchemeData colors = _getColorScheme(widget.colorScheme, widget.isLight);
+    /// Decide which color scheme to use
+    final effectiveScheme = widget.isPink
+        ? DunnoTextFieldColor.pink
+        : widget.colorScheme;
+
+    final ColorSchemeData colors = _getColorScheme(effectiveScheme, widget.isLight);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -188,7 +198,7 @@ class DunnoTextFieldState extends State<DunnoTextField> {
   }
 }
 
-/// Helper class to hold all color info for a theme scheme
+/// Helper class for color scheme info
 class ColorSchemeData {
   final Color textColor;
   final Color borderColor;

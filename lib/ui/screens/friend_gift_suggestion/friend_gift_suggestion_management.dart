@@ -9,12 +9,8 @@ import 'package:go_router/go_router.dart';
 class FriendGiftSuggestionManagement extends StatefulWidget {
   final Map<String, dynamic>? friendData;
   final Map<String, dynamic>? collectionData;
-  
-  const FriendGiftSuggestionManagement({
-    super.key,
-    this.friendData,
-    this.collectionData,
-  });
+
+  const FriendGiftSuggestionManagement({super.key, this.friendData, this.collectionData});
 
   @override
   State<FriendGiftSuggestionManagement> createState() => _FriendGiftSuggestionManagementState();
@@ -31,26 +27,11 @@ class _FriendGiftSuggestionManagementState extends State<FriendGiftSuggestionMan
 
   void _generateSuggestions() {
     if (_filterData == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-            'Please fill in filter preferences for suggestions',
-          ),
-          backgroundColor: Colors.red,
-        ),
-      );
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please fill in filter preferences for suggestions'), backgroundColor: Colors.red));
       return;
     }
 
-    // Navigate to the friend gift suggestion screen with all the data
-    context.pushNamed(
-      FRIEND_GIFT_SUGGESTION_SCREEN,
-      extra: {
-        'friend': widget.friendData,
-        'collection': widget.collectionData,
-        'filters': _filterData?.toMap(),
-      },
-    );
+    context.pushNamed(FRIEND_GIFT_SUGGESTION_SCREEN, extra: {'friend': widget.friendData, 'collection': widget.collectionData, 'filters': _filterData?.toMap()});
   }
 
   @override
@@ -58,45 +39,35 @@ class _FriendGiftSuggestionManagementState extends State<FriendGiftSuggestionMan
     return Scaffold(
       backgroundColor: AppColors.offWhite,
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: Text(
-          'Gift Ideas for ${widget.friendData?['name'] ?? 'Friend'}',
-          style: const TextStyle(color: Colors.black),
-        ),
-        backgroundColor: AppColors.offWhite,
         elevation: 0,
+        backgroundColor: Colors.transparent,
+        surfaceTintColor: Colors.transparent,
+        automaticallyImplyLeading: false,
+        centerTitle: false,
+        leadingWidth: 50,
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 16),
+          child: IconButton(
+            onPressed: () => Navigator.of(context).maybePop(),
+            icon: const Icon(Icons.arrow_back_rounded, size: 20, color: Colors.white),
+            style: IconButton.styleFrom(backgroundColor: AppColors.cerise, shape: const CircleBorder(), minimumSize: const Size(36, 36), padding: EdgeInsets.zero),
+          ),
+        ),
+        titleSpacing: 20,
+        title: Text(
+          'Gift Suggestion Preferences',
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600, color: AppColors.black),
+          overflow: TextOverflow.ellipsis,
+        ),
       ),
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Padding(
-            padding: const EdgeInsets.all(20),
-            child: Text(
-              'Set your gift preferences',
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                fontWeight: FontWeight.w600,
-                color: AppColors.black,
-              ),
-            ),
-          ),
+          Expanded(child: AddFilterPage(onFilterUpdated: _handleFilterData, isFriendFlow: true)),
 
-          // Filter screen
-          Expanded(
-            child: AddFilterPage(onFilterUpdated: _handleFilterData),
-          ),
-
-          // Generate suggestions button
           Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: DunnoButton(
-              type: ButtonType.cinnabar,
-              onPressed: _generateSuggestions,
-              label: 'Generate Gift Suggestions',
-              buttonColor: AppColors.cinnabar,
-              textColor: AppColors.offWhite,
-            ),
+            padding:  EdgeInsets.all(20),
+            child: DunnoButton(type: ButtonType.primary, onPressed: _generateSuggestions, label: 'Generate Gift Suggestions'),
           ),
         ],
       ),

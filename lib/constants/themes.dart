@@ -190,6 +190,8 @@ class AppColors {
   static Color cinnabar = HexColor('#EF512C');
   static Color antiqueWhite = HexColor('#FBE9D1');
   static Color errorRed = HexColor('#FF4C4C');
+  static Color yellow = HexColor('#FFB700');
+  static Color brightPink = HexColor('#FB66B1');
 }
 
 List<BoxShadow> getBoxShadow(BuildContext context) {

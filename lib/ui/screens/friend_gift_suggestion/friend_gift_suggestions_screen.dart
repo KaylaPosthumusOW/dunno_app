@@ -1,7 +1,7 @@
 import 'package:dunno/constants/constants.dart';
 import 'package:dunno/constants/themes.dart';
-import 'package:dunno/cubits/ai_gift_suggestion/ai_gift_suggestion_cubit.dart';
-import 'package:dunno/cubits/ai_gift_suggestion/ai_gift_suggestion_state.dart';
+import 'package:dunno/cubits/friend_gift_suggestion/friend_gift_suggestion_cubit.dart';
+import 'package:dunno/cubits/friend_gift_suggestion/friend_gift_suggestion_state.dart';
 import 'package:dunno/ui/widgets/dunno_button.dart';
 import 'package:dunno/ui/widgets/gift_suggestion_card.dart';
 import 'package:dunno/ui/widgets/loading_indicator.dart';
@@ -83,17 +83,18 @@ class _FriendGiftSuggestionsScreenState extends State<FriendGiftSuggestionsScree
         centerTitle: true,
       ),
       body: BlocProvider(
-        create: (_) => sl<AiGiftSuggestionCubit>(),
+        create: (_) => sl<FriendGiftSuggestionCubit>(),
         child: Padding(
           padding: const EdgeInsets.all(20),
-          child: BlocBuilder<AiGiftSuggestionCubit, AiGiftSuggestionState>(
+          child: BlocBuilder<FriendGiftSuggestionCubit, FriendGiftSuggestionState>(
           builder: (context, state) {
-            if (state is AiGiftSuggestionInitial) {
+            if (state is FriendGiftSuggestionInitial) {
               WidgetsBinding.instance.addPostFrameCallback((_) {
+                context.read<FriendGiftSuggestionCubit>().reset();
                 final profile = _buildProfileFromFriendData();
                 final filters = widget.filterData ?? {};
                 
-                context.read<AiGiftSuggestionCubit>().generateSuggestions(
+                context.read<FriendGiftSuggestionCubit>().generateSuggestions(
                   profile: profile,
                   filters: filters,
                 );
@@ -132,7 +133,7 @@ class _FriendGiftSuggestionsScreenState extends State<FriendGiftSuggestionsScree
               );
             }
 
-            if (state is AiGiftSuggestionLoading) {
+            if (state is FriendGiftSuggestionLoading) {
               return Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -153,7 +154,7 @@ class _FriendGiftSuggestionsScreenState extends State<FriendGiftSuggestionsScree
               );
             }
 
-            if (state is AiGiftSuggestionError) {
+            if (state is FriendGiftSuggestionError) {
               return Center(
                 child: Padding(
                   padding: const EdgeInsets.all(20),
@@ -185,7 +186,7 @@ class _FriendGiftSuggestionsScreenState extends State<FriendGiftSuggestionsScree
                         type: ButtonType.primary,
                         label: 'Try Again',
                         onPressed: () {
-                          context.read<AiGiftSuggestionCubit>().retryGeneration();
+                          context.read<FriendGiftSuggestionCubit>().retryGeneration();
                         },
                       ),
                     ],
@@ -194,7 +195,7 @@ class _FriendGiftSuggestionsScreenState extends State<FriendGiftSuggestionsScree
               );
             }
 
-            if (state is AiGiftSuggestionLoaded) {
+            if (state is FriendGiftSuggestionLoaded) {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
@@ -223,7 +224,7 @@ class _FriendGiftSuggestionsScreenState extends State<FriendGiftSuggestionsScree
                       final profile = _buildProfileFromFriendData();
                       final filters = widget.filterData ?? {};
                       
-                      context.read<AiGiftSuggestionCubit>().generateSuggestions(
+                      context.read<FriendGiftSuggestionCubit>().generateSuggestions(
                         profile: profile,
                         filters: filters,
                       );

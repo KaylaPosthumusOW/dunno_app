@@ -7,8 +7,13 @@ import 'package:syncfusion_flutter_sliders/sliders.dart';
 
 class AddFilterPage extends StatefulWidget {
   final Function(FilterSuggestion)? onFilterUpdated;
+  final bool isFriendFlow;
 
-  const AddFilterPage({super.key, this.onFilterUpdated});
+  const AddFilterPage({
+    super.key, 
+    this.onFilterUpdated,
+    this.isFriendFlow = false,
+  });
 
   @override
   State<AddFilterPage> createState() => _AddFilterPageState();
@@ -35,14 +40,15 @@ class _AddFilterPageState extends State<AddFilterPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Relationship Field
             DunnoTextField(
               controller: _relationController,
               label: 'What\'s your relationship to them?',
               supportingText: 'e.g., Friend, Sister, Colleague',
               keyboardType: TextInputType.text,
               isLight: true,
-              colorScheme: DunnoTextFieldColor.antiqueWhite,
+              colorScheme: widget.isFriendFlow 
+                  ? DunnoTextFieldColor.pink 
+                  : DunnoTextFieldColor.antiqueWhite,
               onChanged: (value) {
                 _relation = value;
                 _updateFilter();
@@ -70,18 +76,20 @@ class _AddFilterPageState extends State<AddFilterPage> {
               max: 5000.0,
               interval: 500,
               showLabels: true,
-              activeColor: AppColors.tangerine,
-              inactiveColor: AppColors.tangerine.withValues(alpha: 0.3),
+              activeColor: widget.isFriendFlow ? AppColors.cerise : AppColors.tangerine,
+              inactiveColor: widget.isFriendFlow 
+                  ? AppColors.cerise.withValues(alpha: 0.3)
+                  : AppColors.tangerine.withValues(alpha: 0.3),
               startThumbIcon: Container(
                 decoration: BoxDecoration(
-                  color: AppColors.tangerine,
+                  color: widget.isFriendFlow ? AppColors.cerise : AppColors.tangerine,
                   shape: BoxShape.circle,
                   border: Border.all(color: Colors.white, width: 2),
                 ),
               ),
               endThumbIcon: Container(
                 decoration: BoxDecoration(
-                  color: AppColors.tangerine,
+                  color: widget.isFriendFlow ? AppColors.cerise : AppColors.tangerine,
                   shape: BoxShape.circle,
                   border: Border.all(color: Colors.white, width: 2),
                 ),
@@ -115,6 +123,15 @@ class _AddFilterPageState extends State<AddFilterPage> {
                 });
                 _updateFilter();
               },
+              fillColor: widget.isFriendFlow 
+                  ? AppColors.pinkLavender.withValues(alpha: 0.6)
+                  : AppColors.tangerine.withValues(alpha: 0.4),
+              borderColor: widget.isFriendFlow 
+                  ? AppColors.pinkLavender.withValues(alpha: 0.6)
+                  : AppColors.antiqueWhite,
+              focusedBorderColor: widget.isFriendFlow 
+                  ? AppColors.pinkLavender
+                  : AppColors.antiqueWhite,
               dropDownColor: AppColors.offWhite,
               dropDownTextColor: AppColors.black,
               items: GiftCategory.values.map((category) {
@@ -142,6 +159,15 @@ class _AddFilterPageState extends State<AddFilterPage> {
                 });
                 _updateFilter();
               },
+              fillColor: widget.isFriendFlow 
+                  ? AppColors.pinkLavender.withValues(alpha: 0.6)
+                  : AppColors.tangerine.withValues(alpha: 0.4),
+              borderColor: widget.isFriendFlow 
+                  ? AppColors.pinkLavender.withValues(alpha: 0.6)
+                  : AppColors.antiqueWhite,
+              focusedBorderColor: widget.isFriendFlow 
+                  ? AppColors.pinkLavender
+                  : AppColors.antiqueWhite,
               dropDownColor: AppColors.offWhite,
               dropDownTextColor: AppColors.black,
               items: GiftValue.values.map((value) {
@@ -165,7 +191,9 @@ class _AddFilterPageState extends State<AddFilterPage> {
               supportingText: 'e.g., Practical, Sentimental, Fun',
               keyboardType: TextInputType.text,
               isLight: true,
-              colorScheme: DunnoTextFieldColor.antiqueWhite,
+              colorScheme: widget.isFriendFlow 
+                  ? DunnoTextFieldColor.pink 
+                  : DunnoTextFieldColor.antiqueWhite,
               onChanged: (value) {
                 _giftType = value;
                 _updateFilter();
@@ -180,7 +208,9 @@ class _AddFilterPageState extends State<AddFilterPage> {
               supportingText: 'Any specific requirements or restrictions',
               keyboardType: TextInputType.text,
               isLight: true,
-              colorScheme: DunnoTextFieldColor.antiqueWhite,
+              colorScheme: widget.isFriendFlow 
+                  ? DunnoTextFieldColor.pink 
+                  : DunnoTextFieldColor.antiqueWhite,
               maxLines: 3,
               onChanged: (value) {
                 _extraNotes = value;
