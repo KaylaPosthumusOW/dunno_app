@@ -15,12 +15,7 @@ class CollectionCard extends StatefulWidget {
   final Collections? collection;
   final Function? onPressed;
 
-  const CollectionCard({
-    super.key,
-    this.collection,
-    this.onPressed,
-    this.colorType = CollectionColorType.pink,
-  });
+  const CollectionCard({super.key, this.collection, this.onPressed, this.colorType = CollectionColorType.pink});
 
   @override
   State<CollectionCard> createState() => _CollectionCardState();
@@ -60,38 +55,23 @@ class _CollectionCardState extends State<CollectionCard> {
         decoration: BoxDecoration(
           color: AppColors.offWhite,
           borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(
-              color: borderColor,
-              offset: const Offset(3, 4),
-            ),
-          ],
+          boxShadow: [BoxShadow(color: borderColor, offset: const Offset(3, 4))],
           border: Border.all(width: 1.5, color: borderColor),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(
-              widget.collection?.title ?? '',
-              style: Theme.of(context)
-                  .textTheme
-                  .headlineLarge
-                  ?.copyWith(color: borderColor),
-            ),
+            Text(widget.collection?.title ?? '', style: Theme.of(context).textTheme.headlineLarge?.copyWith(color: borderColor)),
             Text(
               'Date: ${StringHelpers.printFirebaseTimeStamp(widget.collection?.createdAt, format: 'dd MMMM, yyyy')}',
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyLarge
-                  ?.copyWith(color: AppColors.black),
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: AppColors.black),
             ),
             const SizedBox(height: 10),
             DunnoButton(
               label: 'View Collection',
               type: buttonType,
               onPressed: () {
-                _collectionCubit
-                    .setSelectedCollection(widget.collection ?? Collections());
+                _collectionCubit.setSelectedCollection(widget.collection ?? Collections());
                 if (widget.onPressed != null) {
                   widget.onPressed!();
                 } else {

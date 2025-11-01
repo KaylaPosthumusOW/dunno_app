@@ -188,11 +188,11 @@ class _HomeScreenState extends State<HomeScreen> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                Icon(Icons.lightbulb_outline_rounded, color: AppColors.antiqueWhite),
+                                Icon(Icons.camera_alt_outlined, color: AppColors.antiqueWhite),
                               ],
                             ),
                             SizedBox(height: 5),
-                            Text('Quick \nSuggestions', style: Theme.of(context).textTheme.displayMedium?.copyWith(color: AppColors.antiqueWhite)),
+                            Text('Connect \nWith QR', style: Theme.of(context).textTheme.displayMedium?.copyWith(color: AppColors.antiqueWhite)),
                           ],
                         ),
                       ),

@@ -1,4 +1,5 @@
 import 'package:dunno/constants/themes.dart';
+import 'package:dunno/cubits/general/general_cubit.dart';
 import 'package:dunno/models/ai_gift_suggestion.dart';
 import 'package:flutter/material.dart';
 
@@ -19,6 +20,8 @@ class GiftSuggestionCard extends StatefulWidget {
 }
 
 class _GiftSuggestionCardState extends State<GiftSuggestionCard> {
+  final GeneralCubit _generalCubit = GeneralCubit();
+
   @override
   Widget build(BuildContext context) {
     final mainColor = widget.isPink ? AppColors.cerise : AppColors.cinnabar;
@@ -81,23 +84,37 @@ class _GiftSuggestionCardState extends State<GiftSuggestionCard> {
                 color: textColor,
               ),
             ),
-            Text(
-              widget.suggestion?.location ?? '',
-              style: const TextStyle(
-                fontSize: 14,
-                color: Colors.grey,
-                height: 1.5,
-              ),
+            Row(
+              children: [
+                Text(
+                  '${widget.suggestion?.location}:' ?? '',
+                  style: const TextStyle(
+                    fontSize: 14,
+                    color: Colors.grey,
+                    height: 1.5,
+                  ),
+                ),
+                SizedBox(width: 6),
+                if ((widget.suggestion?.purchaseLink ?? '').isNotEmpty) ...[
+                  const SizedBox(height: 6),
+                  InkWell(
+                    onTap: () => _generalCubit.openWebsite(url: widget.suggestion?.purchaseLink ?? ''),
+                    child: Text(
+                      'Link',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: 14,
+                        decoration: TextDecoration.underline,
+                        fontWeight: FontWeight.w600,
+                        height: 1.5,
+                      ),
+                    ),
+                  ),
+                ],
+              ],
             ),
-            //TODO: activate link and add to repo that it is a clickable/active/correct link
-            Text(
-              widget.suggestion?.purchaseLink ?? '',
-              style: const TextStyle(
-                fontSize: 14,
-                color: Colors.grey,
-                height: 1.5,
-              ),
-            ),
+
             if ((widget.suggestion?.tags ?? []).isNotEmpty) ...[
               const SizedBox(height: 16),
               Wrap(
