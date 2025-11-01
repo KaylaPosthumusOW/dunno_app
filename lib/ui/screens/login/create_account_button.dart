@@ -1,7 +1,6 @@
 import 'package:dunno/constants/themes.dart';
 import 'package:dunno/ui/screens/register/register_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class CreateAccountButton extends StatelessWidget {
   const CreateAccountButton({super.key});

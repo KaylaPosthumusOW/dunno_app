@@ -5,14 +5,16 @@ class MainGiftBoardState extends Equatable {
   final String? errorMessage;
   final List<GiftBoard>? allUserGiftBoards;
   final GiftBoard? selectedGiftBoard;
+  final num? totalGiftSuggestions;
+  final List<GiftBoard>? selectedBoards;
 
   final List<BoardGiftSuggestion>? allGiftBoardSuggestions;
   final BoardGiftSuggestion? selectedGiftBoardSuggestion;
 
-  const MainGiftBoardState({this.message, this.errorMessage, this.allUserGiftBoards, this.selectedGiftBoard, this.allGiftBoardSuggestions, this.selectedGiftBoardSuggestion});
+  const MainGiftBoardState({this.message, this.errorMessage, this.allUserGiftBoards, this.selectedGiftBoard, this.allGiftBoardSuggestions, this.selectedGiftBoardSuggestion, this.totalGiftSuggestions, this.selectedBoards});
 
   @override
-  List<Object?> get props => [message, errorMessage, allUserGiftBoards, selectedGiftBoard, allGiftBoardSuggestions, selectedGiftBoardSuggestion];
+  List<Object?> get props => [message, errorMessage, allUserGiftBoards, selectedGiftBoard, allGiftBoardSuggestions, selectedGiftBoardSuggestion, totalGiftSuggestions, selectedBoards];
 
   MainGiftBoardState copyWith({
     String? message,
@@ -21,6 +23,8 @@ class MainGiftBoardState extends Equatable {
     GiftBoard? selectedGiftBoard,
     List<BoardGiftSuggestion>? allGiftBoardSuggestions,
     BoardGiftSuggestion? selectedGiftBoardSuggestion,
+    num? totalGiftSuggestions,
+    List<GiftBoard>? selectedBoards,
   }) {
     return MainGiftBoardState(
       message: message ?? this.message,
@@ -29,6 +33,8 @@ class MainGiftBoardState extends Equatable {
       selectedGiftBoard: selectedGiftBoard ?? this.selectedGiftBoard,
       allGiftBoardSuggestions: allGiftBoardSuggestions ?? this.allGiftBoardSuggestions,
       selectedGiftBoardSuggestion: selectedGiftBoardSuggestion ?? this.selectedGiftBoardSuggestion,
+      totalGiftSuggestions: totalGiftSuggestions ?? this.totalGiftSuggestions,
+      selectedBoards: selectedBoards ?? this.selectedBoards,
     );
   }
 
@@ -39,6 +45,8 @@ class MainGiftBoardState extends Equatable {
     GiftBoard? selectedGiftBoard,
     List<BoardGiftSuggestion>? allGiftBoardSuggestions,
     BoardGiftSuggestion? selectedGiftBoardSuggestion,
+    num? totalGiftSuggestions,
+    List<GiftBoard>? selectedBoards,
   }) {
     return MainGiftBoardState(
       message: message ?? this.message,
@@ -47,6 +55,8 @@ class MainGiftBoardState extends Equatable {
       selectedGiftBoard: selectedGiftBoard,
       allGiftBoardSuggestions: allGiftBoardSuggestions ?? this.allGiftBoardSuggestions,
       selectedGiftBoardSuggestion: selectedGiftBoardSuggestion,
+      totalGiftSuggestions: totalGiftSuggestions ?? this.totalGiftSuggestions,
+      selectedBoards: selectedBoards ?? this.selectedBoards,
     );
   }
 }
@@ -110,6 +120,10 @@ class LoadingGiftBoardSuggestionDetails extends GiftBoardState {
 
 class SelectedGiftBoardSuggestionDetails extends GiftBoardState {
   const SelectedGiftBoardSuggestionDetails(super.mainGiftBoardState);
+}
+
+class ToggledGiftBoardSelection extends GiftBoardState {
+  const ToggledGiftBoardSelection(super.mainGiftBoardState);
 }
 
 class GiftBoardError extends GiftBoardState {

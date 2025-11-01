@@ -6,7 +6,6 @@ import 'package:dunno/ui/widgets/dunno_button.dart';
 import 'package:dunno/ui/widgets/dunno_text_field.dart';
 import 'package:dunno/ui/widgets/gift_loading_indicator.dart';
 import 'package:dunno/ui/widgets/gift_suggestion_card.dart';
-import 'package:dunno/ui/widgets/loading_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

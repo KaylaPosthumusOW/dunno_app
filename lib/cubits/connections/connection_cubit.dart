@@ -6,7 +6,6 @@ import 'package:dunno/models/app_user_profile.dart';
 import 'package:dunno/models/calender_events.dart';
 import 'package:dunno/models/collections.dart';
 import 'package:dunno/models/connections.dart';
-import 'package:dunno/stores/firebase/calender_event_firebase_repository.dart';
 import 'package:dunno/stores/firebase/connection_firebase_repository.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

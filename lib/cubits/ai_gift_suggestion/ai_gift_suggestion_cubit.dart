@@ -10,8 +10,6 @@ class AiGiftSuggestionCubit extends Cubit<AiGiftSuggestionState> {
 
   Timer? _timeoutTimer;
 
-  String? _currentRequestId;
-
   static const int _maxRetryAttempts = 3;
 
   int _retryCount = 0;
@@ -26,7 +24,6 @@ class AiGiftSuggestionCubit extends Cubit<AiGiftSuggestionState> {
   }) async {
     try {
       _retryCount = 0;
-      _currentRequestId = DateTime.now().millisecondsSinceEpoch.toString();
       
       developer.log('Starting suggestion generation', name: 'AiGiftSuggestionCubit');
 
@@ -171,7 +168,6 @@ class AiGiftSuggestionCubit extends Cubit<AiGiftSuggestionState> {
 
   void cancelGeneration() {
     _cancelTimeoutTimer();
-    _currentRequestId = null;
     
     if (state is AiGiftSuggestionLoading) {
       emit(const AiGiftSuggestionInitial());
@@ -182,7 +178,6 @@ class AiGiftSuggestionCubit extends Cubit<AiGiftSuggestionState> {
   /// Clear suggestions and reset to initial state
   void clearSuggestions() {
     _cancelTimeoutTimer();
-    _currentRequestId = null;
     _retryCount = 0;
     emit(const AiGiftSuggestionInitial());
     developer.log('Suggestions cleared', name: 'AiGiftSuggestionCubit');

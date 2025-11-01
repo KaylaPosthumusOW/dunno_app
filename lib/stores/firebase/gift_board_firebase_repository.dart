@@ -69,4 +69,10 @@ class GiftBoardFirebaseRepository extends GiftBoardStore {
   Future<void> deleteGiftBoard(String giftBoardUid) async {
     await _giftBoardCollection.doc(giftBoardUid).delete();
   }
+
+  @override
+  Future<num?> totalGiftSuggestionsForBoard({required String boardUid}) async {
+    AggregateQuerySnapshot query = await _boardGiftSuggestionCollection.where('board.uid', isEqualTo: boardUid).count().get();
+    return query.count;
+  }
 }

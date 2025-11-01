@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dunno/constants/constants.dart';
 import 'package:dunno/models/board_gift_suggestion.dart';
 import 'package:dunno/models/gift_boards.dart';
@@ -86,4 +87,48 @@ class GiftBoardCubit extends Cubit<GiftBoardState> {
     emit(LoadingGiftBoardSuggestionDetails(state.mainGiftBoardState.copyWith(message: 'Selected gift board suggestion')));
     emit(SelectedGiftBoardSuggestionDetails(state.mainGiftBoardState.copyWith(selectedGiftBoardSuggestion: boardGiftSuggestion, message: 'Selected gift board suggestion')));
   }
+
+  toggleBoardSelection(GiftBoard board) {
+    final current = List<GiftBoard>.from(state.mainGiftBoardState.selectedBoards ?? []);
+
+    if (current.any((b) => b.uid == board.uid)) {
+      current.removeWhere((b) => b.uid == board.uid);
+    } else {
+      current.add(board);
+    }
+    emit(ToggledGiftBoardSelection(state.mainGiftBoardState.copyWith(selectedBoards: current, message: 'Toggled gift board selection', errorMessage: '')));
+
+  }
+
+  Future<void> saveBoardSuggestions() async {
+    emit(CreatingGiftBoardSuggestion(state.mainGiftBoardState.copyWith(message: 'Saving gift board suggestions')));
+    try {
+      final selectedBoards = state.mainGiftBoardState.selectedBoards ?? [];
+      final selectedSuggestion = state.mainGiftBoardState.selectedGiftBoardSuggestion;
+      if (selectedSuggestion == null) {
+        throw Exception('No gift board suggestion selected');
+      }
+
+      for (final board in selectedBoards) {
+        await _giftBoardFirebaseRepository.createBoardGiftSuggestion(
+          BoardGiftSuggestion(
+            board: board,
+            createdAt: Timestamp.now(),
+            giftSuggestion: selectedSuggestion.giftSuggestion,
+          ),
+        );
+      }
+
+      emit(CreatedGiftBoardSuggestion(state.mainGiftBoardState.copyWith(message: 'Saved gift board suggestions')));
+    } catch (error, stackTrace) {
+      emit(
+        GiftBoardError(
+          state.mainGiftBoardState.copyWith(message: '', errorMessage: error.toString()),
+          stackTrace: stackTrace.toString(),
+        ),
+      );
+    }
+  }
+
+
 }

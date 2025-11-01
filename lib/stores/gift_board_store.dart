@@ -6,6 +6,7 @@ abstract class GiftBoardStore {
   Future<void> updateGiftBoard(GiftBoard giftBoard);
   Future<List<GiftBoard>> loadAllGiftBoardsForUser({required String ownerUid});
   Future<void> deleteGiftBoard(String giftBoardUid);
+  Future<num?> totalGiftSuggestionsForBoard({required String boardUid});
 
   Future<BoardGiftSuggestion> createBoardGiftSuggestion(BoardGiftSuggestion newBoardGiftSuggestion);
   Future<List<BoardGiftSuggestion>> loadAllBoardGiftSuggestionsForBoard({required String boardUid});

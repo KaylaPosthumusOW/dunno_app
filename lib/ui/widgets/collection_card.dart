@@ -1,6 +1,7 @@
 import 'package:dunno/constants/constants.dart';
 import 'package:dunno/constants/routes.dart';
 import 'package:dunno/constants/themes.dart';
+import 'package:dunno/cubits/app_user_profile/app_user_profile_cubit.dart';
 import 'package:dunno/cubits/collections/collection_cubit.dart';
 import 'package:dunno/models/collections.dart';
 import 'package:dunno/ui/widgets/dunno_button.dart';
@@ -22,6 +23,7 @@ class CollectionCard extends StatefulWidget {
 }
 
 class _CollectionCardState extends State<CollectionCard> {
+  final AppUserProfileCubit _appUserProfileCubit = sl<AppUserProfileCubit>();
   final CollectionCubit _collectionCubit = sl<CollectionCubit>();
 
   Color get borderColor {
@@ -48,6 +50,11 @@ class _CollectionCardState extends State<CollectionCard> {
 
   @override
   Widget build(BuildContext context) {
+    final currentUserUid = _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile?.uid;
+    final selectedProfileUid = _appUserProfileCubit.state.mainAppUserProfileState.selectedProfile?.uid;
+
+    final bool isOwnProfile = (selectedProfileUid == null) || (selectedProfileUid == currentUserUid);
+
     return SizedBox(
       width: MediaQuery.of(context).size.width * 0.7,
       child: Container(
@@ -68,7 +75,7 @@ class _CollectionCardState extends State<CollectionCard> {
             ),
             const SizedBox(height: 10),
             DunnoButton(
-              label: 'View Collection',
+              label: isOwnProfile ? 'View Collection' : 'Create Gift Suggestion',
               type: buttonType,
               onPressed: () {
                 _collectionCubit.setSelectedCollection(widget.collection ?? Collections());

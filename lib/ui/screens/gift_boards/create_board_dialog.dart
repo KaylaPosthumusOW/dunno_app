@@ -38,20 +38,31 @@ class _CreateBoardDialogState extends State<CreateBoardDialog> {
           child: Container(
             padding: const EdgeInsets.all(16.0),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
-                  'Create New Gift Board',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Create New Gift Board',
+                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.close, size: 24.0),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
                 ),
-                SizedBox(height: 16.0),
+                SizedBox(height: 10.0),
                 DunnoTextField(
                   controller: _boardNameController,
                   label: 'Board Name',
                   supportingText: 'Enter board name',
+                  colorScheme: DunnoTextFieldColor.yellow,
+                  isLight: true,
                 ),
                 SizedBox(height: 16.0),
                 DunnoButton(

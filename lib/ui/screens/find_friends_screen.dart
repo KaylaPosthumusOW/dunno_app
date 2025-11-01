@@ -1,6 +1,5 @@
 import 'package:dunno/constants/constants.dart';
 import 'package:dunno/cubits/app_user_profile/app_user_profile_cubit.dart';
-import 'package:dunno/cubits/collections/collection_cubit.dart';
 import 'package:dunno/cubits/connections/connection_cubit.dart';
 import 'package:dunno/models/app_user_profile.dart';
 import 'package:dunno/ui/widgets/dunno_search_field.dart';

@@ -13,34 +13,34 @@ packages:
     dependency: transitive
     description:
       name: algolia_client_core
-      sha256: "3faa0b9f46888035e80f99bc9a12d392bcf369b49c0e00bd7d350171a09f5740"
+      sha256: cffb099e46172839b6e50bf197d8bd4ff14903d763b2e3abaa4e2f779f311c54
       url: "https://pub.dev"
     source: hosted
-    version: "1.38.0"
+    version: "1.40.0"
   algolia_client_insights:
     dependency: transitive
     description:
       name: algolia_client_insights
-      sha256: e0ac27bb239adb5ca41f90460d2eaff7221055f66f92ae141cfe73ba33c07a55
+      sha256: "47ee6ac41cf2bbc2afb3f197b86693e3794372019dc20c35213b285b35898ed1"
       url: "https://pub.dev"
     source: hosted
-    version: "1.38.0"
+    version: "1.40.0"
   algolia_client_search:
     dependency: transitive
     description:
       name: algolia_client_search
-      sha256: "018f5c5cf7415a1955375983781142f365d6bcc9898b2ee623c425d5cd74b34d"
+      sha256: "48ca6a5c07ba3a6d9148dda1c0dc29ec52868d95fcf62d0202a8610355d688a2"
       url: "https://pub.dev"
     source: hosted
-    version: "1.38.0"
+    version: "1.40.0"
   algoliasearch:
     dependency: "direct main"
     description:
       name: algoliasearch
-      sha256: c6632dfc6d5b35cde25dc0de294f0f3135b68fef66cb3349a3d5c0b88b8da67f
+      sha256: "3b5c1f30e9e829ac98e30e8a437c4a0986382ef8646700749f1e0c5abf8b267a"
       url: "https://pub.dev"
     source: hosted
-    version: "1.38.0"
+    version: "1.40.0"
   archive:
     dependency: transitive
     description:
@@ -668,10 +668,10 @@ packages:
     dependency: "direct main"
     description:
       name: font_awesome_flutter
-      sha256: "27af5982e6c510dec1ba038eff634fa284676ee84e3fd807225c80c4ad869177"
+      sha256: b9011df3a1fa02993630b8fb83526368cf2206a711259830325bab2f1d2a4eb0
       url: "https://pub.dev"
     source: hosted
-    version: "10.10.0"
+    version: "10.12.0"
   get_it:
     dependency: "direct main"
     description:
@@ -684,10 +684,10 @@ packages:
     dependency: "direct main"
     description:
       name: go_router
-      sha256: c752e2d08d088bf83742cb05bf83003f3e9d276ff1519b5c92f9d5e60e5ddd23
+      sha256: d8f590a69729f719177ea68eb1e598295e8dbc41bbc247fed78b2c8a25660d7c
       url: "https://pub.dev"
     source: hosted
-    version: "16.2.4"
+    version: "16.3.0"
   google_fonts:
     dependency: "direct main"
     description:
@@ -1324,10 +1324,10 @@ packages:
     dependency: "direct main"
     description:
       name: share_plus
-      sha256: "3424e9d5c22fd7f7590254ba09465febd6f8827c8b19a44350de4ac31d92d3a6"
+      sha256: "14c8860d4de93d3a7e53af51bff479598c4e999605290756bbbe45cf65b37840"
       url: "https://pub.dev"
     source: hosted
-    version: "12.0.0"
+    version: "12.0.1"
   share_plus_platform_interface:
     dependency: transitive
     description:
@@ -1558,18 +1558,18 @@ packages:
     dependency: transitive
     description:
       name: syncfusion_flutter_core
-      sha256: "3135dc6b427686cdda1546bdeab3a4a45372f5bb3d95369e007776b605f863ac"
+      sha256: a24e9ec04e03c2c14b7b41b1afe60e455adef09b244ab4c425ce6c5b8f58c9ce
       url: "https://pub.dev"
     source: hosted
-    version: "31.1.23"
+    version: "31.2.4"
   syncfusion_flutter_sliders:
     dependency: "direct main"
     description:
       name: syncfusion_flutter_sliders
-      sha256: "4933f6bd2228dd12d591ef75f6f468ac88d6824d51426e89ffc07afaf8cfdb90"
+      sha256: "46cec82b7918071f5b3b6f8c10c02e40e9d92d20f6ca98cb7c37fdd8f7b88785"
       url: "https://pub.dev"
     source: hosted
-    version: "31.1.23"
+    version: "31.2.4"
   synchronized:
     dependency: transitive
     description:

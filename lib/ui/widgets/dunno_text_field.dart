@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 enum DunnoTextFieldColor {
   pink,
   antiqueWhite,
+  yellow
 }
 
 class DunnoTextField extends StatefulWidget {
@@ -192,6 +193,16 @@ class DunnoTextFieldState extends State<DunnoTextField> {
           fillColor: isLight
               ? AppColors.tangerine.withValues(alpha: 0.4)
               : AppColors.tangerine.withValues(alpha: 0.4),
+          focusedColor: AppColors.antiqueWhite,
+        );
+      case DunnoTextFieldColor.yellow:
+        return ColorSchemeData(
+          textColor: isLight ? AppColors.black : AppColors.offWhite,
+          borderColor: AppColors.antiqueWhite,
+          iconColor: AppColors.antiqueWhite,
+          fillColor: isLight
+              ? AppColors.yellow.withValues(alpha: 0.4)
+              : AppColors.yellow.withValues(alpha: 0.4),
           focusedColor: AppColors.antiqueWhite,
         );
     }
