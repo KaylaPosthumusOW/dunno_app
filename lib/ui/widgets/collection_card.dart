@@ -70,7 +70,7 @@ class _CollectionCardState extends State<CollectionCard> {
           children: [
             Text(widget.collection?.title ?? '', style: Theme.of(context).textTheme.headlineLarge?.copyWith(color: borderColor)),
             Text(
-              'Date: ${StringHelpers.printFirebaseTimeStamp(widget.collection?.createdAt, format: 'dd MMMM, yyyy')}',
+              'Date: ${StringHelpers.printFirebaseTimeStamp(widget.collection?.eventCollectionDate, format: 'dd MMMM, yyyy')}',
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: AppColors.black),
             ),
             const SizedBox(height: 10),

@@ -21,7 +21,7 @@ class CalenderEventFirebaseRepository implements CalenderEventStore {
   @override
   Future<List<CalenderEvent>> loadAllEventsForUser({required String userId}) async {
     List<CalenderEvent> events = [];
-    QuerySnapshot<CalenderEvent> query = await _calenderCollection.where('user.uid', isEqualTo: userId).orderBy('startTime', descending: true).get();
+    QuerySnapshot<CalenderEvent> query = await _calenderCollection.where('user.uid', isEqualTo: userId).orderBy('collection.eventCollectionDate', descending: true).get();
     for (var doc in query.docs) {
       events.add(doc.data());
     }
@@ -50,7 +50,7 @@ class CalenderEventFirebaseRepository implements CalenderEventStore {
   Future<List<CalenderEvent>> getUpcomingEvents({required String userId}) async {
     try {
       final dateNow = Timestamp.now().toDate();
-      final dateOneWeekAgo = dateNow.subtract(const Duration(days: 7));
+      final dateOneWeekAgo = dateNow.add(const Duration(days: 7));
 
       final snapshot = await _calenderCollection
           .where('user.uid', isEqualTo: userId)

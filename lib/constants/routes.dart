@@ -10,7 +10,6 @@ const FRIEND_PROFILE_SCREEN = '/friend_profile';
 const USER_FRIENDS_SCREEN = '/user_friends';
 const GIFT_BOARDS_SCREEN = '/gift_boards';
 const GIFT_BOARDS_SUGGESTIONS_SCREEN = '/gift_boards_suggestions';
-
 //-----------
 const GIFT_SUGGESTION_MANAGEMENT = '/gift_suggestion';
 const RECEIVE_GIFT_SUGGESTION_SCREEN = '/receive_gift_suggestion';

@@ -13,7 +13,6 @@ import 'package:dunno/ui/screens/profile/friend_profile_screen.dart';
 import 'package:dunno/ui/screens/quick_gift_suggestion/gift_suggestion_management.dart';
 import 'package:dunno/ui/screens/quick_gift_suggestion/receive_gift_suggestion_screen.dart';
 import 'package:dunno/ui/screens/quick_suggestion_screen.dart';
-import 'package:dunno/ui/screens/search_friends_screen.dart';
 import 'package:dunno/ui/screens/user_friend_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -44,11 +43,6 @@ class AppRouter {
         path: CREATE_COLLECTION_SCREEN,
         name: CREATE_COLLECTION_SCREEN,
         builder: (BuildContext context, GoRouterState state) => CreateCollectionScreen(),
-      ),
-      GoRoute(
-        path: SEARCH_FRIENDS_SCREEN,
-        name: SEARCH_FRIENDS_SCREEN,
-        builder: (BuildContext context, GoRouterState state) => SearchFriendsScreen(),
       ),
       GoRoute(
         path: COLLECTION_DETAIL_SCREEN,

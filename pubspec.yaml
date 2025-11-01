@@ -54,8 +54,8 @@ dependencies:
     path: ../spaza/spaza-packages/user-repository
   sp_utilities:
     path: ../spaza/spaza-packages/sp-utilities
-#  sp-qr:
-#    path: ../spaza/spaza-packages/spaza-qr
+  sp_qr:
+    path: ../spaza/spaza-packages/spaza-qr
 
 dev_dependencies:
   flutter_lints: ^6.0.0
