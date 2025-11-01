@@ -114,7 +114,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   Expanded(
                     child: InkWell(
                       onTap: () {
-                        DefaultTabController.of(context).animateTo(2);
+                        context.pushNamed(GIFT_BOARDS_SCREEN);
                       },
                       child: Container(
                         padding: const EdgeInsets.all(16),

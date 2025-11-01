@@ -2,15 +2,11 @@ import 'package:dunno/models/app_user_profile.dart';
 import 'package:equatable/equatable.dart';
 
 class GiftBoard extends Equatable {
-  final String uid;
-  final String boardName;
+  final String? uid;
+  final String? boardName;
   final AppUserProfile? owner;
 
-  const GiftBoard({
-    required this.uid,
-    required this.boardName,
-    this.owner,
-  });
+  const GiftBoard({this.uid, this.boardName, this.owner});
 
   @override
   List<Object?> get props => [uid, boardName, owner];

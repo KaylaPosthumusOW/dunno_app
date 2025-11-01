@@ -6,12 +6,14 @@ import 'package:dunno/cubits/calender_event_cubit/calender_event_cubit.dart';
 import 'package:dunno/cubits/collections/collection_cubit.dart';
 import 'package:dunno/cubits/connections/connection_cubit.dart';
 import 'package:dunno/cubits/general/general_cubit.dart';
+import 'package:dunno/cubits/gift_board/gift_board_cubit.dart';
 import 'package:dunno/firebase_options.dart';
 import 'package:dunno/repositories/ai_text_generation_repository.dart';
 import 'package:dunno/stores/firebase/app_user_profile_firebase_repository.dart';
 import 'package:dunno/stores/firebase/calender_event_firebase_repository.dart';
 import 'package:dunno/stores/firebase/collection_firebase_repository.dart';
 import 'package:dunno/stores/firebase/connection_firebase_repository.dart';
+import 'package:dunno/stores/firebase/gift_board_firebase_repository.dart';
 import 'package:dunno/stores/firebase/main_firebase_repository.dart';
 import 'package:sp_firebase/sp_firebase.dart';
 import 'package:sp_user_repository/sp_user_repository.dart';
@@ -33,6 +35,7 @@ class DependencyInjection {
     sl.registerLazySingleton<CalenderEventFirebaseRepository>(() => CalenderEventFirebaseRepository());
     sl.registerLazySingleton<CollectionFirebaseRepository>(() => CollectionFirebaseRepository());
     sl.registerLazySingleton<ConnectionFirebaseRepository>(() => ConnectionFirebaseRepository());
+    sl.registerLazySingleton<GiftBoardFirebaseRepository>(() => GiftBoardFirebaseRepository());
     
     // AI Repository
     sl.registerLazySingleton<AiTextGenerationRepository>(() => AiTextGenerationRepository());
@@ -44,6 +47,7 @@ class DependencyInjection {
     sl.registerSingleton<CalenderEventCubit>(CalenderEventCubit());
     sl.registerSingleton<CollectionCubit>(CollectionCubit());
     sl.registerSingleton<ConnectionCubit>(ConnectionCubit());
+    sl.registerSingleton<GiftBoardCubit>(GiftBoardCubit());
 
     sl.registerFactory<AiGiftSuggestionCubit>(() => AiGiftSuggestionCubit(sl<AiTextGenerationRepository>()));
     sl.registerFactory<FriendGiftSuggestionCubit>(() => FriendGiftSuggestionCubit(sl<AiTextGenerationRepository>()));

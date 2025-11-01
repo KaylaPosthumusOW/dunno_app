@@ -6,6 +6,7 @@ import 'package:dunno/ui/screens/dunno_landing_screen.dart';
 import 'package:dunno/ui/screens/find_friends_screen.dart';
 import 'package:dunno/ui/screens/friend_gift_suggestion/friend_gift_suggestion_management.dart';
 import 'package:dunno/ui/screens/friend_gift_suggestion/friend_gift_suggestions_screen.dart';
+import 'package:dunno/ui/screens/gift_boards/gift_board_screen.dart';
 import 'package:dunno/ui/screens/profile/edit_profile_screen.dart';
 import 'package:dunno/ui/screens/profile/friend_profile_screen.dart';
 import 'package:dunno/ui/screens/quick_gift_suggestion/gift_suggestion_management.dart';
@@ -72,6 +73,11 @@ class AppRouter {
         path: USER_FRIENDS_SCREEN,
         name: USER_FRIENDS_SCREEN,
         builder: (BuildContext context, GoRouterState state) => UserFriendScreen(),
+      ),
+      GoRoute(
+        path: GIFT_BOARDS_SCREEN,
+        name: GIFT_BOARDS_SCREEN,
+        builder: (BuildContext context, GoRouterState state) => GiftBoardScreen(),
       ),
       GoRoute(
         path: FRIEND_GIFT_SUGGESTION_SCREEN,

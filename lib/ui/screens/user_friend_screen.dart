@@ -28,22 +28,12 @@ class _UserFriendScreenState extends State<UserFriendScreen> {
   @override
   void initState() {
     super.initState();
-    final uid = _appUserProfileCubit
-        .state.mainAppUserProfileState.appUserProfile?.uid ??
-        '';
+    final uid = _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile?.uid ?? '';
     _connectionCubit.loadAllUserConnections(userUid: uid);
   }
 
-  @override
-  void dispose() {
-    _searchFriendController.dispose();
-    super.dispose();
-  }
-
   Future<void> _refresh() async {
-    final uid = _appUserProfileCubit
-        .state.mainAppUserProfileState.appUserProfile?.uid ??
-        '';
+    final uid = _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile?.uid ?? '';
     await _connectionCubit.loadAllUserConnections(userUid: uid);
   }
 
@@ -52,43 +42,43 @@ class _UserFriendScreenState extends State<UserFriendScreen> {
     return BlocBuilder<ConnectionCubit, ConnectionState>(
       bloc: _connectionCubit,
       builder: (context, state) {
-        final connections =
-            state.mainConnectionState.allUserConnections ?? [];
-        final currentUserUid = _appUserProfileCubit
-            .state.mainAppUserProfileState.appUserProfile?.uid ??
-            '';
+        final connections = state.mainConnectionState.allUserConnections ?? [];
+        final currentUserUid =
+            _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile?.uid ?? '';
 
         return Scaffold(
           appBar: AppBar(title: const Text('Your Friends')),
-          body: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  DunnoSearchField(
-                    controller: _searchFriendController,
-                    typeSearch: TypeSearch.friends,
-                    onChanged: _onSearchChanged,
-                  ),
-                  const SizedBox(height: 12),
-                  if (state is LoadingConnections)
-                    const Expanded(
-                      child: Center(child: CircularProgressIndicator()),
-                    )
-                  else if (connections.isEmpty)
-                    const Expanded(
-                      child: Center(
-                        child: Text(
-                          'No friends yet. Connect with someone to see them here!',
-                          style: TextStyle(fontSize: 16),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    )
-                  else
-                    Expanded(
-                      child: RefreshIndicator(
+          body: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                DunnoSearchField(
+                  controller: _searchFriendController,
+                  typeSearch: TypeSearch.friends,
+                  onChanged: _onSearchChanged,
+                ),
+                const SizedBox(height: 12),
+
+                // 👇 This Expanded now has bounded height (no SingleChildScrollView above)
+                Expanded(
+                  child: Builder(
+                    builder: (_) {
+                      if (state is LoadingConnections) {
+                        return const Center(child: CircularProgressIndicator());
+                      }
+
+                      if (connections.isEmpty) {
+                        return const Center(
+                          child: Text(
+                            'No friends yet. Connect with someone to see them here!',
+                            style: TextStyle(fontSize: 16),
+                            textAlign: TextAlign.center,
+                          ),
+                        );
+                      }
+
+                      return RefreshIndicator(
                         onRefresh: _refresh,
                         child: ListView.separated(
                           physics: const AlwaysScrollableScrollPhysics(),
@@ -96,25 +86,33 @@ class _UserFriendScreenState extends State<UserFriendScreen> {
                           separatorBuilder: (_, __) => const SizedBox(height: 10),
                           itemBuilder: (context, index) {
                             final Connection connection = connections[index];
-            
+
+                            // show "the other person" in the connection
                             final AppUserProfile? friendProfile =
                             (connection.user?.uid == currentUserUid)
                                 ? connection.connectedUser
                                 : connection.user;
-            
+
                             return UserProfileCard(
                               userProfile: friendProfile ?? AppUserProfile(),
                             );
                           },
                         ),
-                      ),
-                    ),
-                ],
-              ),
+                      );
+                    },
+                  ),
+                ),
+              ],
             ),
           ),
         );
       },
     );
+  }
+
+  @override
+  void dispose() {
+    _searchFriendController.dispose();
+    super.dispose();
   }
 }
