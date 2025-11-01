@@ -50,12 +50,12 @@ class CalenderEventFirebaseRepository implements CalenderEventStore {
   Future<List<CalenderEvent>> getUpcomingEvents({required String userId}) async {
     try {
       final dateNow = Timestamp.now().toDate();
-      final dateOneWeekAgo = dateNow.add(const Duration(days: 7));
+      final oneWeekFromNow = dateNow.add(const Duration(days: 7));
 
       final snapshot = await _calenderCollection
           .where('user.uid', isEqualTo: userId)
-          .where('collection.eventCollectionDate', isGreaterThanOrEqualTo: dateOneWeekAgo)
-          .where('collection.eventCollectionDate', isLessThanOrEqualTo: dateNow)
+          .where('collection.eventCollectionDate', isGreaterThanOrEqualTo: dateNow)
+          .where('collection.eventCollectionDate', isLessThanOrEqualTo: oneWeekFromNow)
           .get();
 
       return snapshot.docs.map((doc) {
@@ -66,6 +66,7 @@ class CalenderEventFirebaseRepository implements CalenderEventStore {
       rethrow;
     }
   }
+
 
 
 }
