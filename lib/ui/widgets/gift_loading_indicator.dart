@@ -6,8 +6,10 @@ import 'package:lottie/lottie.dart';
 class GiftLoadingIndicator extends StatefulWidget {
   final List<String> messages;
   final Duration interval;
+  final String lottieAsset;
+  final Color? color;
 
-  const GiftLoadingIndicator({super.key, required this.messages, this.interval = const Duration(seconds: 2)});
+  const GiftLoadingIndicator({super.key, required this.messages, required this.lottieAsset, this.interval = const Duration(seconds: 2), this.color});
 
   @override
   State<GiftLoadingIndicator> createState() => _GiftLoadingIndicatorState();
@@ -40,7 +42,7 @@ class _GiftLoadingIndicatorState extends State<GiftLoadingIndicator> {
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Lottie.asset('assets/animations/birthday_gifts.json', width: 300, height: 300, fit: BoxFit.contain, repeat: true),
+        Lottie.asset(widget.lottieAsset, width: 300, height: 300, fit: BoxFit.contain, repeat: true),
         AnimatedSwitcher(
           duration: const Duration(milliseconds: 450),
           transitionBuilder: (child, animation) {
@@ -57,7 +59,7 @@ class _GiftLoadingIndicatorState extends State<GiftLoadingIndicator> {
             message,
             key: ValueKey(message),
             textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.cerise),
+            style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700, color: widget.color ?? AppColors.cinnabar),
           ),
         ),
       ],

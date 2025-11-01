@@ -4,6 +4,7 @@ import 'package:dunno/cubits/ai_gift_suggestion/ai_gift_suggestion_cubit.dart';
 import 'package:dunno/cubits/ai_gift_suggestion/ai_gift_suggestion_state.dart';
 import 'package:dunno/ui/widgets/dunno_button.dart';
 import 'package:dunno/ui/widgets/dunno_text_field.dart';
+import 'package:dunno/ui/widgets/gift_loading_indicator.dart';
 import 'package:dunno/ui/widgets/gift_suggestion_card.dart';
 import 'package:dunno/ui/widgets/loading_indicator.dart';
 import 'package:flutter/material.dart';
@@ -77,18 +78,14 @@ class _ReceiveGiftSuggestionScreenState extends State<ReceiveGiftSuggestionScree
 
               if (state is AiGiftSuggestionLoading) {
                 return Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const LoadingIndicator(color: null),
-                      const SizedBox(height: 20),
-                      Text(
-                        state.message,
-                        style: const TextStyle(fontSize: 16, color: Colors.grey, fontWeight: FontWeight.w500),
-                        textAlign: TextAlign.center,
-                      ),
+                  child: const GiftLoadingIndicator(
+                    lottieAsset: 'assets/animations/birthday_gifts_orange.json',
+                    messages: [
+                      'Thinking of the perfect gift...',
+                      'Browsing the best options...',
+                      'Almost there, just a moment...',
                     ],
+                    interval: Duration(seconds: 3),
                   ),
                 );
               }
