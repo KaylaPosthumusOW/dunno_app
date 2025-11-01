@@ -3,6 +3,7 @@ import 'package:dunno/constants/themes.dart';
 import 'package:dunno/cubits/friend_gift_suggestion/friend_gift_suggestion_cubit.dart';
 import 'package:dunno/ui/widgets/dunno_button.dart';
 import 'package:dunno/ui/widgets/dunno_text_field.dart';
+import 'package:dunno/ui/widgets/gift_loading_animation.dart';
 import 'package:dunno/ui/widgets/gift_suggestion_card.dart';
 import 'package:dunno/ui/widgets/loading_indicator.dart';
 import 'package:flutter/material.dart';
@@ -140,25 +141,14 @@ class _FriendGiftSuggestionsScreenState extends State<FriendGiftSuggestionsScree
             }
 
             if (state is FriendGiftSuggestionLoading) {
-              return Padding(
-                padding: const EdgeInsets.all(20),
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      LoadingIndicator(color: AppColors.cerise),
-                      const SizedBox(height: 20),
-                      Text(
-                        state.main.message ?? '',
-                        style: const TextStyle(
-                          fontSize: 16,
-                          color: Colors.grey,
-                          fontWeight: FontWeight.w500,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
-                  ),
+              return Center(
+                child: const GiftLoadingIndicator(
+                  messages: [
+                    'Thinking of the perfect gift...',
+                    'Browsing the best options...',
+                    'Almost there, just a moment...',
+                  ],
+                  interval: Duration(seconds: 3),
                 ),
               );
             }

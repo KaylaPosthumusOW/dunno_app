@@ -116,7 +116,7 @@ class AiTextGenerationRepository {
     return '''
     You are a South African gift recommendation assistant.
     Based on the following profile and filter information, generate **exactly 3 personalised gift suggestions** that are locally relevant and available in South Africa.
-    Respond in **ZAR currency** and **US English**.
+    Respond in **ZAR currency** and **US English**, do not use z, use s correctly in english words.
 
     $profileInfo
 

@@ -73,6 +73,31 @@ class _GiftSuggestionCardState extends State<GiftSuggestionCard> {
                 height: 1.5,
               ),
             ),
+
+            Text(
+              'WHERE?',
+              style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                fontWeight: FontWeight.w700,
+                color: textColor,
+              ),
+            ),
+            Text(
+              widget.suggestion?.location ?? '',
+              style: const TextStyle(
+                fontSize: 14,
+                color: Colors.grey,
+                height: 1.5,
+              ),
+            ),
+            //TODO: activate link and add to repo that it is a clickable/active/correct link
+            Text(
+              widget.suggestion?.purchaseLink ?? '',
+              style: const TextStyle(
+                fontSize: 14,
+                color: Colors.grey,
+                height: 1.5,
+              ),
+            ),
             if ((widget.suggestion?.tags ?? []).isNotEmpty) ...[
               const SizedBox(height: 16),
               Wrap(
