@@ -8,24 +8,30 @@ import 'package:flutter/material.dart' hide ConnectionState;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-class UserProfileCard extends StatelessWidget {
+class UserProfileCard extends StatefulWidget {
   final AppUserProfile userProfile;
   const UserProfileCard({super.key, required this.userProfile});
 
   @override
+  State<UserProfileCard> createState() => _UserProfileCardState();
+}
+
+class _UserProfileCardState extends State<UserProfileCard> {
+  final ConnectionCubit _connectionCubit = sl<ConnectionCubit>();
+
+  @override
   Widget build(BuildContext context) {
     final appUserProfileCubit = sl<AppUserProfileCubit>();
-    final currentUserUid =
-        appUserProfileCubit.state.mainAppUserProfileState.appUserProfile?.uid ?? '';
+    final currentUserUid = appUserProfileCubit.state.mainAppUserProfileState.appUserProfile?.uid ?? '';
 
     return BlocBuilder<ConnectionCubit, ConnectionState>(
-      bloc: sl<ConnectionCubit>(),
+      bloc: _connectionCubit,
       builder: (context, connectionState) {
         final allConnections = connectionState.mainConnectionState.allUserConnections ?? [];
         final isConnected = allConnections.any((connection) {
           final userUid = connection.user?.uid;
           final connectedUserUid = connection.connectedUser?.uid;
-          final profileUid = userProfile.uid;
+          final profileUid = widget.userProfile.uid;
 
           return (userUid == currentUserUid && connectedUserUid == profileUid) ||
                  (userUid == profileUid && connectedUserUid == currentUserUid);
@@ -33,7 +39,7 @@ class UserProfileCard extends StatelessWidget {
 
         return InkWell(
           onTap: () {
-            appUserProfileCubit.selectProfile(userProfile);
+            appUserProfileCubit.selectProfile(widget.userProfile);
             context.pushNamed(FRIEND_PROFILE_SCREEN);
           },
           child: Container(
@@ -49,10 +55,10 @@ class UserProfileCard extends StatelessWidget {
                 CircleAvatar(
                   radius: 30,
                   backgroundColor: AppColors.pinkLavender.withValues(alpha: 0.5),
-                  backgroundImage: userProfile.profilePicture != null
-                      ? NetworkImage(userProfile.profilePicture!)
+                  backgroundImage: widget.userProfile.profilePicture != null
+                      ? NetworkImage(widget.userProfile.profilePicture!)
                       : null,
-                  child: userProfile.profilePicture == null
+                  child: widget.userProfile.profilePicture == null
                       ? Icon(Icons.person, size: 30, color: AppColors.cerise)
                       : null,
                 ),
@@ -65,7 +71,7 @@ class UserProfileCard extends StatelessWidget {
                       Row(
                         children: [
                           Text(
-                            '${userProfile.name ?? ''} ${userProfile.surname ?? ''}',
+                            '${widget.userProfile.name ?? ''} ${widget.userProfile.surname ?? ''}',
                             style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold),
                           ),
                           SizedBox(width: 10),
@@ -82,7 +88,7 @@ class UserProfileCard extends StatelessWidget {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        userProfile.email ?? 'No Email',
+                        widget.userProfile.email ?? 'No Email',
                         style: Theme.of(context).textTheme.bodyMedium,
                       ),
                     ],
