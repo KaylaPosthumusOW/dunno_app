@@ -149,25 +149,33 @@ class _ModernCalendarState extends State<ModernCalendar> {
     }
 
     return events.map((event) {
+      String _initials(String? name, String? surname) {
+        final n = (name ?? '').trim();
+        final s = (surname ?? '').trim();
+        if (n.isEmpty && s.isEmpty) return '🙂';
+        final first = n.isNotEmpty ? n[0] : '';
+        final last = s.isNotEmpty ? s[0] : '';
+        return (first + last).toUpperCase();
+      }
+
       return Container(
         margin: const EdgeInsets.only(bottom: 4),
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         decoration: BoxDecoration(
-          color: AppColors.yellow.withValues(alpha: 0.3),
+          color: AppColors.offWhite.withValues(alpha: 0.3),
           borderRadius: BorderRadius.circular(8),
         ),
         child: Row(
           children: [
             CircleAvatar(
               radius: 12,
+              backgroundColor: AppColors.offWhite,
               backgroundImage: event.friend?.profilePicture != null
                   ? NetworkImage(event.friend!.profilePicture!)
                   : null,
               child: event.friend?.profilePicture == null
                   ? Text(
-                      event.friend?.name?.isNotEmpty == true
-                          ? event.friend!.name![0].toUpperCase()
-                          : '?',
+                      _initials(event.friend?.name, event.friend?.surname),
                       style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
                     )
                   : null,
@@ -189,7 +197,7 @@ class _ModernCalendarState extends State<ModernCalendar> {
                   ),
                   if (event.friend?.name != null)
                     Text(
-                      event.friend!.name!,
+                      '${event.friend?.name} ${event.friend?.surname}',
                       style: const TextStyle(
                         color: Colors.white70,
                         fontSize: 10,

@@ -21,44 +21,45 @@ class _HomeScreenState extends State<HomeScreen> {
   final AppUserProfileCubit _appUserProfileCubit = sl<AppUserProfileCubit>()..loadProfile();
   final CalenderEventCubit _calenderEventCubit = sl<CalenderEventCubit>();
 
-  @override
-  void initState() {
-    super.initState();
-    _appUserProfileCubit.loadProfile();
-    _calenderEventCubit.loadAllUserCalenderEvents(userUid: _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile?.uid ?? '');
-    _calenderEventCubit.loadUpcomingEventsNotifications(userUid: _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile?.uid ?? '');
-  }
+  Widget _displayUpComingEvents(CalenderEventState state) {
+    final upcomingEvents = state.mainCalenderEventState.upcomingEventsNotifications ?? [];
 
-  Widget _displayUpComingEvents() {
-    return BlocBuilder<CalenderEventCubit, CalenderEventState>(
-      bloc: _calenderEventCubit,
-      builder: (context, state) {
-        if (state is LoadingUpcomingEventsNotifications) {
-          return const Center(child: CircularProgressIndicator());
-        }
-
-        if (state.mainCalenderEventState.upcomingEventsNotifications == null || state.mainCalenderEventState.upcomingEventsNotifications!.isEmpty) {
-          return const Center(child: Text('No upcoming events'));
-        }
-
-        return ListView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: state.mainCalenderEventState.upcomingEventsNotifications!.length,
-          itemBuilder: (context, index) {
-            final event = state.mainCalenderEventState.upcomingEventsNotifications![index];
-            return CalenderNotificationCard(upcomingEvent: event);
-          },
-        );
+    return ListView.separated(
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
+      itemCount: upcomingEvents.length,
+      separatorBuilder: (context, index) => SizedBox(height: 10),
+      itemBuilder: (context, index) {
+        final event = upcomingEvents[index];
+        return CalenderNotificationCard(upcomingEvent: event);
       },
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AppUserProfileCubit, AppUserProfileState>(
+    return BlocConsumer<AppUserProfileCubit, AppUserProfileState>(
       bloc: _appUserProfileCubit,
+      listener: (context, state) {
+        if (state is ProfileError) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Error loading profile: ${state.mainAppUserProfileState.errorMessage}'),
+              backgroundColor: AppColors.cinnabar,
+            ),
+          );
+        }
+
+        if (state is ProfileInitialLoaded) {
+          _calenderEventCubit.loadAllUserCalenderEvents(userUid: state.mainAppUserProfileState.appUserProfile?.uid ?? '');
+          _calenderEventCubit.loadUpcomingEventsNotifications(userUid: state.mainAppUserProfileState.appUserProfile?.uid ?? '');
+        }
+      },
       builder: (context, state) {
+        if (state is ProfileLoading) {
+          return const Scaffold(body: Center(child: CircularProgressIndicator()));
+        }
+
         return Scaffold(
           appBar: AppBar(
             title: Text('Hello, ${state.mainAppUserProfileState.appUserProfile?.name ?? 'User'}'),
@@ -67,14 +68,10 @@ class _HomeScreenState extends State<HomeScreen> {
               Container(
                 margin: const EdgeInsets.only(right: 10),
                 child: CircleAvatar(
-                  backgroundImage: state.mainAppUserProfileState.appUserProfile?.profilePicture != null
-                      ? NetworkImage(state.mainAppUserProfileState.appUserProfile!.profilePicture!)
-                      : null,
-                  child: state.mainAppUserProfileState.appUserProfile?.profilePicture == null
-                      ? Icon(Icons.person, color: AppColors.antiqueWhite)
-                      : null,
+                  backgroundImage: state.mainAppUserProfileState.appUserProfile?.profilePicture != null ? NetworkImage(state.mainAppUserProfileState.appUserProfile!.profilePicture!) : null,
+                  child: state.mainAppUserProfileState.appUserProfile?.profilePicture == null ? Icon(Icons.person, color: AppColors.antiqueWhite) : null,
                 ),
-              )
+              ),
             ],
           ),
           body: ListView(
@@ -90,18 +87,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                       child: Container(
                         padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          color: AppColors.yellow,
-                          borderRadius: BorderRadius.circular(20),
-                        ),
+                        decoration: BoxDecoration(color: AppColors.yellow, borderRadius: BorderRadius.circular(20)),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Icon(Icons.folder_copy_outlined, color: AppColors.offWhite),
-                              ],
+                              children: [Icon(Icons.folder_copy_outlined, color: AppColors.offWhite)],
                             ),
                             SizedBox(height: 5),
                             Text('Your \nCollections', style: Theme.of(context).textTheme.displayMedium?.copyWith(color: AppColors.offWhite)),
@@ -118,18 +110,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                       child: Container(
                         padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          color: AppColors.pinkLavender,
-                          borderRadius: BorderRadius.circular(20),
-                        ),
+                        decoration: BoxDecoration(color: AppColors.pinkLavender, borderRadius: BorderRadius.circular(20)),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Icon(Icons.card_giftcard_rounded, color: AppColors.cerise),
-                              ],
+                              children: [Icon(Icons.card_giftcard_rounded, color: AppColors.cerise)],
                             ),
                             SizedBox(height: 5),
                             Text('Your \nGift Boards', style: Theme.of(context).textTheme.displayMedium?.copyWith(color: AppColors.cerise)),
@@ -150,18 +137,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                       child: Container(
                         padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          color: AppColors.cerise,
-                          borderRadius: BorderRadius.circular(20),
-                        ),
+                        decoration: BoxDecoration(color: AppColors.cerise, borderRadius: BorderRadius.circular(20)),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Icon(Icons.people_outline_rounded, color: AppColors.pinkLavender),
-                              ],
+                              children: [Icon(Icons.people_outline_rounded, color: AppColors.pinkLavender)],
                             ),
                             SizedBox(height: 5),
                             Text('Your \nFriends/Family', style: Theme.of(context).textTheme.displayMedium?.copyWith(color: AppColors.pinkLavender)),
@@ -178,18 +160,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                       child: Container(
                         padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          color: AppColors.cinnabar,
-                          borderRadius: BorderRadius.circular(20),
-                        ),
+                        decoration: BoxDecoration(color: AppColors.cinnabar, borderRadius: BorderRadius.circular(20)),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Icon(Icons.camera_alt_outlined, color: AppColors.antiqueWhite),
-                              ],
+                              children: [Icon(Icons.camera_alt_outlined, color: AppColors.antiqueWhite)],
                             ),
                             SizedBox(height: 5),
                             Text('Connect \nWith QR', style: Theme.of(context).textTheme.displayMedium?.copyWith(color: AppColors.antiqueWhite)),
@@ -203,39 +180,37 @@ class _HomeScreenState extends State<HomeScreen> {
               SizedBox(height: 20),
               Text('All Your Friends Events', style: Theme.of(context).textTheme.titleMedium),
               BlocBuilder<CalenderEventCubit, CalenderEventState>(
-                  bloc: _calenderEventCubit,
-                  builder: (context, state) {
+                bloc: _calenderEventCubit,
+                builder: (context, state) {
+
+                  final count = state.mainCalenderEventState.upcomingEventsNotifications?.length ?? 0;
+
+                  final message = count == 0
+                      ? 'You have no upcoming events'
+                      : 'You have $count upcoming ${count == 1 ? 'event' : 'events'}!';
                   return Offstage(
                     offstage: state.mainCalenderEventState.upcomingEventsNotifications == null || state.mainCalenderEventState.upcomingEventsNotifications!.isEmpty,
-                    child: Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: AppColors.tangerine,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('Upcoming Events', style: Theme.of(context).textTheme.displayMedium?.copyWith(color: AppColors.antiqueWhite)),
-                              Icon(Icons.lightbulb_outline_rounded, color: AppColors.antiqueWhite),
-                            ],
-                          ),
-                          _displayUpComingEvents(),
-                        ],
-                      ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(message, style: Theme.of(context).textTheme.bodyMedium),
+                          ],
+                        ),
+                        _displayUpComingEvents(state),
+                      ],
                     ),
                   );
-                }
+                },
               ),
               SizedBox(height: 10),
-              ModernCalendar()
+              ModernCalendar(),
             ],
-          )
+          ),
         );
-      }
+      },
     );
   }
 }
