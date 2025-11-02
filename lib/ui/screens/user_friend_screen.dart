@@ -28,13 +28,11 @@ class _UserFriendScreenState extends State<UserFriendScreen> {
   @override
   void initState() {
     super.initState();
-    final uid = _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile?.uid ?? '';
-    _connectionCubit.loadAllUserConnections(userUid: uid);
+    _connectionCubit.loadAllUserConnections(userUid: _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile?.uid ?? '');
   }
 
   Future<void> _refresh() async {
-    final uid = _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile?.uid ?? '';
-    await _connectionCubit.loadAllUserConnections(userUid: uid);
+    await _connectionCubit.loadAllUserConnections(userUid: _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile?.uid ?? '');
   }
 
   @override

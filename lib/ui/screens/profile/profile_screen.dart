@@ -18,6 +18,8 @@ import 'package:go_router/go_router.dart';
 import 'package:sp_user_repository/sp_user_repository.dart';
 import 'package:sp_utilities/utilities.dart';
 
+enum _PhotoSource { camera, gallery, remove }
+
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
 
@@ -34,13 +36,71 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   String? _downloadUrl;
 
-  _updateProfilePicture({required bool cameraFlag}) async {
-    Navigator.of(context).pop();
-    Reference storageReference = sl<FirebaseStorage>().ref().child('user').child(_appUserProfileCubit.state.mainAppUserProfileState.appUserProfile!.uid!);
-    if (cameraFlag == true) {
-      _imageUploaderCubit.singleSelectImageFromCameraToUploadToReference(storageRef: storageReference);
-    } else {
-      _imageUploaderCubit.singleSelectImageFromGalleryToUploadToReference(storageRef: storageReference);
+  Future<void> _chooseAndUploadProfilePhoto() async {
+    // 1) Ask user how to add photo
+    final source = await showModalBottomSheet<_PhotoSource>(
+      context: context,
+      backgroundColor: AppColors.offWhite,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24.0)),
+      ),
+      builder: (sheetCtx) {
+        return SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: const Icon(Icons.photo_camera_outlined),
+                title: Text('Take Photo', style: Theme.of(context).textTheme.bodyLarge),
+                onTap: () => Navigator.of(sheetCtx).pop(_PhotoSource.camera),
+              ),
+              ListTile(
+                leading: const Icon(Icons.image_outlined),
+                title: Text('Choose Photo', style: Theme.of(context).textTheme.bodyLarge),
+                onTap: () => Navigator.of(sheetCtx).pop(_PhotoSource.gallery),
+              ),
+              if (_appUserProfileCubit.state.mainAppUserProfileState.appUserProfile?.profilePicture?.isNotEmpty == true) ...[
+                const Divider(),
+                ListTile(
+                  leading: const Icon(Icons.delete_outline),
+                  title: Text('Remove Photo', style: Theme.of(context).textTheme.bodyLarge),
+                  onTap: () => Navigator.of(sheetCtx).pop(_PhotoSource.remove),
+                ),
+              ],
+              ListTile(
+                leading: const Icon(Icons.close),
+                title: Text('Cancel', style: Theme.of(context).textTheme.bodyLarge),
+                onTap: () => Navigator.of(sheetCtx).pop(null),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+
+    if (source == null) return; // cancelled
+    if (!mounted) return;
+
+    // 2) Handle choice AFTER the sheet has fully closed
+    if (source == _PhotoSource.remove) {
+      await _deleteImage();
+      return;
+    }
+
+    final storageReference = sl<FirebaseStorage>()
+        .ref()
+        .child('user')
+        .child(_appUserProfileCubit.state.mainAppUserProfileState.appUserProfile!.uid!);
+
+    try {
+      if (source == _PhotoSource.camera) {
+        _imageUploaderCubit.singleSelectImageFromCameraToUploadToReference(storageRef: storageReference);
+      } else {
+        _imageUploaderCubit.singleSelectImageFromGalleryToUploadToReference(storageRef: storageReference);
+      }
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Upload failed: $e')));
     }
   }
 
@@ -63,82 +123,37 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  _addProfilePhoto() {
-    return showModalBottomSheet(
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(24.0))),
-      backgroundColor: AppColors.offWhite,
-      context: context,
-      builder: (BuildContext bc) {
-        return SafeArea(
-          child: Wrap(
-            children: <Widget>[
-              Column(
-                children: [
-                  ListTile(
-                    leading: const Icon(Icons.photo_camera_outlined, color: Colors.black),
-                    title: Text('Take Photo', style: Theme.of(context).textTheme.bodyLarge),
-                    onTap: () => _updateProfilePicture(cameraFlag: true),
-                  ),
-                  ListTile(
-                    leading: const Icon(Icons.image_outlined, color: Colors.black),
-                    title: Text('Choose Photo', style: Theme.of(context).textTheme.bodyLarge),
-                    onTap: () => _updateProfilePicture(cameraFlag: false),
-                  ),
-                  Offstage(
-                    offstage: !(_appUserProfileCubit.state.mainAppUserProfileState.appUserProfile != null && _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile!.profilePicture != null && _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile!.profilePicture != ''),
-                    child: Column(
-                      children: [
-                        const Divider(),
-                        ListTile(
-                          leading: const Icon(Icons.delete_outline, color: Colors.black),
-                          title: Text('Remove Photo', style: Theme.of(context).textTheme.bodyLarge),
-                          onTap: () {
-                            Navigator.pop(context);
-                            _deleteImage();
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                  ListTile(
-                    leading: const Icon(Icons.close, color: Colors.black),
-                    title: Text('Cancel', style: Theme.of(context).textTheme.bodyLarge),
-                    onTap: () => Navigator.pop(context),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
+
 
   _profilePicture() {
     return BlocConsumer<SPFileUploaderCubit, SPFileUploaderState>(
       bloc: _imageUploaderCubit,
-      listener: (context, state) {
+      listener: (context, state) async {
         if (state is SPFileUploaderAllUploadTaskCompleted) {
           _downloadUrl = state.mainSPFileUploadState.downloadUrls?.first;
-          if (_appUserProfileCubit.state.mainAppUserProfileState.appUserProfile != null) {
-            final AppUserProfile appUserProfile = _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile!.copyWith(profilePicture: _downloadUrl);
-            _appUserProfileCubit.updateProfile(appUserProfile);
+          final profile = _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile;
+          if (profile != null) {
+            await _appUserProfileCubit.updateProfile(profile.copyWith(profilePicture: _downloadUrl));
           }
+          if (!mounted) return;
           setState(() {});
         }
 
         if (state is SPFileUploaderErrorState) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.mainSPFileUploadState.errorMessage ?? state.mainSPFileUploadState.message ?? '')));
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(state.mainSPFileUploadState.errorMessage ?? state.mainSPFileUploadState.message ?? 'Upload error')),
+            );
+          }
         }
       },
       builder: (context, state) {
         if (state.mainSPFileUploadState.uploadTasks != null && state.mainSPFileUploadState.uploadTasks!.isNotEmpty) {
-          return ListView.builder(
-            shrinkWrap: true,
-            itemCount: state.mainSPFileUploadState.uploadTasks?.length ?? 0,
-            itemBuilder: (context, index) {
-              return DunnoImageUploadingTile(task: state.mainSPFileUploadState.uploadTasks != null ? state.mainSPFileUploadState.uploadTasks![index] : {'task': null, 'uploadTaskSnapshot': null});
-            },
+          // Show circular upload progress over the profile picture area
+          return DunnoImageUploadingTile(
+            task: state.mainSPFileUploadState.uploadTasks!.first,
+            size: 200.0,
+            isCircular: true,
           );
         }
 
@@ -150,7 +165,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               Column(
                 children: [
                   GestureDetector(
-                    onTap: () => _addProfilePhoto(),
+                    onTap: () => _chooseAndUploadProfilePhoto(),
                     child: Stack(
                       children: <Widget>[
                         profilePicture != null
@@ -174,7 +189,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                             child: IconButton(
                               icon: Icon(Icons.edit, color: AppColors.cinnabar, size: 25),
-                              onPressed: () => _addProfilePhoto(),
+                              onPressed: () => _chooseAndUploadProfilePhoto(),
                             ),
                           ),
                         ),
@@ -193,12 +208,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   Stack(
                     children: [
                       GestureDetector(
-                        onTap: () => _addProfilePhoto(),
+                        onTap: () => _chooseAndUploadProfilePhoto(),
                         child: SizedBox(
                           width: 200,
                           height: 200,
                           child: ClipRRect(
-                            borderRadius: BorderRadius.circular(75.0),
+                            borderRadius: BorderRadius.circular(100),
                             child: DunnoExtendedImage(url: _downloadUrl!),
                           ),
                         ),
@@ -210,7 +225,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           decoration: BoxDecoration(color: AppColors.offWhite, shape: BoxShape.circle),
                           child: IconButton(
                             icon: Icon(Icons.edit, color: AppColors.cinnabar, size: 25),
-                            onPressed: () => _addProfilePhoto(),
+                            onPressed: () => _chooseAndUploadProfilePhoto(),
                           ),
                         ),
                       ),
@@ -222,7 +237,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           );
         } else {
           return GestureDetector(
-            onTap: () => _addProfilePhoto(),
+            onTap: () => _chooseAndUploadProfilePhoto(),
             child: Column(
               children: [
                 Stack(
@@ -248,7 +263,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         decoration: BoxDecoration(color: AppColors.offWhite, shape: BoxShape.circle),
                         child: IconButton(
                           icon: Icon(Icons.edit, color: AppColors.cinnabar, size: 25),
-                          onPressed: () => _addProfilePhoto(),
+                          onPressed: () => _chooseAndUploadProfilePhoto(),
                         ),
                       ),
                     ),
@@ -402,16 +417,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 BlocBuilder<ConnectionCubit, ConnectionState>(
                   bloc: _connectionCubit,
                   builder: (context, state) {
-                    return Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.people),
-                        SizedBox(width: 8),
-                        Text(
-                          '${state.mainConnectionState.numberOfUserConnections ?? '0'}',
-                          style: Theme.of(context).textTheme.displayLarge?.copyWith(fontWeight: FontWeight.bold, color: AppColors.black),
-                        ),
-                      ],
+                    return InkWell(
+                      onTap: () {
+                        context.pushNamed(USER_FRIENDS_SCREEN);
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.people),
+                          SizedBox(width: 8),
+                          Text(
+                            '${state.mainConnectionState.numberOfUserConnections ?? '0'}',
+                            style: Theme.of(context).textTheme.displayLarge?.copyWith(fontWeight: FontWeight.bold, color: AppColors.black),
+                          ),
+                        ],
+                      ),
                     );
                   }
                 ),
@@ -449,11 +469,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
         backgroundColor: AppColors.yellow,
         actions: [
           PopupMenuButton(
-            icon: Icon(Icons.logout),
+            icon: Icon(Icons.logout, color: AppColors.offWhite),
             itemBuilder: (context) => [
               PopupMenuItem(
                 onTap: () {
-                  _logOutPopup();
+                  // schedule after the menu has closed
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    _logOutPopup();
+                  });
                 },
                 child: ListTile(
                   title: Row(
@@ -467,7 +490,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               PopupMenuItem(
                 onTap: () {
-                  _deleteProfilePopup();
+                  // schedule after the menu has closed
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    _deleteProfilePopup();
+                  });
                 },
                 child: ListTile(
                   title: Row(
@@ -488,8 +514,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
         listener: (context, state) {
           if (state is ProfileUpdated) {
             _appUserProfileCubit.loadProfile();
-            Navigator.of(context).pop();
-            UtilitiesHelper.showSnackBar(context, message: 'Profile Updated', backgroundColor: Colors.green);
+            if (mounted) Navigator.of(context).maybePop(); // optional: only if you opened a modal
+            if (mounted) UtilitiesHelper.showSnackBar(context, message: 'Profile Updated', backgroundColor: Colors.green);
           }
         },
         builder: (context, state) {
