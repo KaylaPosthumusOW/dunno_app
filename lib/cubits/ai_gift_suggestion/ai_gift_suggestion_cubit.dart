@@ -18,101 +18,52 @@ class AiGiftSuggestionCubit extends Cubit<AiGiftSuggestionState> {
     developer.log('AiGiftSuggestionCubit initialized', name: 'AiGiftSuggestionCubit');
   }
 
-  Future<void> generateSuggestions({
-    required Map<String, dynamic> profile,
-    required Map<String, dynamic> filters,
-  }) async {
+  Future<void> generateSuggestions({required Map<String, dynamic> profile, required Map<String, dynamic> filters}) async {
     try {
       _retryCount = 0;
-      
+
       developer.log('Starting suggestion generation', name: 'AiGiftSuggestionCubit');
 
       final validationError = _validateInputData(profile, filters);
       if (validationError != null) {
-        emit(AiGiftSuggestionError(
-          message: validationError,
-          errorCode: 'VALIDATION_ERROR',
-          profile: profile,
-          filters: filters,
-          isRetryable: false,
-        ));
+        emit(AiGiftSuggestionError(message: validationError, errorCode: 'VALIDATION_ERROR', profile: profile, filters: filters, isRetryable: false));
         return;
       }
 
-      emit(AiGiftSuggestionLoading(
-        message: 'Analysing your preferences...',
-        progress: 0.1,
-        profile: profile,
-        filters: filters,
-      ));
+      emit(AiGiftSuggestionLoading(message: 'Analysing your preferences...', progress: 0.1, profile: profile, filters: filters));
 
       _startTimeoutTimer();
 
-      emit(AiGiftSuggestionLoading(
-        message: 'Generating personalised suggestions...',
-        progress: 0.5,
-        profile: profile,
-        filters: filters,
-      ));
+      emit(AiGiftSuggestionLoading(message: 'Generating personalised suggestions...', progress: 0.5, profile: profile, filters: filters));
 
-      final suggestions = await _repository.generateGiftSuggestions(
-        profile: profile,
-        filters: filters,
-      );
+      final suggestions = await _repository.generateGiftSuggestions(profile: profile, filters: filters);
 
       _cancelTimeoutTimer();
 
-      emit(AiGiftSuggestionLoading(
-        message: 'Finalising suggestions...',
-        progress: 0.9,
-        profile: profile,
-        filters: filters,
-      ));
+      emit(AiGiftSuggestionLoading(message: 'Finalising suggestions...', progress: 0.9, profile: profile, filters: filters));
 
       if (suggestions.isEmpty) {
-        emit(AiGiftSuggestionError(
-          message: 'No gift suggestions were generated. Please try with different criteria.',
-          errorCode: 'NO_SUGGESTIONS',
-          profile: profile,
-          filters: filters,
-        ));
+        emit(AiGiftSuggestionError(message: 'No gift suggestions were generated. Please try with different criteria.', errorCode: 'NO_SUGGESTIONS', profile: profile, filters: filters));
         return;
       }
 
-      final qualityIssue = _validateSuggestionQuality(suggestions);
+      final qualityIssue = _validateSuggestionQuality(suggestions, filters);
       if (qualityIssue != null) {
         developer.log('Suggestion quality issue: $qualityIssue', name: 'AiGiftSuggestionCubit');
-        emit(AiGiftSuggestionError(
-          message: 'Generated suggestions need improvement. Please try again.',
-          errorCode: 'QUALITY_ERROR',
-          technicalDetails: qualityIssue,
-          profile: profile,
-          filters: filters,
-        ));
+        emit(AiGiftSuggestionError(message: 'Generated suggestions need improvement. Please try again.', errorCode: 'QUALITY_ERROR', technicalDetails: qualityIssue, profile: profile, filters: filters));
         return;
       }
 
       developer.log('Successfully generated ${suggestions.length} suggestions', name: 'AiGiftSuggestionCubit');
-      
-      emit(AiGiftSuggestionLoaded(
-        suggestions: suggestions,
-        profile: profile,
-        filters: filters,
-      ));
+
+      emit(AiGiftSuggestionLoaded(suggestions: suggestions, profile: profile, filters: filters));
     } catch (e, stackTrace) {
       _cancelTimeoutTimer();
       developer.log('Error generating suggestions: $e', name: 'AiGiftSuggestionCubit', error: e, stackTrace: stackTrace);
-      
+
       final errorInfo = _categorizeError(e);
-      
-      emit(AiGiftSuggestionError(
-        message: errorInfo['message'],
-        errorCode: errorInfo['code'],
-        technicalDetails: e.toString(),
-        profile: profile,
-        filters: filters,
-        isRetryable: errorInfo['retryable'],
-      ));
+
+      emit(AiGiftSuggestionError(message: errorInfo['message'], errorCode: errorInfo['code'], technicalDetails: e.toString(), profile: profile, filters: filters, isRetryable: errorInfo['retryable']));
     }
   }
 
@@ -124,24 +75,12 @@ class AiGiftSuggestionCubit extends Cubit<AiGiftSuggestionState> {
     }
 
     if (!currentState.isRetryable) {
-      emit(AiGiftSuggestionError(
-        message: 'This error cannot be retried. Please modify your input and try again.',
-        errorCode: 'NOT_RETRYABLE',
-        profile: currentState.profile,
-        filters: currentState.filters,
-        isRetryable: false,
-      ));
+      emit(AiGiftSuggestionError(message: 'This error cannot be retried. Please modify your input and try again.', errorCode: 'NOT_RETRYABLE', profile: currentState.profile, filters: currentState.filters, isRetryable: false));
       return;
     }
 
     if (_retryCount >= _maxRetryAttempts) {
-      emit(AiGiftSuggestionError(
-        message: 'Maximum retry attempts reached. Please try again later.',
-        errorCode: 'MAX_RETRIES_EXCEEDED',
-        profile: currentState.profile,
-        filters: currentState.filters,
-        isRetryable: false,
-      ));
+      emit(AiGiftSuggestionError(message: 'Maximum retry attempts reached. Please try again later.', errorCode: 'MAX_RETRIES_EXCEEDED', profile: currentState.profile, filters: currentState.filters, isRetryable: false));
       return;
     }
 
@@ -150,25 +89,17 @@ class AiGiftSuggestionCubit extends Cubit<AiGiftSuggestionState> {
 
     if (_retryCount > 1) {
       final delaySeconds = _retryCount * 2;
-      emit(AiGiftSuggestionLoading(
-        message: 'Retrying in $delaySeconds seconds...',
-        progress: 0.0,
-        profile: currentState.profile,
-        filters: currentState.filters,
-      ));
-      
+      emit(AiGiftSuggestionLoading(message: 'Retrying in $delaySeconds seconds...', progress: 0.0, profile: currentState.profile, filters: currentState.filters));
+
       await Future.delayed(Duration(seconds: delaySeconds));
     }
 
-    await generateSuggestions(
-      profile: currentState.profile ?? {},
-      filters: currentState.filters ?? {},
-    );
+    await generateSuggestions(profile: currentState.profile ?? {}, filters: currentState.filters ?? {});
   }
 
   void cancelGeneration() {
     _cancelTimeoutTimer();
-    
+
     if (state is AiGiftSuggestionLoading) {
       emit(const AiGiftSuggestionInitial());
       developer.log('Generation cancelled by user', name: 'AiGiftSuggestionCubit');
@@ -182,24 +113,21 @@ class AiGiftSuggestionCubit extends Cubit<AiGiftSuggestionState> {
     emit(const AiGiftSuggestionInitial());
     developer.log('Suggestions cleared', name: 'AiGiftSuggestionCubit');
   }
+
   Future<void> regenerateSuggestions() async {
     final currentState = state;
     if (currentState is AiGiftSuggestionLoaded) {
-      await generateSuggestions(
-        profile: currentState.profile,
-        filters: currentState.filters,
-      );
+      await generateSuggestions(profile: currentState.profile, filters: currentState.filters);
     }
   }
+
   String? _validateInputData(Map<String, dynamic> profile, Map<String, dynamic> filters) {
     if (profile.isEmpty && filters.isEmpty) {
       return 'Please provide profile or filter information to generate suggestions';
     }
 
-    final hasProfileContent = profile.values.any((value) => 
-      value != null && value.toString().trim().isNotEmpty);
-    final hasFilterContent = filters.values.any((value) => 
-      value != null && value.toString().trim().isNotEmpty);
+    final hasProfileContent = profile.values.any((value) => value != null && value.toString().trim().isNotEmpty);
+    final hasFilterContent = filters.values.any((value) => value != null && value.toString().trim().isNotEmpty);
 
     if (!hasProfileContent && !hasFilterContent) {
       return 'Please provide more detailed information to generate better suggestions';
@@ -208,14 +136,16 @@ class AiGiftSuggestionCubit extends Cubit<AiGiftSuggestionState> {
     return null;
   }
 
-  String? _validateSuggestionQuality(List<AiGiftSuggestion> suggestions) {
-    if (suggestions.length < 3) {
-      return 'Expected 3 suggestions, got ${suggestions.length}';
+  String? _validateSuggestionQuality(List<AiGiftSuggestion> suggestions, Map<String, dynamic> filters) {
+    final expectedCount = filters['numberOfSuggestions'] ?? 3;
+
+    if (suggestions.length < expectedCount) {
+      return 'Expected $expectedCount suggestions, got ${suggestions.length}';
     }
 
     for (int i = 0; i < suggestions.length; i++) {
       final suggestion = suggestions[i];
-      
+
       if (suggestion.title.isEmpty) {
         return 'Suggestion ${i + 1} has empty title';
       }
@@ -230,64 +160,40 @@ class AiGiftSuggestionCubit extends Cubit<AiGiftSuggestionState> {
 
   Map<String, dynamic> _categorizeError(dynamic error) {
     final errorString = error.toString().toLowerCase();
-    
+
     if (errorString.contains('api key') || errorString.contains('unauthorized')) {
-      return {
-        'message': 'Configuration error. Please contact support.',
-        'code': 'API_KEY_ERROR',
-        'retryable': false,
-      };
+      return {'message': 'Configuration error. Please contact support.', 'code': 'API_KEY_ERROR', 'retryable': false};
     }
-    
-    if (errorString.contains('network') || errorString.contains('connection')) {
-      return {
-        'message': 'Connection failed. Please check your internet and try again.',
-        'code': 'NETWORK_ERROR',
-        'retryable': true,
-      };
+
+    if (errorString.contains('network') || 
+        errorString.contains('connection') || 
+        errorString.contains('failed host lookup') ||
+        errorString.contains('socketexception') ||
+        errorString.contains('clientexception') ||
+        errorString.contains('no internet connection')) {
+      return {'message': 'No internet connection. Please check your network and try again.', 'code': 'NETWORK_ERROR', 'retryable': true};
     }
-    
+
     if (errorString.contains('timeout')) {
-      return {
-        'message': 'Request timed out. Please try again.',
-        'code': 'TIMEOUT_ERROR',
-        'retryable': true,
-      };
+      return {'message': 'Request timed out. Please try again.', 'code': 'TIMEOUT_ERROR', 'retryable': true};
     }
-    
+
     if (errorString.contains('parse') || errorString.contains('json')) {
-      return {
-        'message': 'Invalid response received. Please try again.',
-        'code': 'PARSE_ERROR',
-        'retryable': true,
-      };
+      return {'message': 'Invalid response received. Please try again.', 'code': 'PARSE_ERROR', 'retryable': true};
     }
-    
+
     if (errorString.contains('rate limit') || errorString.contains('too many')) {
-      return {
-        'message': 'Too many requests. Please wait a moment and try again.',
-        'code': 'RATE_LIMIT_ERROR',
-        'retryable': true,
-      };
+      return {'message': 'Too many requests. Please wait a moment and try again.', 'code': 'RATE_LIMIT_ERROR', 'retryable': true};
     }
-    
-    return {
-      'message': 'An unexpected error occurred. Please try again.',
-      'code': 'UNKNOWN_ERROR',
-      'retryable': true,
-    };
+
+    return {'message': 'An unexpected error occurred. Please try again.', 'code': 'UNKNOWN_ERROR', 'retryable': true};
   }
 
   void _startTimeoutTimer() {
     _cancelTimeoutTimer();
     _timeoutTimer = Timer(const Duration(seconds: 60), () {
       if (state is AiGiftSuggestionLoading) {
-        emit(AiGiftSuggestionError(
-          message: 'Request timed out. Please try again.',
-          errorCode: 'TIMEOUT_ERROR',
-          profile: (state as AiGiftSuggestionLoading).profile,
-          filters: (state as AiGiftSuggestionLoading).filters,
-        ));
+        emit(AiGiftSuggestionError(message: 'Request timed out. Please try again.', errorCode: 'TIMEOUT_ERROR', profile: (state as AiGiftSuggestionLoading).profile, filters: (state as AiGiftSuggestionLoading).filters));
       }
     });
   }
@@ -341,9 +247,7 @@ class AiGiftSuggestionCubit extends Cubit<AiGiftSuggestionState> {
 
   bool get canRetry {
     final currentState = state;
-    return currentState is AiGiftSuggestionError && 
-           currentState.isRetryable && 
-           _retryCount < _maxRetryAttempts;
+    return currentState is AiGiftSuggestionError && currentState.isRetryable && _retryCount < _maxRetryAttempts;
   }
 
   @override

@@ -1,13 +1,25 @@
+import 'package:dunno/constants/constants.dart';
+import 'package:dunno/constants/routes.dart';
 import 'package:dunno/constants/themes.dart';
+import 'package:dunno/cubits/app_user_profile/app_user_profile_cubit.dart';
+import 'package:dunno/models/app_user_profile.dart';
 import 'package:dunno/models/calender_events.dart';
 import 'package:dunno/ui/widgets/dunno_button.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:sp_utilities/utilities.dart';
 
-class CalenderNotificationCard extends StatelessWidget {
+class CalenderNotificationCard extends StatefulWidget {
   final CalenderEvent upcomingEvent;
 
   const CalenderNotificationCard({super.key, required this.upcomingEvent});
+
+  @override
+  State<CalenderNotificationCard> createState() => _CalenderNotificationCardState();
+}
+
+class _CalenderNotificationCardState extends State<CalenderNotificationCard> {
+  final AppUserProfileCubit _appUserProfileCubit = sl<AppUserProfileCubit>();
 
   String _initials(String? name, String? surname) {
     final n = (name ?? '').trim();
@@ -20,11 +32,11 @@ class CalenderNotificationCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final friend = upcomingEvent.friend;
+    final friend = widget.upcomingEvent.friend;
     final photoUrl = friend?.profilePicture ?? '';
-    final title = upcomingEvent.collection?.title?.trim().isNotEmpty == true ? upcomingEvent.collection!.title! : 'Upcoming Event';
+    final title = widget.upcomingEvent.collection?.title?.trim().isNotEmpty == true ? widget.upcomingEvent.collection!.title! : 'Upcoming Event';
     final fullName = [(friend?.name ?? '').trim(), (friend?.surname ?? '').trim()].where((p) => p.isNotEmpty).join(' ').trim();
-    final dateText = StringHelpers.printFirebaseTimeStamp(upcomingEvent.collection?.eventCollectionDate, format: 'EEE, dd MMM yyyy');
+    final dateText = StringHelpers.printFirebaseTimeStamp(widget.upcomingEvent.collection?.eventCollectionDate, format: 'EEE, dd MMM yyyy');
 
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8),
@@ -95,7 +107,14 @@ class CalenderNotificationCard extends StatelessWidget {
               const SizedBox(width: 12),
               SizedBox(
                 height: 40,
-                child: DunnoButton(type: ButtonType.saffron, label: compact ? 'Suggest' : 'Get Gift Suggestion', onPressed: () {}),
+                child: DunnoButton(
+                  type: ButtonType.saffron,
+                  label: compact ? 'Suggest' : 'Get Gift Suggestion',
+                  onPressed: () {
+                    _appUserProfileCubit.selectProfile(friend ?? AppUserProfile());
+                    context.pushNamed(FRIEND_PROFILE_SCREEN);
+                  },
+                ),
               ),
             ],
           );

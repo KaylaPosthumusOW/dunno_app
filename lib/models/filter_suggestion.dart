@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 enum GiftValue { low, medium, high }
+
 enum GiftCategory { tech, fashion, home, sports, books, toys, other }
 
 class FilterSuggestion extends Equatable {
@@ -11,11 +12,33 @@ class FilterSuggestion extends Equatable {
   final GiftValue? giftValue;
   final String? giftType;
   final String? extraNote;
+  final int? numberOfSuggestions;
+  final String? location;
 
-  const FilterSuggestion({this.title = '', this.minBudget, this.maxBudget, this.category, this.giftValue, this.giftType, this.extraNote});
+  const FilterSuggestion({
+    this.title = '',
+    this.minBudget,
+    this.maxBudget,
+    this.category,
+    this.giftValue,
+    this.giftType,
+    this.extraNote,
+    this.numberOfSuggestions,
+    this.location,
+  });
 
   @override
-  List<Object?> get props => [title, minBudget, maxBudget, category, giftValue, giftType, extraNote];
+  List<Object?> get props => [
+    title,
+    minBudget,
+    maxBudget,
+    category,
+    giftValue,
+    giftType,
+    extraNote,
+    numberOfSuggestions,
+    location,
+  ];
 
   FilterSuggestion copyWith({
     String? title,
@@ -25,6 +48,8 @@ class FilterSuggestion extends Equatable {
     GiftValue? giftValue,
     String? giftType,
     String? extraNote,
+    int? numberOfSuggestions,
+    String? location,
   }) {
     return FilterSuggestion(
       title: title ?? this.title,
@@ -34,6 +59,8 @@ class FilterSuggestion extends Equatable {
       giftValue: giftValue ?? this.giftValue,
       giftType: giftType ?? this.giftType,
       extraNote: extraNote ?? this.extraNote,
+      numberOfSuggestions: numberOfSuggestions ?? this.numberOfSuggestions,
+      location: location ?? this.location,
     );
   }
 
@@ -46,6 +73,8 @@ class FilterSuggestion extends Equatable {
       'giftValue': giftValue?.toString().split('.').last,
       'giftType': giftType,
       'extraNote': extraNote,
+      'numberOfSuggestions': numberOfSuggestions,
+      'location': location,
     };
   }
 
@@ -54,10 +83,20 @@ class FilterSuggestion extends Equatable {
       title: map['title'] ?? '',
       minBudget: map['minBudget'],
       maxBudget: map['maxBudget'],
-      category: map['category'] != null ? GiftCategory.values.firstWhere((e) => e.toString().split('.').last == map['category']) : null,
-      giftValue: map['giftValue'] != null ? GiftValue.values.firstWhere((e) => e.toString().split('.').last == map['giftValue']) : null,
+      category: map['category'] != null
+          ? GiftCategory.values.firstWhere(
+              (e) => e.toString().split('.').last == map['category'],
+            )
+          : null,
+      giftValue: map['giftValue'] != null
+          ? GiftValue.values.firstWhere(
+              (e) => e.toString().split('.').last == map['giftValue'],
+            )
+          : null,
       giftType: map['giftType'],
       extraNote: map['extraNote'],
+      numberOfSuggestions: map['numberOfSuggestions'],
+      location: map['location'],
     );
   }
 }

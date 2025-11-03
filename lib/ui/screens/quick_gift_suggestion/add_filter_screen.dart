@@ -9,20 +9,18 @@ class AddFilterPage extends StatefulWidget {
   final Function(FilterSuggestion)? onFilterUpdated;
   final bool isFriendFlow;
 
-  const AddFilterPage({
-    super.key, 
-    this.onFilterUpdated,
-    this.isFriendFlow = false,
-  });
+  const AddFilterPage({super.key, this.onFilterUpdated, this.isFriendFlow = false});
 
   @override
   State<AddFilterPage> createState() => _AddFilterPageState();
 }
 
 class _AddFilterPageState extends State<AddFilterPage> {
-  final _relationController = TextEditingController();
-  final _giftTypeController = TextEditingController();
-  final _extraNotesController = TextEditingController();
+  final TextEditingController _relationController = TextEditingController();
+  final TextEditingController _giftTypeController = TextEditingController();
+  final TextEditingController _extraNotesController = TextEditingController();
+  final TextEditingController _locationController = TextEditingController();
+  final TextEditingController _numberOfSuggestionsController = TextEditingController();
 
   double _minBudget = 200;
   double _maxBudget = 1000;
@@ -31,6 +29,25 @@ class _AddFilterPageState extends State<AddFilterPage> {
   GiftValue? _giftValue;
   GiftCategory? _giftCategory;
   String? _extraNotes;
+  int _numberOfSuggestions = 3;
+  String? _location;
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize the number of suggestions controller with default value
+    _numberOfSuggestionsController.text = _numberOfSuggestions.toString();
+  }
+
+  @override
+  void dispose() {
+    _relationController.dispose();
+    _giftTypeController.dispose();
+    _extraNotesController.dispose();
+    _locationController.dispose();
+    _numberOfSuggestionsController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,9 +63,7 @@ class _AddFilterPageState extends State<AddFilterPage> {
               supportingText: 'e.g., Friend, Sister, Colleague',
               keyboardType: TextInputType.text,
               isLight: true,
-              colorScheme: widget.isFriendFlow 
-                  ? DunnoTextFieldColor.pink 
-                  : DunnoTextFieldColor.antiqueWhite,
+              colorScheme: widget.isFriendFlow ? DunnoTextFieldColor.pink : DunnoTextFieldColor.antiqueWhite,
               onChanged: (value) {
                 _relation = value;
                 _updateFilter();
@@ -61,13 +76,7 @@ class _AddFilterPageState extends State<AddFilterPage> {
               alignment: Alignment.centerLeft,
               child: Padding(
                 padding: const EdgeInsets.only(bottom: 8, left: 15),
-                child: Text(
-                  'Budget: R${_minBudget.toStringAsFixed(0)} - R${_maxBudget.toStringAsFixed(0)}',
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                  ),
-                ),
+                child: Text('Budget: R${_minBudget.toStringAsFixed(0)} - R${_maxBudget.toStringAsFixed(0)}', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
               ),
             ),
             SfRangeSlider(
@@ -77,9 +86,7 @@ class _AddFilterPageState extends State<AddFilterPage> {
               interval: 500,
               showLabels: true,
               activeColor: widget.isFriendFlow ? AppColors.cerise : AppColors.tangerine,
-              inactiveColor: widget.isFriendFlow 
-                  ? AppColors.cerise.withValues(alpha: 0.3)
-                  : AppColors.tangerine.withValues(alpha: 0.3),
+              inactiveColor: widget.isFriendFlow ? AppColors.cerise.withValues(alpha: 0.3) : AppColors.tangerine.withValues(alpha: 0.3),
               startThumbIcon: Container(
                 decoration: BoxDecoration(
                   color: widget.isFriendFlow ? AppColors.cerise : AppColors.tangerine,
@@ -94,14 +101,12 @@ class _AddFilterPageState extends State<AddFilterPage> {
                   border: Border.all(color: Colors.white, width: 2),
                 ),
               ),
-              tooltipTextFormatterCallback:
-                  (dynamic actualValue, String formattedText) {
-                    return 'R${actualValue.toStringAsFixed(0)}';
-                  },
-              labelFormatterCallback:
-                  (dynamic actualValue, String formattedText) {
-                    return 'R${(actualValue / 1000).toStringAsFixed(0)}k';
-                  },
+              tooltipTextFormatterCallback: (dynamic actualValue, String formattedText) {
+                return 'R${actualValue.toStringAsFixed(0)}';
+              },
+              labelFormatterCallback: (dynamic actualValue, String formattedText) {
+                return 'R${(actualValue / 1000).toStringAsFixed(0)}k';
+              },
               onChanged: (SfRangeValues values) {
                 setState(() {
                   _minBudget = values.start;
@@ -123,26 +128,15 @@ class _AddFilterPageState extends State<AddFilterPage> {
                 });
                 _updateFilter();
               },
-              fillColor: widget.isFriendFlow 
-                  ? AppColors.pinkLavender.withValues(alpha: 0.6)
-                  : AppColors.tangerine.withValues(alpha: 0.4),
-              borderColor: widget.isFriendFlow 
-                  ? AppColors.pinkLavender.withValues(alpha: 0.6)
-                  : AppColors.antiqueWhite,
-              focusedBorderColor: widget.isFriendFlow 
-                  ? AppColors.pinkLavender
-                  : AppColors.antiqueWhite,
+              fillColor: widget.isFriendFlow ? AppColors.pinkLavender.withValues(alpha: 0.6) : AppColors.tangerine.withValues(alpha: 0.4),
+              borderColor: widget.isFriendFlow ? AppColors.pinkLavender.withValues(alpha: 0.6) : AppColors.antiqueWhite,
+              focusedBorderColor: widget.isFriendFlow ? AppColors.pinkLavender : AppColors.antiqueWhite,
               dropDownColor: AppColors.offWhite,
               dropDownTextColor: AppColors.black,
               items: GiftCategory.values.map((category) {
                 return DropdownMenuItem<GiftCategory>(
                   value: category,
-                  child: Text(
-                    _getCategoryDisplayName(category),
-                    style: Theme.of(
-                      context,
-                    ).textTheme.labelLarge?.copyWith(color: AppColors.black),
-                  ),
+                  child: Text(_getCategoryDisplayName(category), style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.black)),
                 );
               }).toList(),
             ),
@@ -159,26 +153,15 @@ class _AddFilterPageState extends State<AddFilterPage> {
                 });
                 _updateFilter();
               },
-              fillColor: widget.isFriendFlow 
-                  ? AppColors.pinkLavender.withValues(alpha: 0.6)
-                  : AppColors.tangerine.withValues(alpha: 0.4),
-              borderColor: widget.isFriendFlow 
-                  ? AppColors.pinkLavender.withValues(alpha: 0.6)
-                  : AppColors.antiqueWhite,
-              focusedBorderColor: widget.isFriendFlow 
-                  ? AppColors.pinkLavender
-                  : AppColors.antiqueWhite,
+              fillColor: widget.isFriendFlow ? AppColors.pinkLavender.withValues(alpha: 0.6) : AppColors.tangerine.withValues(alpha: 0.4),
+              borderColor: widget.isFriendFlow ? AppColors.pinkLavender.withValues(alpha: 0.6) : AppColors.antiqueWhite,
+              focusedBorderColor: widget.isFriendFlow ? AppColors.pinkLavender : AppColors.antiqueWhite,
               dropDownColor: AppColors.offWhite,
               dropDownTextColor: AppColors.black,
               items: GiftValue.values.map((value) {
                 return DropdownMenuItem<GiftValue>(
                   value: value,
-                  child: Text(
-                    _getValueDisplayName(value),
-                    style: Theme.of(
-                      context,
-                    ).textTheme.labelLarge?.copyWith(color: AppColors.black),
-                  ),
+                  child: Text(_getValueDisplayName(value), style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.black)),
                 );
               }).toList(),
             ),
@@ -191,11 +174,51 @@ class _AddFilterPageState extends State<AddFilterPage> {
               supportingText: 'e.g., Practical, Sentimental, Fun',
               keyboardType: TextInputType.text,
               isLight: true,
-              colorScheme: widget.isFriendFlow 
-                  ? DunnoTextFieldColor.pink 
-                  : DunnoTextFieldColor.antiqueWhite,
+              colorScheme: widget.isFriendFlow ? DunnoTextFieldColor.pink : DunnoTextFieldColor.antiqueWhite,
               onChanged: (value) {
                 _giftType = value;
+                _updateFilter();
+              },
+            ),
+            const SizedBox(height: 16),
+
+            // Number of Suggestions Field
+            DunnoTextField(
+              controller: _numberOfSuggestionsController,
+              label: 'Number of Suggestions',
+              supportingText: 'How many gift ideas would you like? (1-10)',
+              keyboardType: TextInputType.number,
+              isLight: true,
+              colorScheme: widget.isFriendFlow ? DunnoTextFieldColor.pink : DunnoTextFieldColor.antiqueWhite,
+              onChanged: (value) {
+                // Parse and validate the input
+                final parsedValue = int.tryParse(value);
+                if (parsedValue != null && parsedValue >= 1 && parsedValue <= 10) {
+                  setState(() {
+                    _numberOfSuggestions = parsedValue;
+                  });
+                  _updateFilter();
+                } else if (value.isEmpty) {
+                  // Reset to default if field is empty
+                  setState(() {
+                    _numberOfSuggestions = 3;
+                  });
+                  _updateFilter();
+                }
+              },
+            ),
+            const SizedBox(height: 16),
+
+            // Location Field
+            DunnoTextField(
+              controller: _locationController,
+              label: 'Your Location',
+              supportingText: 'e.g., Cape Town, Johannesburg, Durban',
+              keyboardType: TextInputType.text,
+              isLight: true,
+              colorScheme: widget.isFriendFlow ? DunnoTextFieldColor.pink : DunnoTextFieldColor.antiqueWhite,
+              onChanged: (value) {
+                _location = value;
                 _updateFilter();
               },
             ),
@@ -208,9 +231,7 @@ class _AddFilterPageState extends State<AddFilterPage> {
               supportingText: 'Any specific requirements or restrictions',
               keyboardType: TextInputType.text,
               isLight: true,
-              colorScheme: widget.isFriendFlow 
-                  ? DunnoTextFieldColor.pink 
-                  : DunnoTextFieldColor.antiqueWhite,
+              colorScheme: widget.isFriendFlow ? DunnoTextFieldColor.pink : DunnoTextFieldColor.antiqueWhite,
               maxLines: 3,
               onChanged: (value) {
                 _extraNotes = value;
@@ -225,15 +246,7 @@ class _AddFilterPageState extends State<AddFilterPage> {
   }
 
   void _updateFilter() {
-    final filterSuggestion = FilterSuggestion(
-      title: _relation ?? '',
-      minBudget: _minBudget,
-      maxBudget: _maxBudget,
-      category: _giftCategory,
-      giftValue: _giftValue,
-      giftType: _giftType,
-      extraNote: _extraNotes,
-    );
+    final filterSuggestion = FilterSuggestion(title: _relation ?? '', minBudget: _minBudget, maxBudget: _maxBudget, category: _giftCategory, giftValue: _giftValue, giftType: _giftType, extraNote: _extraNotes, numberOfSuggestions: _numberOfSuggestions, location: _location);
 
     widget.onFilterUpdated?.call(filterSuggestion);
   }

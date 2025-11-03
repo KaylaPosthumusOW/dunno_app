@@ -3,11 +3,11 @@ import 'package:dunno/constants/routes.dart';
 import 'package:dunno/constants/themes.dart';
 import 'package:dunno/cubits/app_user_profile/app_user_profile_cubit.dart';
 import 'package:dunno/cubits/calender_event_cubit/calender_event_cubit.dart';
+import 'package:dunno/cubits/connections/connection_cubit.dart';
 import 'package:dunno/models/app_user_profile.dart';
 import 'package:dunno/ui/screens/scanner_screen.dart';
 import 'package:dunno/ui/widgets/calender.dart';
 import 'package:dunno/ui/widgets/calender_notification_card.dart';
-import 'package:dunno/ui/widgets/custom_header_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -59,7 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
         return Scaffold(
           appBar: AppBar(
-            title: Text('Hello, ${state.mainAppUserProfileState.appUserProfile?.name ?? 'User'}'),
+            title: Text('Hello, ${state.mainAppUserProfileState.appUserProfile?.name ?? 'User'}', style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600)),
             centerTitle: false,
             actions: [
               Container(

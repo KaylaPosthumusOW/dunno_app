@@ -42,7 +42,6 @@ class _CreateCollectionScreenState extends State<CreateCollectionScreen> {
   void initState() {
     super.initState();
 
-    // Prefill form if editing
     final selected = _collectionCubit.state.mainCollectionState.selectedCollection;
     if (selected != null) {
       _titleController.text = selected.title ?? '';
@@ -136,88 +135,78 @@ class _CreateCollectionScreenState extends State<CreateCollectionScreen> {
         children: [
           CustomHeaderBar(
             title: title,
+            subtitle: 'Share your interests and preferences',
             onBack: widget.isFirstTimeUser ? null : () => Navigator.pop(context),
+            backButtonColor: AppColors.yellow,
+            iconColor: AppColors.offWhite,
           ),
           Expanded(
             child: BlocListener<CollectionCubit, CollectionState>(
               bloc: _collectionCubit,
               listener: (context, state) {
-          if (state is CollectionError) {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.mainCollectionState.errorMessage ?? 'An error occurred'), backgroundColor: Colors.red));
-          }
-        },
-        child: Form(
-          key: _formKey,
-          child: ListView(
-            padding: const EdgeInsets.all(20),
-            children: [
-              DunnoTextField(controller: _titleController, label: 'Collection Title', supportingText: 'Enter a title for your collection', isLight: true),
-              const SizedBox(height: 12),
-              DunnoTextField(controller: _hobbiesController, label: 'Hobbies', supportingText: 'e.g. Reading, Hiking, Cooking', isLight: true),
-              const SizedBox(height: 12),
-              DunnoTextField(controller: _interestsController, label: 'Interests', supportingText: 'e.g. Technology, Art, Travel', isLight: true),
-              const SizedBox(height: 12),
-              DunnoTextField(controller: _likesController, label: 'Likes', supportingText: 'e.g. Coffee, Music, Sports', isLight: true),
-              const SizedBox(height: 12),
-              DunnoTextField(controller: _aestheticController, label: 'Aesthetic Preferences', supportingText: 'e.g. Minimalist, Vintage, Modern', isLight: true),
-              const SizedBox(height: 10),
-
-              // --- Date Selection ---
-              Padding(
-                padding: const EdgeInsets.only(bottom: 4, left: 15),
-                child: Text('Event Date (Optional)', style: Theme.of(context).textTheme.labelMedium),
-              ),
-              Container(
-                height: 55,
-                decoration: BoxDecoration(
-                  color: AppColors.pinkLavender.withValues(alpha: 0.6),
-                  borderRadius: BorderRadius.circular(30),
-                  border: Border.all(color: AppColors.pinkLavender.withValues(alpha: 0.6)),
-                ),
-                child: Row(
+                if (state is CollectionError) {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.mainCollectionState.errorMessage ?? 'An error occurred'), backgroundColor: Colors.red));
+                }
+              },
+              child: Form(
+                key: _formKey,
+                child: ListView(
+                  padding: const EdgeInsets.all(20),
                   children: [
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: TextButton.icon(
-                        onPressed: _selectDate,
-                        icon: const Icon(Icons.calendar_today, color: Colors.black87),
-                        label: Text(_selectedDate != null ? '${_selectedDate!.day}/${_selectedDate!.month}/${_selectedDate!.year}' : 'Select Date', style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.black87)),
-                        style: TextButton.styleFrom(alignment: Alignment.centerLeft),
+                    DunnoTextField(controller: _titleController, label: 'Collection Title', supportingText: 'Enter a title for your collection', isLight: true, colorScheme: DunnoTextFieldColor.yellow),
+                    const SizedBox(height: 12),
+                    DunnoTextField(controller: _hobbiesController, label: 'Hobbies', supportingText: 'e.g. Reading, Hiking, Cooking', isLight: true, colorScheme: DunnoTextFieldColor.yellow),
+                    const SizedBox(height: 12),
+                    DunnoTextField(controller: _interestsController, label: 'Interests', supportingText: 'e.g. Technology, Art, Travel', isLight: true, colorScheme: DunnoTextFieldColor.yellow),
+                    const SizedBox(height: 12),
+                    DunnoTextField(controller: _likesController, label: 'Likes', supportingText: 'e.g. Coffee, Music, Sports', isLight: true, colorScheme: DunnoTextFieldColor.yellow),
+                    const SizedBox(height: 12),
+                    DunnoTextField(controller: _aestheticController, label: 'Aesthetic Preferences', supportingText: 'e.g. Minimalist, Vintage, Modern', isLight: true, colorScheme: DunnoTextFieldColor.yellow),
+                    const SizedBox(height: 10),
+
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 4, left: 15),
+                      child: Text('Event Date (Optional)', style: Theme.of(context).textTheme.labelMedium),
+                    ),
+                    Container(
+                      height: 55,
+                      decoration: BoxDecoration(
+                        color: AppColors.yellow.withValues(alpha: 0.4),
+                        borderRadius: BorderRadius.circular(30),
+                        border: Border.all(color: AppColors.yellow.withValues(alpha: 0.4)),
+                      ),
+                      child: Row(
+                        children: [
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: TextButton.icon(
+                              onPressed: _selectDate,
+                              icon: const Icon(Icons.calendar_today, color: Colors.black87),
+                              label: Text(_selectedDate != null ? '${_selectedDate!.day}/${_selectedDate!.month}/${_selectedDate!.year}' : 'Select Date', style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.black87)),
+                              style: TextButton.styleFrom(alignment: Alignment.centerLeft),
+                            ),
+                          ),
+                          if (_selectedDate != null)
+                            IconButton(
+                              onPressed: () => setState(() => _selectedDate = null),
+                              icon: const Icon(Icons.clear_rounded, color: Colors.black54, size: 25),
+                            ),
+                        ],
                       ),
                     ),
-                    if (_selectedDate != null)
-                      IconButton(
-                        onPressed: () => setState(() => _selectedDate = null),
-                        icon: const Icon(Icons.clear_rounded, color: Colors.black54, size: 25),
-                      ),
+                    if (_selectedDate != null) ...[const SizedBox(height: 12), SwitchListTile(activeThumbColor: AppColors.cerise, activeTrackColor: AppColors.pinkLavender, inactiveThumbColor: AppColors.pinkLavender, inactiveTrackColor: AppColors.pinkLavender.withValues(alpha: 0.4), trackOutlineColor: WidgetStateProperty.all(Colors.transparent), title: const Text('Make date visible to others'), value: _isDateVisible, onChanged: (v) => setState(() => _isDateVisible = v), contentPadding: EdgeInsets.zero)],
+
+                    const SizedBox(height: 32),
+
+                    DunnoButton(
+                      onPressed: _isLoading ? null : _saveCollection,
+                      icon: Icon(_isEditing ? Icons.update : Icons.add, color: Colors.white),
+                      label: (_isLoading ? (_isEditing ? 'Updating...' : 'Creating...') : (_isEditing ? 'Update Collection' : 'Create Collection')),
+                      type: ButtonType.saffron,
+                    ),
                   ],
                 ),
               ),
-              if (_selectedDate != null) ...[
-                const SizedBox(height: 12),
-                SwitchListTile(
-                  activeThumbColor: AppColors.cerise,
-                    activeTrackColor: AppColors.pinkLavender,
-                    inactiveThumbColor: AppColors.pinkLavender,
-                    inactiveTrackColor: AppColors.pinkLavender.withValues(alpha: 0.4),
-                    trackOutlineColor: WidgetStateProperty.all(Colors.transparent),
-                    title: const Text('Make date visible to others'),
-                    value: _isDateVisible, onChanged: (v) => setState(() => _isDateVisible = v),
-                    contentPadding: EdgeInsets.zero,
-                ),
-              ],
-
-              const SizedBox(height: 32),
-
-              DunnoButton(
-                onPressed: _isLoading ? null : _saveCollection,
-                icon: Icon(_isEditing ? Icons.update : Icons.add, color: Colors.white),
-                label: (_isLoading ? (_isEditing ? 'Updating...' : 'Creating...') : (_isEditing ? 'Update Collection' : 'Create Collection')),
-                type: ButtonType.primary,
-              ),
-            ],
-          ),
-        ),
             ),
           ),
         ],
