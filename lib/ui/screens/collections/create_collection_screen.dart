@@ -127,7 +127,7 @@ class _CreateCollectionScreenState extends State<CreateCollectionScreen> {
     final title = _isEditing
         ? 'Edit Collection'
         : widget.isFirstTimeUser
-        ? 'Create Your First Collection'
+        ? 'Create Your First Collection!'
         : 'Create Collection';
 
     return Scaffold(
