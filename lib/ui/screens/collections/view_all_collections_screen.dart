@@ -30,11 +30,17 @@ class _ViewAllCollectionsScreenState extends State<ViewAllCollectionsScreen> {
     _collectionCubit.loadAllCollectionsForUser(userUid: _appUserProfileCubit.state.mainAppUserProfileState.selectedProfile?.uid ?? '');
   }
 
-  _displayCollections() {
+  @override
+  void dispose() {
+    _searchCollection.dispose();
+    super.dispose();
+  }
+
+  Widget _displayCollections() {
     return BlocBuilder<CollectionCubit, CollectionState>(
       bloc: _collectionCubit,
       builder: (context, state) {
-        if (state is LoadingAllCollections) {
+        if (state is LoadingAllCollections || state is SearchingCollections) {
           return const Center(child: CircularProgressIndicator());
         }
 
@@ -42,10 +48,12 @@ class _ViewAllCollectionsScreenState extends State<ViewAllCollectionsScreen> {
           return Center(child: Text('Error: ${state.mainCollectionState.errorMessage}'));
         }
 
-        final collections = state.mainCollectionState.allUserCollections ?? [];
+        final collections = state.mainCollectionState.searchedCollections ?? state.mainCollectionState.allUserCollections ?? [];
 
         if (collections.isEmpty) {
-          return const Center(child: Text('No collections found.'));
+          final isSearching = _searchCollection.text.isNotEmpty;
+          final message = isSearching ? 'No collections found matching "${_searchCollection.text}"' : 'No collections found.';
+          return Center(child: Text(message));
         }
 
         return ListView.builder(
@@ -57,7 +65,7 @@ class _ViewAllCollectionsScreenState extends State<ViewAllCollectionsScreen> {
             final collection = collections[index];
             return Container(
               margin: const EdgeInsets.only(bottom: 16.0),
-              child: CollectionCard(collection: collection, colorType: CollectionColorType.yellow)
+              child: CollectionCard(collection: collection, colorType: CollectionColorType.yellow),
             );
           },
         );
@@ -95,7 +103,7 @@ class _ViewAllCollectionsScreenState extends State<ViewAllCollectionsScreen> {
                         },
                       ),
                     ),
-                  )
+                  ),
                 ],
               ),
               Expanded(
@@ -104,7 +112,18 @@ class _ViewAllCollectionsScreenState extends State<ViewAllCollectionsScreen> {
                     padding: const EdgeInsets.all(16.0),
                     child: Column(
                       children: [
-                        DunnoSearchField(hintText: 'Search Collections', typeSearch: TypeSearch.collections, controller: _searchCollection),
+                        DunnoSearchField(
+                          hintText: 'Search Collections',
+                          typeSearch: TypeSearch.collections,
+                          controller: _searchCollection,
+                          onChanged: (value) {
+                            // If search is cleared, reset to show all collections
+                            if (value.isEmpty) {
+                              _collectionCubit.searchCollections('', reset: true);
+                            }
+                            setState(() {}); // Refresh UI to update empty message
+                          },
+                        ),
                         _displayCollections(),
                       ],
                     ),
@@ -114,7 +133,7 @@ class _ViewAllCollectionsScreenState extends State<ViewAllCollectionsScreen> {
             ],
           ),
         );
-      }
+      },
     );
   }
 }

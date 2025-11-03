@@ -70,4 +70,54 @@ class CollectionCubit extends Cubit<CollectionState> {
     emit(LoadingAllCollections(state.mainCollectionState.copyWith(message: 'Selecting collection')));
     emit(SelectedCollection(state.mainCollectionState.copyWith(selectedCollection: collection, message: 'Collection selected', errorMessage: '')));
   }
+
+  void searchCollections(String query, {bool reset = false}) {
+    emit(SearchingCollections(state.mainCollectionState.copyWith(message: 'Searching collections...')));
+    try {
+      List<Collections>? allItems = state.mainCollectionState.allUserCollections ?? [];
+      List<Collections>? searchedItems = [];
+      if (reset) {
+        searchedItems = allItems;
+      } else {
+        searchedItems = allItems.where((item) {
+          final title = item.title?.toLowerCase();
+          final searchLower = query.toLowerCase();
+          return (title != null && title.contains(searchLower));
+        }).toList();
+      }
+      emit(SearchedCollections(state.mainCollectionState.copyWith(searchedCollections: searchedItems, message: 'Searched collections', errorMessage: '')));
+    } catch (error, stackTrace) {
+      emit(
+        CollectionError(
+          state.mainCollectionState.copyWith(message: '', errorMessage: error.toString()),
+          stackTrace: stackTrace.toString(),
+        ),
+      );
+    }
+  }
+
+  // void searchGiftBoards(String query, {bool reset = false}) {
+  //   emit(SearchingGiftBoards(state.mainGiftBoardState.copyWith(message: 'Searching gift boards...')));
+  //   try {
+  //     List<GiftBoard>? allItems = state.mainGiftBoardState.allUserGiftBoards ?? [];
+  //     List<GiftBoard>? searchedItems = [];
+  //     if (reset) {
+  //       searchedItems = allItems;
+  //     } else {
+  //       searchedItems = allItems.where((item) {
+  //         final title = item.boardName?.toLowerCase();
+  //         final searchLower = query.toLowerCase();
+  //         return (title != null && title.contains(searchLower));
+  //       }).toList();
+  //     }
+  //     emit(SearchedGiftBoards(state.mainGiftBoardState.copyWith(searchedBoards: searchedItems, message: 'Searched gift boards', errorMessage: '')));
+  //   } catch (error, stackTrace) {
+  //     emit(
+  //       GiftBoardError(
+  //         state.mainGiftBoardState.copyWith(message: '', errorMessage: error.toString()),
+  //         stackTrace: stackTrace.toString(),
+  //       ),
+  //     );
+  //   }
+  // }
 }

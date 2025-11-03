@@ -2,10 +2,12 @@ import 'dart:async';
 import 'package:dunno/constants/constants.dart';
 import 'package:dunno/constants/themes.dart';
 import 'package:dunno/cubits/app_user_profile/app_user_profile_cubit.dart';
+import 'package:dunno/cubits/collections/collection_cubit.dart';
+import 'package:dunno/cubits/gift_board/gift_board_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:sp_utilities/utilities.dart';
 
-enum TypeSearch { friends, collections }
+enum TypeSearch { friends, collections, giftBoards }
 
 class DunnoSearchField extends StatefulWidget {
   final String? hintText;
@@ -24,6 +26,9 @@ class DunnoSearchField extends StatefulWidget {
 
 class DunnoSearchFieldState extends State<DunnoSearchField> {
   final AppUserProfileCubit _appUserProfileCubit = sl<AppUserProfileCubit>();
+  final GiftBoardCubit _giftBoardCubit = sl<GiftBoardCubit>();
+  final CollectionCubit _collectionCubit = sl<CollectionCubit>();
+
   Timer? _debounce;
 
   void _onSearchChanged(String text) {
@@ -39,7 +44,9 @@ class DunnoSearchFieldState extends State<DunnoSearchField> {
       case TypeSearch.friends:
         _appUserProfileCubit.searchUsers(query);
       case TypeSearch.collections:
-        // handle collections search later
+        _collectionCubit.searchCollections(query);
+      case TypeSearch.giftBoards:
+        _giftBoardCubit.searchGiftBoards(query);
         break;
     }
   }

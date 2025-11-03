@@ -70,7 +70,7 @@ class _GiftBoardScreenState extends State<GiftBoardScreen> {
             child: BlocBuilder<GiftBoardCubit, GiftBoardState>(
               bloc: _giftBoardCubit,
               builder: (context, state) {
-                final boards = state.mainGiftBoardState.allUserGiftBoards ?? [];
+                final boards = state.mainGiftBoardState.searchedBoards ?? state.mainGiftBoardState.allUserGiftBoards ?? [];
 
                 return RefreshIndicator(
                   onRefresh: _refresh,
@@ -82,10 +82,17 @@ class _GiftBoardScreenState extends State<GiftBoardScreen> {
                         children: [
                           DunnoSearchField(
                             hintText: 'Search Your Boards',
-                            typeSearch: TypeSearch.collections,
+                            typeSearch: TypeSearch.giftBoards,
                             controller: _searchCollection,
+                            onChanged: (value) {
+                              // If search is cleared, reset to show all boards
+                              if (value.isEmpty) {
+                                _giftBoardCubit.searchGiftBoards('', reset: true);
+                              }
+                              setState(() {}); // Refresh UI to update empty message
+                            },
                           ),
-                          if (state is LoadingGiftBoards)
+                          if (state is LoadingGiftBoards || state is SearchingGiftBoards)
                             const Padding(
                               padding: EdgeInsets.only(top: 40),
                               child: Center(child: CircularProgressIndicator()),
@@ -97,12 +104,12 @@ class _GiftBoardScreenState extends State<GiftBoardScreen> {
                                 children: [
                                   const Icon(Icons.dashboard_outlined, size: 48, color: Colors.grey),
                                   const SizedBox(height: 12),
-                                  Text('No boards yet', style: Theme.of(context).textTheme.titleMedium),
+                                  Text(_searchCollection.text.isNotEmpty ? 'No boards found matching "${_searchCollection.text}"' : 'No boards yet', style: Theme.of(context).textTheme.titleMedium),
                                   const SizedBox(height: 6),
-                                  const Text(
-                                    'Create your first Gift Board to save favourite ideas.',
+                                  Text(
+                                    _searchCollection.text.isNotEmpty ? 'Try adjusting your search terms' : 'Create your first Gift Board to save favourite ideas.',
                                     textAlign: TextAlign.center,
-                                    style: TextStyle(color: Colors.grey),
+                                    style: const TextStyle(color: Colors.grey),
                                   ),
                                 ],
                               ),

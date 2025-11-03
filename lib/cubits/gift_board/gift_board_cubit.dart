@@ -117,13 +117,7 @@ class GiftBoardCubit extends Cubit<GiftBoardState> {
       }
 
       for (final board in selectedBoards) {
-        await _giftBoardFirebaseRepository.createBoardGiftSuggestion(
-          BoardGiftSuggestion(
-            board: board,
-            createdAt: Timestamp.now(),
-            giftSuggestion: selectedSuggestion.giftSuggestion,
-          ),
-        );
+        await _giftBoardFirebaseRepository.createBoardGiftSuggestion(BoardGiftSuggestion(board: board, createdAt: Timestamp.now(), giftSuggestion: selectedSuggestion.giftSuggestion));
       }
 
       emit(CreatedGiftBoardSuggestion(state.mainGiftBoardState.copyWith(message: 'Saved gift board suggestions')));
@@ -154,5 +148,28 @@ class GiftBoardCubit extends Cubit<GiftBoardState> {
     }
   }
 
-
+  void searchGiftBoards(String query, {bool reset = false}) {
+    emit(SearchingGiftBoards(state.mainGiftBoardState.copyWith(message: 'Searching gift boards...')));
+    try {
+      List<GiftBoard>? allItems = state.mainGiftBoardState.allUserGiftBoards ?? [];
+      List<GiftBoard>? searchedItems = [];
+      if (reset) {
+        searchedItems = allItems;
+      } else {
+        searchedItems = allItems.where((item) {
+          final title = item.boardName?.toLowerCase();
+          final searchLower = query.toLowerCase();
+          return (title != null && title.contains(searchLower));
+        }).toList();
+      }
+      emit(SearchedGiftBoards(state.mainGiftBoardState.copyWith(searchedBoards: searchedItems, message: 'Searched gift boards', errorMessage: '')));
+    } catch (error, stackTrace) {
+      emit(
+        GiftBoardError(
+          state.mainGiftBoardState.copyWith(message: '', errorMessage: error.toString()),
+          stackTrace: stackTrace.toString(),
+        ),
+      );
+    }
+  }
 }

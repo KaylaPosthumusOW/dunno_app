@@ -5,23 +5,26 @@ class MainCollectionState extends Equatable {
   final String? errorMessage;
   final List<Collections>? allUserCollections;
   final Collections? selectedCollection;
+  final List<Collections>? searchedCollections;
 
-  const MainCollectionState({this.message, this.errorMessage, this.allUserCollections, this.selectedCollection});
+  const MainCollectionState({this.message, this.errorMessage, this.allUserCollections, this.selectedCollection, this.searchedCollections});
 
   @override
-  List<Object?> get props => [message, errorMessage, allUserCollections, selectedCollection];
+  List<Object?> get props => [message, errorMessage, allUserCollections, selectedCollection, searchedCollections];
 
   MainCollectionState copyWith({
     String? message,
     String? errorMessage,
     List<Collections>? allUserCollections,
     Collections? selectedCollection,
+    List<Collections>? searchedCollections,
   }) {
     return MainCollectionState(
       message: message ?? this.message,
       errorMessage: errorMessage ?? this.errorMessage,
       allUserCollections: allUserCollections ?? this.allUserCollections,
       selectedCollection: selectedCollection ?? this.selectedCollection,
+      searchedCollections: searchedCollections ?? this.searchedCollections,
     );
   }
 
@@ -30,12 +33,14 @@ class MainCollectionState extends Equatable {
     String? errorMessage,
     List<Collections>? allUserCollections,
     Collections? selectedCollection,
+    List<Collections>? searchedCollections,
   }) {
     return MainCollectionState(
       message: message ?? this.message,
       errorMessage: errorMessage ?? this.errorMessage,
       allUserCollections: allUserCollections ?? this.allUserCollections,
       selectedCollection: selectedCollection,
+      searchedCollections: searchedCollections ?? this.searchedCollections,
     );
   }
 }
@@ -79,6 +84,14 @@ class UpdatedCollection extends CollectionState {
 
 class SelectedCollection extends CollectionState {
   const SelectedCollection(super.mainCollectionState);
+}
+
+class SearchingCollections extends CollectionState {
+  const SearchingCollections(super.mainCollectionState);
+}
+
+class SearchedCollections extends CollectionState {
+  const SearchedCollections(super.mainCollectionState);
 }
 
 class CollectionError extends CollectionState {
