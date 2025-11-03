@@ -35,7 +35,6 @@ class _AddFilterPageState extends State<AddFilterPage> {
   @override
   void initState() {
     super.initState();
-    // Initialize the number of suggestions controller with default value
     _numberOfSuggestionsController.text = _numberOfSuggestions.toString();
   }
 

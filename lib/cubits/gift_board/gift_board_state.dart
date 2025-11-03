@@ -56,7 +56,7 @@ class MainGiftBoardState extends Equatable {
       allGiftBoardSuggestions: allGiftBoardSuggestions ?? this.allGiftBoardSuggestions,
       selectedGiftBoardSuggestion: selectedGiftBoardSuggestion,
       totalGiftSuggestions: totalGiftSuggestions ?? this.totalGiftSuggestions,
-      selectedBoards: selectedBoards ?? this.selectedBoards,
+      selectedBoards: selectedBoards,
     );
   }
 }

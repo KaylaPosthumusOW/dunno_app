@@ -101,7 +101,10 @@ class GiftBoardCubit extends Cubit<GiftBoardState> {
       current.add(board);
     }
     emit(ToggledGiftBoardSelection(state.mainGiftBoardState.copyWith(selectedBoards: current, message: 'Toggled gift board selection', errorMessage: '')));
+  }
 
+  clearBoardSelections() {
+    emit(ToggledGiftBoardSelection(state.mainGiftBoardState.copyWithNull(message: 'Cleared gift board selections', errorMessage: '')));
   }
 
   Future<void> saveBoardSuggestions() async {

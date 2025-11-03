@@ -1,5 +1,7 @@
+import 'package:dunno/constants/constants.dart';
 import 'package:dunno/constants/themes.dart';
 import 'package:dunno/cubits/general/general_cubit.dart';
+import 'package:dunno/cubits/gift_board/gift_board_cubit.dart';
 import 'package:dunno/models/ai_gift_suggestion.dart';
 import 'package:dunno/ui/screens/gift_boards/selecting_gift_boards.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +19,8 @@ class GiftSuggestionCard extends StatefulWidget {
 }
 
 class _GiftSuggestionCardState extends State<GiftSuggestionCard> {
-  final GeneralCubit _generalCubit = GeneralCubit();
+  final GeneralCubit _generalCubit = sl<GeneralCubit>();
+  final GiftBoardCubit _giftBoardCubit = sl<GiftBoardCubit>();
   late bool _isSaved;
 
   @override
@@ -59,6 +62,7 @@ class _GiftSuggestionCardState extends State<GiftSuggestionCard> {
                     final result = await showDialog(
                       context: context,
                       builder: (context) {
+                        _giftBoardCubit.clearBoardSelections();
                         return SelectingGiftBoards(giftSuggestions: widget.suggestion);
                       },
                     );
