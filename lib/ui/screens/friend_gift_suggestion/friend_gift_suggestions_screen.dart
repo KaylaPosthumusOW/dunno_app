@@ -146,7 +146,6 @@ class _FriendGiftSuggestionsScreenState extends State<FriendGiftSuggestionsScree
                     'Almost there, just a moment...',
                   ],
                   interval: Duration(seconds: 3),
-                  color: AppColors.black,
                 ),
               );
             }
@@ -210,6 +209,7 @@ class _FriendGiftSuggestionsScreenState extends State<FriendGiftSuggestionsScree
                         suggestion: suggestion,
                         index: index,
                         isPink: true,
+                        isSaved: false,
                       );
                     },
                   ),

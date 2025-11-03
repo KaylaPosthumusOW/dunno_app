@@ -12,7 +12,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SelectingGiftBoards extends StatefulWidget {
   final AiGiftSuggestion? giftSuggestions;
-  
+
   const SelectingGiftBoards({super.key, this.giftSuggestions});
 
   @override
@@ -26,61 +26,35 @@ class _SelectingGiftBoardsState extends State<SelectingGiftBoards> {
   @override
   void initState() {
     super.initState();
-    _giftBoardCubit.loadAllUserGiftBoards(
-      ownerUid: _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile?.uid ?? '',
-    );
+    _giftBoardCubit.loadAllUserGiftBoards(ownerUid: _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile?.uid ?? '');
   }
 
   Future<void> _saveSuggestionsToBoards() async {
     final selectedBoards = _giftBoardCubit.state.mainGiftBoardState.selectedBoards ?? [];
     final suggestion = widget.giftSuggestions;
-    
+
     if (selectedBoards.isEmpty || suggestion == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select boards and ensure a gift suggestion is available')),
-      );
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please select boards and ensure a gift suggestion is available')));
       return;
     }
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Saving suggestion to ${selectedBoards.length} board${selectedBoards.length > 1 ? 's' : ''}...'),
-        duration: const Duration(seconds: 2),
-      ),
-    );
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Saving suggestion to ${selectedBoards.length} board${selectedBoards.length > 1 ? 's' : ''}...'), duration: const Duration(seconds: 2)));
 
     try {
       for (final board in selectedBoards) {
-        final boardGiftSuggestion = BoardGiftSuggestion(
-          board: board,
-          giftSuggestion: suggestion,
-          createdAt: Timestamp.now(),
-        );
+        final boardGiftSuggestion = BoardGiftSuggestion(board: board, giftSuggestion: suggestion, createdAt: Timestamp.now());
         await _giftBoardCubit.createNewBoardGiftSuggestion(boardGiftSuggestion);
-        
-        // Small delay to prevent overwhelming Firebase
+
         await Future.delayed(const Duration(milliseconds: 100));
       }
-      
+
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Successfully saved suggestion to ${selectedBoards.length} board${selectedBoards.length > 1 ? 's' : ''}!'),
-            backgroundColor: Colors.green,
-            duration: const Duration(seconds: 3),
-          ),
-        );
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Successfully saved suggestion to ${selectedBoards.length} board${selectedBoards.length > 1 ? 's' : ''}!'), backgroundColor: Colors.green, duration: const Duration(seconds: 3)));
         Navigator.of(context).pop(selectedBoards);
       }
     } catch (error) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Error saving suggestion: ${error.toString()}'),
-            backgroundColor: Colors.red,
-            duration: const Duration(seconds: 4),
-          ),
-        );
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error saving suggestion: ${error.toString()}'), backgroundColor: Colors.red, duration: const Duration(seconds: 4)));
       }
     }
   }
@@ -91,19 +65,9 @@ class _SelectingGiftBoardsState extends State<SelectingGiftBoards> {
       bloc: _giftBoardCubit,
       listener: (context, state) {
         if (state is CreatedGiftBoardSuggestion) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Gift suggestion saved successfully!'),
-              backgroundColor: Colors.green,
-            ),
-          );
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Gift suggestion saved successfully!'), backgroundColor: Colors.green));
         } else if (state is GiftBoardError) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Error: ${state.mainGiftBoardState.errorMessage ?? 'Something went wrong'}'),
-              backgroundColor: Colors.red,
-            ),
-          );
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: ${state.mainGiftBoardState.errorMessage ?? 'Something went wrong'}'), backgroundColor: Colors.red));
         }
       },
       child: Dialog(
@@ -114,26 +78,16 @@ class _SelectingGiftBoardsState extends State<SelectingGiftBoards> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             mainAxisSize: MainAxisSize.min,
             children: [
-              // Header
               Row(
                 children: [
                   Expanded(
-                    child: Text(
-                      'Save to Boards',
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                    child: Text('Save to Boards', style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
                   ),
-                  IconButton(
-                    icon: const Icon(Icons.close, size: 24.0),
-                    onPressed: () => Navigator.of(context).pop(),
-                  ),
+                  IconButton(icon: const Icon(Icons.close, size: 24.0), onPressed: () => Navigator.of(context).pop()),
                 ],
               ),
               const SizedBox(height: 16),
-              
-              // Single BlocBuilder for entire content
+
               BlocBuilder<GiftBoardCubit, GiftBoardState>(
                 bloc: _giftBoardCubit,
                 builder: (context, state) {
@@ -144,37 +98,23 @@ class _SelectingGiftBoardsState extends State<SelectingGiftBoards> {
 
                   return Column(
                     mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      // Loading state
                       if (isLoading)
                         const Padding(
                           padding: EdgeInsets.symmetric(vertical: 40),
                           child: Center(child: CircularProgressIndicator()),
                         )
-                      
-                      // Error state
                       else if (state is GiftBoardError)
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 24),
-                          child: Text(
-                            state.mainGiftBoardState.errorMessage ?? 'Something went wrong.',
-                            style: TextStyle(color: Colors.red.shade600),
-                          ),
+                          child: Text(state.mainGiftBoardState.errorMessage ?? 'Something went wrong.', style: TextStyle(color: Colors.red.shade600)),
                         )
-                      
-                      // Empty state
                       else if (boards.isEmpty)
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 24),
-                          child: Center(
-                            child: Text(
-                              'No boards available',
-                              style: Theme.of(context).textTheme.bodyMedium,
-                            ),
-                          ),
+                          child: Center(child: Text('No boards available', style: Theme.of(context).textTheme.bodyMedium)),
                         )
-                      
-                      // Boards list
                       else
                         Container(
                           constraints: const BoxConstraints(maxHeight: 300),
@@ -188,48 +128,33 @@ class _SelectingGiftBoardsState extends State<SelectingGiftBoards> {
                               return CheckboxListTile(
                                 value: isSelected,
                                 onChanged: (_) => _giftBoardCubit.toggleBoardSelection(board),
-                                title: Text(
-                                  (board.boardName ?? 'Unnamed Board').trim(),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: Theme.of(context).textTheme.bodyLarge,
-                                ),
-                                subtitle: Text(
-                                  'Board',
-                                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                    color: Colors.grey[600],
-                                  ),
-                                ),
+                                title: Text((board.boardName ?? 'Unnamed Board').trim(), maxLines: 1, overflow: TextOverflow.ellipsis, style: Theme.of(context).textTheme.bodyLarge),
+                                subtitle: Text('Board', style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey[600])),
                                 secondary: CircleAvatar(
                                   radius: 20,
                                   backgroundColor: AppColors.pinkLavender,
-                                  child: board.thumbnailUrl?.isNotEmpty == true
+                                  child: (board.thumbnailUrl?.isNotEmpty ?? false)
                                       ? ClipOval(
-                                          child: DunnoExtendedImage(
-                                            url: board.thumbnailUrl!,
+                                          child: SizedBox(
+                                            width: 45,
+                                            height: 45,
+                                            child: DunnoExtendedImage(url: board.thumbnailUrl!, fit: BoxFit.cover),
                                           ),
                                         )
                                       : const Icon(Icons.dashboard, color: Colors.white, size: 20),
                                 ),
-                                controlAffinity: ListTileControlAffinity.leading,
+                                controlAffinity: ListTileControlAffinity.trailing,
                                 activeColor: AppColors.cerise,
                                 contentPadding: const EdgeInsets.symmetric(horizontal: 0),
                               );
                             },
                           ),
                         ),
-                      
+
                       const SizedBox(height: 20),
-                      
+
                       // Save button
-                      DunnoButton(
-                        type: hasSelection ? ButtonType.saffron : ButtonType.pinkLavender,
-                        isDisabled: !hasSelection,
-                        label: hasSelection 
-                          ? 'Save to ${selectedBoards.length} board${selectedBoards.length > 1 ? 's' : ''}'
-                          : 'Select a board to save',
-                        onPressed: hasSelection ? _saveSuggestionsToBoards : null,
-                      ),
+                      DunnoButton(type: hasSelection ? ButtonType.saffron : ButtonType.pinkLavender, isDisabled: !hasSelection, label: hasSelection ? 'Save to ${selectedBoards.length} board${selectedBoards.length > 1 ? 's' : ''}' : 'Select a board to save', onPressed: hasSelection ? _saveSuggestionsToBoards : null),
                     ],
                   );
                 },

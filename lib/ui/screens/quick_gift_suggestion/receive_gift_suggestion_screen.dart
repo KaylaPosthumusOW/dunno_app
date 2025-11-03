@@ -141,7 +141,7 @@ class _ReceiveGiftSuggestionScreenState extends State<ReceiveGiftSuggestionScree
                       itemCount: state.suggestions.length,
                       itemBuilder: (context, index) {
                         final suggestion = state.suggestions[index];
-                        return GiftSuggestionCard(suggestion: suggestion, index: index, isPink: false);
+                        return GiftSuggestionCard(suggestion: suggestion, index: index, isPink: false, isSaved: false);
                       },
                     ),
                     Padding(

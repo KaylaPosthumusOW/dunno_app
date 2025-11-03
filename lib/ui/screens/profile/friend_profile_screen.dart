@@ -260,22 +260,24 @@ class _FriendProfileScreenState extends State<FriendProfileScreen> {
                 bool isButtonDisabled;
                 Color textColor;
 
+                const _kBtnIconSize = 20.0;
+
                 if (isConnecting) {
                   buttonText = 'Connecting...';
                   buttonColor = AppColors.tangerine;
-                  buttonIcon = Icon(Icons.person_add_alt_1, color: AppColors.offWhite);
+                  buttonIcon = Icon(Icons.person_add_alt_1, color: AppColors.offWhite, size: _kBtnIconSize);
                   textColor = AppColors.offWhite;
                   isButtonDisabled = true;
                 } else if (isConnected) {
                   buttonText = 'Connected';
                   buttonColor = AppColors.cerise;
-                  buttonIcon = Icon(Icons.check_circle, color: AppColors.offWhite);
+                  buttonIcon = Icon(Icons.check_circle, color: AppColors.offWhite, size: _kBtnIconSize);
                   textColor = AppColors.offWhite;
                   isButtonDisabled = true;
                 } else {
                   buttonText = 'Connect';
                   buttonColor = AppColors.tangerine;
-                  buttonIcon = Icon(Icons.person_add_alt_1, color: AppColors.offWhite);
+                  buttonIcon = Icon(Icons.person_add_alt_1, color: AppColors.offWhite, size: _kBtnIconSize);
                   textColor = AppColors.offWhite;
                   isButtonDisabled = false;
                 }
@@ -308,7 +310,7 @@ class _FriendProfileScreenState extends State<FriendProfileScreen> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             buttonIcon,
-                            SizedBox(width: 8),
+                            SizedBox(width: 10),
                             Text(
                               buttonText,
                               style: TextStyle(color: textColor, fontWeight: FontWeight.w600, fontSize: 16),

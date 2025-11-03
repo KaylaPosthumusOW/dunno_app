@@ -76,7 +76,7 @@ class _GiftBoardSuggestionsState extends State<GiftBoardSuggestions> {
           itemCount: suggestions.length,
           itemBuilder: (context, index) {
             final suggestion = suggestions[index];
-            return GiftSuggestionCard(suggestion: suggestion.giftSuggestion, index: index);
+            return GiftSuggestionCard(suggestion: suggestion.giftSuggestion, index: index, isSaved: true);
           },
         );
       },
@@ -160,7 +160,7 @@ class _GiftBoardSuggestionsState extends State<GiftBoardSuggestions> {
                         separatorBuilder: (_, __) => const SizedBox(height: 12),
                         itemBuilder: (context, index) {
                           final s = suggestions[index];
-                          return GiftSuggestionCard(suggestion: s.giftSuggestion, index: index);
+                          return GiftSuggestionCard(suggestion: s.giftSuggestion, index: index, isSaved: true);
                         },
                       ),
               ),

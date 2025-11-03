@@ -8,8 +8,9 @@ class GiftSuggestionCard extends StatefulWidget {
   final AiGiftSuggestion? suggestion;
   final int index;
   final bool isPink;
+  final bool isSaved;
 
-  const GiftSuggestionCard({super.key, required this.suggestion, required this.index, this.isPink = true});
+  const GiftSuggestionCard({super.key, required this.suggestion, required this.index, this.isPink = true, this.isSaved = false});
 
   @override
   State<GiftSuggestionCard> createState() => _GiftSuggestionCardState();
@@ -17,6 +18,13 @@ class GiftSuggestionCard extends StatefulWidget {
 
 class _GiftSuggestionCardState extends State<GiftSuggestionCard> {
   final GeneralCubit _generalCubit = GeneralCubit();
+  late bool _isSaved;
+
+  @override
+  void initState() {
+    super.initState();
+    _isSaved = widget.isSaved;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +45,7 @@ class _GiftSuggestionCardState extends State<GiftSuggestionCard> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
                   child: Text(
@@ -47,17 +55,21 @@ class _GiftSuggestionCardState extends State<GiftSuggestionCard> {
                 ),
                 const SizedBox(width: 10),
                 InkWell(
-                  onTap: () {
-                    showDialog(
+                  onTap: () async {
+                    final result = await showDialog(
                       context: context,
                       builder: (context) {
-                        return SelectingGiftBoards(
-                          giftSuggestions: widget.suggestion,
-                        );
+                        return SelectingGiftBoards(giftSuggestions: widget.suggestion);
                       },
                     );
+
+                    if (result != null && result is List && result.isNotEmpty) {
+                      setState(() {
+                        _isSaved = true;
+                      });
+                    }
                   },
-                  child: Icon(Icons.bookmark_add_outlined),
+                  child: Icon(_isSaved ? Icons.bookmark_add_rounded : Icons.bookmark_add_outlined, color: _isSaved ? Colors.amber : Colors.black54, size: 30),
                 ),
               ],
             ),
