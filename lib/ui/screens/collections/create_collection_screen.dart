@@ -5,6 +5,7 @@ import 'package:dunno/cubits/collections/collection_cubit.dart';
 import 'package:dunno/models/collection_likes.dart';
 import 'package:dunno/models/collections.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dunno/ui/widgets/custom_header_bar.dart';
 import 'package:dunno/ui/widgets/dunno_button.dart';
 import 'package:dunno/ui/widgets/dunno_text_field.dart';
 import 'package:flutter/material.dart';
@@ -131,10 +132,16 @@ class _CreateCollectionScreenState extends State<CreateCollectionScreen> {
         : 'Create Collection';
 
     return Scaffold(
-      appBar: AppBar(title: Text(title), centerTitle: false, automaticallyImplyLeading: !widget.isFirstTimeUser),
-      body: BlocListener<CollectionCubit, CollectionState>(
-        bloc: _collectionCubit,
-        listener: (context, state) {
+      body: Column(
+        children: [
+          CustomHeaderBar(
+            title: title,
+            onBack: widget.isFirstTimeUser ? null : () => Navigator.pop(context),
+          ),
+          Expanded(
+            child: BlocListener<CollectionCubit, CollectionState>(
+              bloc: _collectionCubit,
+              listener: (context, state) {
           if (state is CollectionError) {
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.mainCollectionState.errorMessage ?? 'An error occurred'), backgroundColor: Colors.red));
           }
@@ -211,6 +218,9 @@ class _CreateCollectionScreenState extends State<CreateCollectionScreen> {
             ],
           ),
         ),
+            ),
+          ),
+        ],
       ),
     );
   }

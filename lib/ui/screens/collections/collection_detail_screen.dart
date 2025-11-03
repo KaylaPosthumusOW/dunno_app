@@ -2,6 +2,7 @@ import 'package:dunno/constants/constants.dart';
 import 'package:dunno/constants/routes.dart';
 import 'package:dunno/constants/themes.dart';
 import 'package:dunno/cubits/collections/collection_cubit.dart';
+import 'package:dunno/ui/widgets/custom_header_bar.dart';
 import 'package:dunno/ui/widgets/dunno_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -58,11 +59,15 @@ class _CollectionDetailsScreenState extends State<CollectionDetailsScreen> {
       builder: (context, state) {
         if (state is LoadingAllCollections) {
           return Scaffold(
-            appBar: AppBar(title: const Text('Collection Details'), centerTitle: false),
             body: Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  CustomHeaderBar(
+                    backgroundColor: AppColors.pinkLavender,
+                    onBack: () => Navigator.pop(context),
+                    backButtonColor: AppColors.cerise,
+                  ),
                   CircularProgressIndicator(color: AppColors.cerise, strokeWidth: 3),
                   const SizedBox(height: 16),
                   Text(
@@ -85,12 +90,18 @@ class _CollectionDetailsScreenState extends State<CollectionDetailsScreen> {
         final eventDate = collection.eventCollectionDate;
 
         return Scaffold(
-          appBar: AppBar(title: Text(collection.title ?? 'Collection Details')),
-          body: SingleChildScrollView(
-            padding: const EdgeInsets.all(20.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
+          body: Column(
+            children: [
+              CustomHeaderBar(
+                title: collection.title ?? 'Collection Details',
+                onBack: () => Navigator.pop(context),
+              ),
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
                 Container(
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(color: AppColors.cerise, borderRadius: BorderRadius.circular(20), boxShadow: getBoxShadow(context)),
@@ -166,8 +177,11 @@ class _CollectionDetailsScreenState extends State<CollectionDetailsScreen> {
                     context.push(CREATE_COLLECTION_SCREEN);
                   },
                 ),
-              ],
-            ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
         );
       },

@@ -1,6 +1,7 @@
 import 'package:dunno/constants/constants.dart';
 import 'package:dunno/constants/themes.dart';
 import 'package:dunno/cubits/friend_gift_suggestion/friend_gift_suggestion_cubit.dart';
+import 'package:dunno/ui/widgets/custom_header_bar.dart';
 import 'package:dunno/ui/widgets/dunno_button.dart';
 import 'package:dunno/ui/widgets/dunno_text_field.dart';
 import 'package:dunno/ui/widgets/gift_loading_indicator.dart';
@@ -72,25 +73,19 @@ class _FriendGiftSuggestionsScreenState extends State<FriendGiftSuggestionsScree
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.offWhite,
-      appBar: AppBar(
-        backgroundColor: AppColors.offWhite,
-        elevation: 0,
-        surfaceTintColor: Colors.transparent,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        title: Text(
-          'Gift Ideas for ${widget.friendData?['name'] ?? 'Friend'}',
-          style: const TextStyle(fontWeight: FontWeight.w600),
-        ),
-        centerTitle: true,
-      ),
-      body: BlocProvider(
-        create: (_) => sl<FriendGiftSuggestionCubit>(),
-        child: SingleChildScrollView(
-          child: BlocBuilder<FriendGiftSuggestionCubit, FriendGiftSuggestionState>(
-          builder: (context, state) {
+      body: Column(
+        children: [
+          CustomHeaderBar(
+            title: 'Gift Ideas for ${widget.friendData?['name'] ?? 'Friend'}',
+            backgroundColor: AppColors.offWhite,
+            onBack: () => Navigator.of(context).pop(),
+          ),
+          Expanded(
+            child: BlocProvider(
+              create: (_) => sl<FriendGiftSuggestionCubit>(),
+              child: SingleChildScrollView(
+                child: BlocBuilder<FriendGiftSuggestionCubit, FriendGiftSuggestionState>(
+                  builder: (context, state) {
             if (state is FriendGiftSuggestionInitial) {
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 context.read<FriendGiftSuggestionCubit>().reset();
@@ -288,10 +283,13 @@ class _FriendGiftSuggestionsScreenState extends State<FriendGiftSuggestionsScree
             }
 
             return const SizedBox.shrink();
-          },
+                },
+              ),
+            ),
+          ),
         ),
+        ],
       ),
-    ),
     );
   }
 }

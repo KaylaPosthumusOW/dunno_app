@@ -48,6 +48,7 @@ class _UserProfileCardState extends State<UserProfileCard> {
               color: AppColors.offWhite,
               borderRadius: BorderRadius.circular(20),
               border: Border.all(color: AppColors.cerise, width: 1.5),
+              boxShadow: [BoxShadow(color: AppColors.cerise, offset: const Offset(3, 4))],
             ),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,

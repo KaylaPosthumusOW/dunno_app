@@ -6,6 +6,7 @@ import 'package:dunno/cubits/connections/connection_cubit.dart';
 import 'package:dunno/models/app_user_profile.dart';
 import 'package:dunno/models/connections.dart';
 import 'package:dunno/ui/widgets/collection_card.dart';
+import 'package:dunno/ui/widgets/custom_header_bar.dart';
 import 'package:dunno/ui/widgets/dunno_button.dart';
 import 'package:dunno/ui/widgets/dunno_extended_image.dart';
 import 'package:flutter/material.dart' hide ConnectionState;
@@ -159,7 +160,7 @@ class _FriendProfileScreenState extends State<FriendProfileScreen> {
     final profile = state.mainAppUserProfileState.selectedProfile;
 
     if (profile == null) {
-      return const Center(
+      return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -186,6 +187,12 @@ class _FriendProfileScreenState extends State<FriendProfileScreen> {
           children: [
             Column(
               children: [
+                CustomHeaderBar(
+                  backgroundColor: AppColors.pinkLavender,
+                  onBack: () => Navigator.pop(context),
+                  backButtonColor: AppColors.cerise,
+                  iconColor: AppColors.offWhite,
+                ),
                 Container(
                   height: 130,
                   decoration: BoxDecoration(color: AppColors.pinkLavender),
@@ -194,7 +201,7 @@ class _FriendProfileScreenState extends State<FriendProfileScreen> {
                 Divider(height: 0, color: AppColors.pinkLavender),
               ],
             ),
-            Positioned(top: 30, left: 0, right: 0, child: _profilePicture(state)),
+            Positioned(top: 120, left: 0, right: 0, child: _profilePicture(state)),
           ],
         ),
         Column(
@@ -326,20 +333,6 @@ class _FriendProfileScreenState extends State<FriendProfileScreen> {
       bloc: _appUserProfileCubit,
       builder: (context, state) {
         return Scaffold(
-          appBar: AppBar(
-            leading: Container(
-              decoration: BoxDecoration(
-                color: AppColors.cerise,
-                shape: BoxShape.circle,
-              ),
-              child: IconButton(
-                icon: Icon(Icons.arrow_back, color: AppColors.offWhite),
-                onPressed: () => Navigator.of(context).pop(),
-              ),
-            ),
-            backgroundColor: AppColors.pinkLavender,
-            centerTitle: true,
-          ),
           body: _buildBody(state),
         );
       }

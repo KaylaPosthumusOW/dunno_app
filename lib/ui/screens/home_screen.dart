@@ -7,6 +7,7 @@ import 'package:dunno/models/app_user_profile.dart';
 import 'package:dunno/ui/screens/scanner_screen.dart';
 import 'package:dunno/ui/widgets/calender.dart';
 import 'package:dunno/ui/widgets/calender_notification_card.dart';
+import 'package:dunno/ui/widgets/custom_header_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -165,7 +166,6 @@ class _HomeScreenState extends State<HomeScreen> {
                           uid ??= scanned;
 
                           if (uid.isNotEmpty) {
-                            // Show loading indicator
                             showDialog(
                               context: context,
                               barrierDismissible: false,
@@ -173,18 +173,15 @@ class _HomeScreenState extends State<HomeScreen> {
                             );
 
                             try {
-                              // Wait for the profile to be loaded
                               await _appUserProfileCubit.selectProfileById(uid);
-                              
+
                               if (!context.mounted) return;
-                              Navigator.of(context).pop(); // Close loading dialog
+                              Navigator.of(context).pop();
                               context.pushNamed(FRIEND_PROFILE_SCREEN);
                             } catch (e) {
                               if (!context.mounted) return;
-                              Navigator.of(context).pop(); // Close loading dialog
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text('Failed to load profile: $e')),
-                              );
+                              Navigator.of(context).pop();
+                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Failed to load profile: $e')));
                             }
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Invalid QR code')));

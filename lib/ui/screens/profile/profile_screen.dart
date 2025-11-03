@@ -6,6 +6,7 @@ import 'package:dunno/cubits/collections/collection_cubit.dart';
 import 'package:dunno/cubits/connections/connection_cubit.dart';
 import 'package:dunno/models/app_user_profile.dart';
 import 'package:dunno/ui/widgets/collection_card.dart';
+import 'package:dunno/ui/widgets/custom_header_bar.dart';
 import 'package:dunno/ui/widgets/dunno_alert_dialog.dart';
 import 'package:dunno/ui/widgets/dunno_button.dart';
 import 'package:dunno/ui/widgets/dunno_extended_image.dart';
@@ -518,65 +519,69 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: AppColors.yellow,
-        actions: [
-          PopupMenuButton(
-            icon: Icon(Icons.more_vert_rounded, color: AppColors.offWhite),
-            itemBuilder: (context) => [
-              PopupMenuItem(
-                onTap: () {
-                  context.pushNamed(EDIT_PROFILE_SCREEN);
-                },
-                child: ListTile(
-                  title: Row(
-                    children: [
-                      Icon(Icons.edit, color: AppColors.cinnabar, size: 20),
-                      SizedBox(width: 10),
-                      Text('Edit Profile'),
-                    ],
+      body: Column(
+        children: [
+          CustomHeaderBar(
+            backgroundColor: AppColors.yellow,
+            title: 'Profile',
+            actions: [
+              PopupMenuButton(
+                icon: Icon(Icons.more_vert_rounded, color: AppColors.offWhite),
+                itemBuilder: (context) => [
+                  PopupMenuItem(
+                    onTap: () {
+                      context.pushNamed(EDIT_PROFILE_SCREEN);
+                    },
+                    child: ListTile(
+                      title: Row(
+                        children: [
+                          Icon(Icons.edit, color: AppColors.cinnabar, size: 20),
+                          SizedBox(width: 10),
+                          Text('Edit Profile'),
+                        ],
+                      ),
+                    ),
                   ),
-                ),
-              ),
-              PopupMenuItem(
-                onTap: () {
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    _logOutPopup();
-                  });
-                },
-                child: ListTile(
-                  title: Row(
-                    children: [
-                      Icon(Icons.logout, color: AppColors.cinnabar, size: 20),
-                      SizedBox(width: 10),
-                      Text('Log Out'),
-                    ],
+                  PopupMenuItem(
+                    onTap: () {
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        _logOutPopup();
+                      });
+                    },
+                    child: ListTile(
+                      title: Row(
+                        children: [
+                          Icon(Icons.logout, color: AppColors.cinnabar, size: 20),
+                          SizedBox(width: 10),
+                          Text('Log Out'),
+                        ],
+                      ),
+                    ),
                   ),
-                ),
-              ),
-              PopupMenuItem(
-                onTap: () {
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    _deleteProfilePopup();
-                  });
-                },
-                child: ListTile(
-                  title: Row(
-                    children: [
-                      Icon(Icons.delete, color: Colors.red, size: 20),
-                      SizedBox(width: 10),
-                      Text('Delete Profile'),
-                    ],
+                  PopupMenuItem(
+                    onTap: () {
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        _deleteProfilePopup();
+                      });
+                    },
+                    child: ListTile(
+                      title: Row(
+                        children: [
+                          Icon(Icons.delete, color: Colors.red, size: 20),
+                          SizedBox(width: 10),
+                          Text('Delete Profile'),
+                        ],
+                      ),
+                    ),
                   ),
-                ),
+                ],
               ),
             ],
           ),
-        ],
-      ),
-      body: BlocConsumer<AppUserProfileCubit, AppUserProfileState>(
-        bloc: _appUserProfileCubit,
-        listener: (context, state) {
+          Expanded(
+            child: BlocConsumer<AppUserProfileCubit, AppUserProfileState>(
+              bloc: _appUserProfileCubit,
+              listener: (context, state) {
           if (state is ProfileUpdated) {
             _appUserProfileCubit.loadProfile();
             if (mounted) Navigator.of(context).maybePop();
@@ -589,6 +594,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
           }
           return _buildBody(state);
         },
+            ),
+          ),
+        ],
       ),
     );
   }

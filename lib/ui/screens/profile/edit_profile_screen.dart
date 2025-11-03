@@ -1,6 +1,6 @@
 import 'package:dunno/constants/constants.dart';
-import 'package:dunno/constants/themes.dart';
 import 'package:dunno/cubits/app_user_profile/app_user_profile_cubit.dart';
+import 'package:dunno/ui/widgets/custom_header_bar.dart';
 import 'package:dunno/ui/widgets/dunno_button.dart';
 import 'package:dunno/ui/widgets/dunno_text_field.dart';
 import 'package:flutter/material.dart';
@@ -34,18 +34,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: true,
-        centerTitle: true,
-        title: Text(
-          'Edit Profile',
-          style: Theme.of(context).textTheme.headlineLarge,
-        ),
-        iconTheme: IconThemeData(color: AppColors.black),
-      ),
-      body: BlocListener<AppUserProfileCubit, AppUserProfileState>(
-        bloc: _appUserProfileCubit,
-        listener: (context, state) {
+      body: Column(
+        children: [
+          CustomHeaderBar(
+            title: 'Edit Profile',
+            onBack: () => Navigator.pop(context),
+          ),
+          Expanded(
+            child: BlocListener<AppUserProfileCubit, AppUserProfileState>(
+              bloc: _appUserProfileCubit,
+              listener: (context, state) {
           if (state is ProfileUpdated) {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
@@ -115,6 +113,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             ),
           ),
         ),
+              ),
+            ),
+        ],
       ),
     );
   }

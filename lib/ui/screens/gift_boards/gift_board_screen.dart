@@ -3,6 +3,7 @@ import 'package:dunno/constants/themes.dart';
 import 'package:dunno/cubits/app_user_profile/app_user_profile_cubit.dart';
 import 'package:dunno/cubits/gift_board/gift_board_cubit.dart';
 import 'package:dunno/ui/screens/gift_boards/create_board_dialog.dart';
+import 'package:dunno/ui/widgets/custom_header_bar.dart';
 import 'package:dunno/ui/widgets/dunno_button.dart';
 import 'package:dunno/ui/widgets/dunno_search_field.dart';
 import 'package:dunno/ui/widgets/gift_board_card.dart';
@@ -41,85 +42,90 @@ class _GiftBoardScreenState extends State<GiftBoardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Gift Board')),
-      body: BlocBuilder<GiftBoardCubit, GiftBoardState>(
-        bloc: _giftBoardCubit,
-        builder: (context, state) {
-          final boards = state.mainGiftBoardState.allUserGiftBoards ?? [];
-
-          return RefreshIndicator(
-            onRefresh: _refresh,
-            child: SingleChildScrollView(
-              physics: const AlwaysScrollableScrollPhysics(),
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          flex: 2,
-                          child: DunnoSearchField(hintText: 'Search Your Boards', typeSearch: TypeSearch.collections, controller: _searchCollection),
-                        ),
-                        const SizedBox(width: 10),
-                        DunnoButton(
-                          label: 'Create',
-                          type: ButtonType.pinkLavender,
-                          icon: Icon(Icons.add, color: AppColors.cerise),
-                          onPressed: () {
-                            _giftBoardCubit.clearSelectedGiftBoard();
-                            showDialog(
-                              context: context,
-                              builder: (context) {
-                                return CreateBoardDialog();
-                              },
-                            );
-                          },
-                        ),
-                      ],
-                    ),
-
-                    const SizedBox(height: 20),
-
-                    if (state is LoadingGiftBoards)
-                      const Padding(
-                        padding: EdgeInsets.only(top: 40),
-                        child: Center(child: CircularProgressIndicator()),
-                      )
-                    else if (boards.isEmpty)
-                      Padding(
-                        padding: const EdgeInsets.only(top: 40),
-                        child: Column(
-                          children: [
-                            const Icon(Icons.dashboard_outlined, size: 48, color: Colors.grey),
-                            const SizedBox(height: 12),
-                            Text('No boards yet', style: Theme.of(context).textTheme.titleMedium),
-                            const SizedBox(height: 6),
-                            const Text(
-                              'Create your first Gift Board to save favourite ideas.',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(color: Colors.grey),
-                            ),
-                          ],
-                        ),
-                      )
-                    else
-                      ListView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: boards.length,
-                        itemBuilder: (context, index) {
-                          final board = boards[index];
-                          return GiftBoardCard(board: board);
-                        },
-                      ),
-                  ],
-                ),
+      body: Column(
+        children: [
+          CustomHeaderBar(
+            title: 'Your Gift Boards',
+            onBack: () => Navigator.pop(context),
+            backButtonColor: AppColors.pinkLavender,
+            iconColor: AppColors.cerise,
+            actions: [
+              DunnoButton(
+                label: 'Create Board',
+                type: ButtonType.pinkLavender,
+                icon: Icon(Icons.add, color: AppColors.cerise),
+                onPressed: () {
+                  _giftBoardCubit.clearSelectedGiftBoard();
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return CreateBoardDialog();
+                    },
+                  );
+                },
               ),
+            ],
+          ),
+          Expanded(
+            child: BlocBuilder<GiftBoardCubit, GiftBoardState>(
+              bloc: _giftBoardCubit,
+              builder: (context, state) {
+                final boards = state.mainGiftBoardState.allUserGiftBoards ?? [];
+
+                return RefreshIndicator(
+                  onRefresh: _refresh,
+                  child: SingleChildScrollView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        children: [
+                          DunnoSearchField(
+                            hintText: 'Search Your Boards',
+                            typeSearch: TypeSearch.collections,
+                            controller: _searchCollection,
+                          ),
+                          if (state is LoadingGiftBoards)
+                            const Padding(
+                              padding: EdgeInsets.only(top: 40),
+                              child: Center(child: CircularProgressIndicator()),
+                            )
+                          else if (boards.isEmpty)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 40),
+                              child: Column(
+                                children: [
+                                  const Icon(Icons.dashboard_outlined, size: 48, color: Colors.grey),
+                                  const SizedBox(height: 12),
+                                  Text('No boards yet', style: Theme.of(context).textTheme.titleMedium),
+                                  const SizedBox(height: 6),
+                                  const Text(
+                                    'Create your first Gift Board to save favourite ideas.',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(color: Colors.grey),
+                                  ),
+                                ],
+                              ),
+                            )
+                          else
+                            ListView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: boards.length,
+                              itemBuilder: (context, index) {
+                                final board = boards[index];
+                                return GiftBoardCard(board: board);
+                              },
+                            ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              },
             ),
-          );
-        },
+          ),
+        ],
       ),
     );
   }

@@ -1,8 +1,10 @@
 import 'package:dunno/constants/constants.dart';
 import 'package:dunno/constants/routes.dart';
+import 'package:dunno/constants/themes.dart';
 import 'package:dunno/cubits/app_user_profile/app_user_profile_cubit.dart';
 import 'package:dunno/cubits/collections/collection_cubit.dart';
 import 'package:dunno/ui/widgets/collection_card.dart';
+import 'package:dunno/ui/widgets/custom_header_bar.dart';
 import 'package:dunno/ui/widgets/dunno_button.dart';
 import 'package:dunno/ui/widgets/dunno_search_field.dart';
 import 'package:flutter/material.dart';
@@ -55,7 +57,7 @@ class _ViewAllCollectionsScreenState extends State<ViewAllCollectionsScreen> {
             final collection = collections[index];
             return Container(
               margin: const EdgeInsets.only(bottom: 16.0),
-              child: CollectionCard(collection: collection),
+              child: CollectionCard(collection: collection, colorType: CollectionColorType.yellow)
             );
           },
         );
@@ -69,40 +71,39 @@ class _ViewAllCollectionsScreenState extends State<ViewAllCollectionsScreen> {
       bloc: _appUserProfileCubit,
       builder: (context, state) {
         return Scaffold(
-          appBar: AppBar(title: const Text('All Collections')),
           body: Column(
             children: [
+              CustomHeaderBar(
+                backgroundColor: AppColors.offWhite,
+                title: 'Your Collections',
+                subtitle: 'Manage and explore your collections',
+                onBack: () => Navigator.pop(context),
+                backButtonColor: AppColors.yellow,
+                actions: [
+                  Offstage(
+                    offstage: state.mainAppUserProfileState.appUserProfile?.uid != state.mainAppUserProfileState.selectedProfile?.uid,
+                    child: Expanded(
+                      flex: 1,
+                      child: DunnoButton(
+                        label: 'Create',
+                        type: ButtonType.saffron,
+                        textColor: AppColors.offWhite,
+                        icon: Icon(Icons.add, color: Colors.white),
+                        onPressed: () {
+                          context.pushNamed(CREATE_COLLECTION_SCREEN);
+                        },
+                      ),
+                    ),
+                  )
+                ],
+              ),
               Expanded(
                 child: SingleChildScrollView(
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Column(
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              flex: 2,
-                              child: DunnoSearchField(hintText: 'Search Collections', typeSearch: TypeSearch.collections, controller: _searchCollection),
-                            ),
-                            SizedBox(width: 10),
-                            Offstage(
-                              offstage: state.mainAppUserProfileState.appUserProfile?.uid != state.mainAppUserProfileState.selectedProfile?.uid,
-                              child: Expanded(
-                                flex: 1,
-                                child: DunnoButton(
-                                  label: 'Create',
-                                  type: ButtonType.primary,
-                                  icon: Icon(Icons.add, color: Colors.white),
-                                  onPressed: () {
-                                    context.pushNamed(CREATE_COLLECTION_SCREEN);
-                                  },
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
-                        SizedBox(height: 20),
+                        DunnoSearchField(hintText: 'Search Collections', typeSearch: TypeSearch.collections, controller: _searchCollection),
                         _displayCollections(),
                       ],
                     ),

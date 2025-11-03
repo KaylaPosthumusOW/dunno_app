@@ -96,57 +96,9 @@ class _FindFriendsScreenState extends State<FindFriendsScreen> {
               GestureDetector(
                 onTap: _enterSearchMode,
                 child: AbsorbPointer(
-                  child: DunnoSearchField(controller: _searchFriendController, typeSearch: TypeSearch.friends, hintText: 'Tap to search...'),
+                  child: DunnoSearchField(controller: _searchFriendController, typeSearch: TypeSearch.friends, hintText: 'Tap to search...', isPinkVersion: true,),
                 ),
               ),
-              // BlocBuilder<ConnectionCubit, ConnectionState>(
-              //   bloc: _connectionCubit,
-              //   builder: (context, state) {
-              //     if (state is LoadingAllCollections) {
-              //       return const Center(child: CircularProgressIndicator());
-              //     }
-              //
-              //     if (state is ConnectionError) {
-              //       return Center(child: Text('Error: ${state.mainConnectionState.message}'));
-              //     }
-              //
-              //     final connections = state.mainConnectionState.allUserConnections ?? [];
-              //
-              //     if (connections.isEmpty) {
-              //       return const Padding(
-              //         padding: EdgeInsets.only(top: 12.0),
-              //         child: Text('No connections found'),
-              //       );
-              //     }
-              //
-              //     return Column(
-              //       crossAxisAlignment: CrossAxisAlignment.start,
-              //       children: [
-              //         Text('Your Connections', style: Theme.of(context).textTheme.titleMedium),
-              //         const SizedBox(height: 10),
-              //         ListView.builder(
-              //           shrinkWrap: true,
-              //           physics: const NeverScrollableScrollPhysics(),
-              //           itemCount: connections.length,
-              //           itemBuilder: (context, index) {
-              //             final connection = connections[index];
-              //             final allProfiles = _appUserProfileCubit.state.mainAppUserProfileState.allProfiles ?? [];
-              //             final userProfile = allProfiles.firstWhere(
-              //                   (profile) => profile.uid == connection.connectedUser?.uid,
-              //               orElse: () => AppUserProfile(),
-              //             );
-              //
-              //             return Container(
-              //               margin: const EdgeInsets.symmetric(vertical: 8),
-              //               child: UserProfileCard(userProfile: userProfile),
-              //             );
-              //           },
-              //         ),
-              //       ],
-              //     );
-              //   },
-              // ),
-
               const SizedBox(height: 130),
             ],
           ),
@@ -164,9 +116,9 @@ class _FindFriendsScreenState extends State<FindFriendsScreen> {
             padding: const EdgeInsets.all(16),
             child: Row(
               children: [
-                IconButton(icon: const Icon(Icons.arrow_back), onPressed: _exitSearchMode),
+                IconButton(icon: const Icon(Icons.arrow_back_rounded, size: 22), onPressed: _exitSearchMode),
                 Expanded(
-                  child: DunnoSearchField(controller: _searchFriendController, typeSearch: TypeSearch.friends, onChanged: _onSearchChanged),
+                  child: DunnoSearchField(controller: _searchFriendController, typeSearch: TypeSearch.friends, onChanged: _onSearchChanged, isPinkVersion: true,),
                 ),
               ],
             ),

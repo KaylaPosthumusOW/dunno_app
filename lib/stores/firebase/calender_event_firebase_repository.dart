@@ -6,10 +6,7 @@ import 'package:get_it/get_it.dart';
 class CalenderEventFirebaseRepository implements CalenderEventStore {
   static final FirebaseFirestore _firebaseFirestore = GetIt.instance<FirebaseFirestore>();
 
-  final CollectionReference<CalenderEvent> _calenderCollection = _firebaseFirestore.collection('calenderEvent').withConverter<CalenderEvent>(
-    fromFirestore: (snapshot, _) => CalenderEvent.fromMap(snapshot.data() ?? {}),
-    toFirestore: (map, _) => map.toMap(),
-  );
+  final CollectionReference<CalenderEvent> _calenderCollection = _firebaseFirestore.collection('calenderEvent').withConverter<CalenderEvent>(fromFirestore: (snapshot, _) => CalenderEvent.fromMap(snapshot.data() ?? {}), toFirestore: (map, _) => map.toMap());
 
   @override
   Future<CalenderEvent> createEvent({required CalenderEvent event}) async {
@@ -46,27 +43,49 @@ class CalenderEventFirebaseRepository implements CalenderEventStore {
     }
   }
 
+  // @override
+  // Future<List<CalenderEvent>> getUpcomingEvents({required String userId}) async {
+  //   try {
+  //     final dateNow = Timestamp.now().toDate();
+  //     final oneWeekFromNow = dateNow.add(const Duration(days: 7));
+  //
+  //     final snapshot = await _calenderCollection.where('user.uid', isEqualTo: userId).where('collection.eventCollectionDate', isGreaterThanOrEqualTo: dateNow).where('collection.eventCollectionDate', isLessThanOrEqualTo: oneWeekFromNow).get();
+  //
+  //     return snapshot.docs.map((doc) {
+  //       return CalenderEvent.fromMap(doc.data().toMap()..['uid'] = doc.id);
+  //     }).toList();
+  //   } catch (e) {
+  //     print('Error fetching upcoming events: $e');
+  //     rethrow;
+  //   }
+  // }
+
   @override
   Future<List<CalenderEvent>> getUpcomingEvents({required String userId}) async {
     try {
-      final dateNow = Timestamp.now().toDate();
-      final oneWeekFromNow = dateNow.add(const Duration(days: 7));
+      final now = DateTime.now();
+      // Lower bound: midnight today
+      final startOfToday = DateTime(now.year, now.month, now.day);
+
+      // Upper bound (exclusive): midnight after day 7
+      // This gives you: today (day 0) through day 7 inclusive.
+      final endExclusive = startOfToday.add(const Duration(days: 8));
 
       final snapshot = await _calenderCollection
           .where('user.uid', isEqualTo: userId)
-          .where('collection.eventCollectionDate', isGreaterThanOrEqualTo: dateNow)
-          .where('collection.eventCollectionDate', isLessThanOrEqualTo: oneWeekFromNow)
+          .where('collection.eventCollectionDate',
+          isGreaterThanOrEqualTo: Timestamp.fromDate(startOfToday))
+          .where('collection.eventCollectionDate',
+          isLessThan: Timestamp.fromDate(endExclusive))
           .get();
 
-      return snapshot.docs.map((doc) {
-        return CalenderEvent.fromMap(doc.data().toMap()..['uid'] = doc.id);
-      }).toList();
+      return snapshot.docs
+          .map((doc) => CalenderEvent.fromMap(doc.data().toMap()..['uid'] = doc.id))
+          .toList();
     } catch (e) {
       print('Error fetching upcoming events: $e');
       rethrow;
     }
   }
-
-
 
 }

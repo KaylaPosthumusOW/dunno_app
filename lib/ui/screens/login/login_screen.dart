@@ -1,3 +1,4 @@
+import 'package:dunno/ui/widgets/custom_header_bar.dart';
 import 'package:flutter/material.dart';
 
 import 'login_form.dart';
@@ -8,14 +9,17 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        // title: SvgPicture.asset(
-        //   'assets/svg/frame_logo_dark.svg',
-        //   height: 32,
-        // ),
-        centerTitle: true,
+      body: Column(
+        children: [
+          CustomHeaderBar(
+            title: 'Welcome Back',
+            // centerTitle: true,
+          ),
+          Expanded(
+            child: LoginForm(),
+          ),
+        ],
       ),
-      body: LoginForm(),
     );
   }
 }

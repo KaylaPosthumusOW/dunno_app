@@ -2,6 +2,7 @@ import 'package:dunno/constants/constants.dart';
 import 'package:dunno/constants/themes.dart';
 import 'package:dunno/cubits/ai_gift_suggestion/ai_gift_suggestion_cubit.dart';
 import 'package:dunno/cubits/ai_gift_suggestion/ai_gift_suggestion_state.dart';
+import 'package:dunno/ui/widgets/custom_header_bar.dart';
 import 'package:dunno/ui/widgets/dunno_button.dart';
 import 'package:dunno/ui/widgets/dunno_text_field.dart';
 import 'package:dunno/ui/widgets/gift_loading_indicator.dart';
@@ -33,34 +34,20 @@ class _ReceiveGiftSuggestionScreenState extends State<ReceiveGiftSuggestionScree
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.offWhite,
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-        surfaceTintColor: Colors.transparent,
-        automaticallyImplyLeading: false,
-        centerTitle: false,
-        leadingWidth: 50,
-        leading: Padding(
-          padding: const EdgeInsets.only(left: 16),
-          child: IconButton(
-            onPressed: () => Navigator.of(context).maybePop(),
-            icon: const Icon(Icons.arrow_back_rounded, size: 20, color: Colors.white),
-            style: IconButton.styleFrom(backgroundColor: AppColors.cinnabar, shape: const CircleBorder(), minimumSize: const Size(36, 36), padding: EdgeInsets.zero),
+      body: Column(
+        children: [
+          CustomHeaderBar(
+            title: 'Your Gift Suggestions',
+            backgroundColor: Colors.transparent,
+            onBack: () => Navigator.of(context).maybePop(),
+            backButtonColor: AppColors.cinnabar,
           ),
-        ),
-        titleSpacing: 20,
-        title: Text(
-          'Your Gift Suggestions',
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600, color: AppColors.black),
-          overflow: TextOverflow.ellipsis,
-        ),
-      ),
-
-      body: BlocProvider(
-        create: (_) => sl<AiGiftSuggestionCubit>()..clearSuggestions(),
-        child: SingleChildScrollView(
-          child: BlocBuilder<AiGiftSuggestionCubit, AiGiftSuggestionState>(
-            builder: (context, state) {
+          Expanded(
+            child: BlocProvider(
+              create: (_) => sl<AiGiftSuggestionCubit>()..clearSuggestions(),
+              child: SingleChildScrollView(
+                child: BlocBuilder<AiGiftSuggestionCubit, AiGiftSuggestionState>(
+                  builder: (context, state) {
               if (state is AiGiftSuggestionInitial) {
                 WidgetsBinding.instance.addPostFrameCallback((_) {
                   context.read<AiGiftSuggestionCubit>().generateSuggestions(profile: widget.profile ?? {}, filters: widget.filters ?? {});
@@ -208,9 +195,12 @@ class _ReceiveGiftSuggestionScreenState extends State<ReceiveGiftSuggestionScree
               }
 
               return const SizedBox.shrink();
-            },
+                  },
+                ),
+              ),
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
