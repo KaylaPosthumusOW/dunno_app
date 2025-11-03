@@ -13,8 +13,10 @@ import 'package:dunno/ui/widgets/dunno_image_uploading_tile.dart';
 import 'package:dunno/ui/widgets/loading_indicator.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart' hide ConnectionState;
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:qr_bar_code/code/code.dart';
 import 'package:sp_user_repository/sp_user_repository.dart';
 import 'package:sp_utilities/utilities.dart';
 
@@ -41,9 +43,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final source = await showModalBottomSheet<_PhotoSource>(
       context: context,
       backgroundColor: AppColors.offWhite,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24.0)),
-      ),
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(24.0))),
       builder: (sheetCtx) {
         return SafeArea(
           child: Column(
@@ -87,10 +87,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
       return;
     }
 
-    final storageReference = sl<FirebaseStorage>()
-        .ref()
-        .child('user')
-        .child(_appUserProfileCubit.state.mainAppUserProfileState.appUserProfile!.uid!);
+    final storageReference = sl<FirebaseStorage>().ref().child('user').child(_appUserProfileCubit.state.mainAppUserProfileState.appUserProfile!.uid!);
+
+    // Optional: show a simple loading overlay while the uploader does its thing
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => const Center(child: CircularProgressIndicator()),
+    );
 
     try {
       if (source == _PhotoSource.camera) {
@@ -98,8 +102,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
       } else {
         _imageUploaderCubit.singleSelectImageFromGalleryToUploadToReference(storageRef: storageReference);
       }
+      // The Bloc listener will close the dialog when upload finishes (see section 2).
     } catch (e) {
       if (!mounted) return;
+      Navigator.of(context, rootNavigator: true).pop(); // close loading
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Upload failed: $e')));
     }
   }
@@ -123,7 +129,69 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
+  String _profileShareLink(String uid) {
+    final uri = Uri.https(uid);
+    return uri.toString();
+  }
 
+  Future<void> _showProfileQrDialog() async {
+    final uid = _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile?.uid;
+
+    if (uid == null || uid.isEmpty) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('No user ID found for sharing.')));
+      return;
+    }
+
+    final link = _profileShareLink(uid);
+
+    await showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (ctx) {
+        return Dialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          backgroundColor: AppColors.offWhite,
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        'Share My Profile',
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800, color: AppColors.black),
+                      ),
+                    ),
+                    IconButton(icon: const Icon(Icons.close), onPressed: () => Navigator.of(ctx).pop()),
+                  ],
+                ),
+                const SizedBox(height: 12),
+
+                Container(
+                  padding: const EdgeInsets.all(14),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: AppColors.yellow, width: 1.5),
+                    boxShadow: [BoxShadow(color: AppColors.yellow, offset: const Offset(3, 4))],
+                  ),
+                  child: SizedBox(
+                    height: 220,
+                    width: 220,
+                    child: Code(data: link, codeType: CodeType.qrCode()),
+                  ),
+                ),
+                SizedBox(height: 16),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
 
   _profilePicture() {
     return BlocConsumer<SPFileUploaderCubit, SPFileUploaderState>(
@@ -136,25 +204,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
             await _appUserProfileCubit.updateProfile(profile.copyWith(profilePicture: _downloadUrl));
           }
           if (!mounted) return;
+          Navigator.of(context, rootNavigator: true).maybePop();
           setState(() {});
         }
 
         if (state is SPFileUploaderErrorState) {
           if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.mainSPFileUploadState.errorMessage ?? state.mainSPFileUploadState.message ?? 'Upload error')),
-            );
+            Navigator.of(context, rootNavigator: true).maybePop();
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.mainSPFileUploadState.errorMessage ?? state.mainSPFileUploadState.message ?? 'Upload error')));
           }
         }
       },
       builder: (context, state) {
         if (state.mainSPFileUploadState.uploadTasks != null && state.mainSPFileUploadState.uploadTasks!.isNotEmpty) {
-          // Show circular upload progress over the profile picture area
-          return DunnoImageUploadingTile(
-            task: state.mainSPFileUploadState.uploadTasks!.first,
-            size: 200.0,
-            isCircular: true,
-          );
+          return DunnoImageUploadingTile(task: state.mainSPFileUploadState.uploadTasks!.first, size: 200.0, isCircular: true);
         }
 
         if (_appUserProfileCubit.state.mainAppUserProfileState.appUserProfile?.profilePicture != null && _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile!.profilePicture!.isNotEmpty && _downloadUrl == null) {
@@ -172,9 +235,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ? SizedBox(
                                 width: 200,
                                 height: 200,
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(100),
-                                  child: DunnoExtendedImage(url: profilePicture),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.fromBorderSide(BorderSide(color: AppColors.offWhite, width: 4)),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(100),
+                                    child: DunnoExtendedImage(url: profilePicture),
+                                  ),
                                 ),
                               )
                             : Container(),
@@ -213,7 +282,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           width: 200,
                           height: 200,
                           child: ClipRRect(
-                            borderRadius: BorderRadius.circular(100),
+                            borderRadius: BorderRadius.circular(75.0),
                             child: DunnoExtendedImage(url: _downloadUrl!),
                           ),
                         ),
@@ -317,9 +386,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       builder: (context, state) {
         final collections = state.mainCollectionState.allUserCollections ?? [];
         final hasCollections = collections.isNotEmpty;
-        final displayCount = hasCollections
-            ? (collections.length > 3 ? 3 : collections.length)
-            : 0;
+        final displayCount = hasCollections ? (collections.length > 3 ? 3 : collections.length) : 0;
 
         return Padding(
           padding: const EdgeInsets.all(20),
@@ -341,10 +408,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     },
                     child: Text(
                       'View All',
-                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        color: AppColors.black,
-                        decoration: TextDecoration.underline,
-                      ),
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: AppColors.black, decoration: TextDecoration.underline),
                     ),
                   ),
                 ],
@@ -353,10 +417,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               const SizedBox(height: 10),
 
               if (!hasCollections)
-                Text(
-                  'No collections found.',
-                  style: Theme.of(context).textTheme.bodyMedium,
-                )
+                Text('No collections found.', style: Theme.of(context).textTheme.bodyMedium)
               else
                 SizedBox(
                   height: 150,
@@ -368,10 +429,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       final collection = collections[index];
                       return Container(
                         margin: EdgeInsets.only(right: index == displayCount - 1 ? 0 : 15),
-                        child: CollectionCard(
-                          collection: collection,
-                          colorType: CollectionColorType.yellow,
-                        ),
+                        child: CollectionCard(collection: collection, colorType: CollectionColorType.yellow),
                       );
                     },
                   ),
@@ -433,16 +491,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ],
                       ),
                     );
-                  }
+                  },
                 ),
                 SizedBox(height: 20),
                 DunnoButton(
-                  onPressed: () {
-                    context.pushNamed(EDIT_PROFILE_SCREEN);
-                  },
-                  type: ButtonType.secondary,
-                  label: 'Edit Profile',
-                  icon: Icon(Icons.edit),
+                  onPressed: _showProfileQrDialog,
+                  type: ButtonType.secondary, label: 'Share via QR Code',
+                  icon: const Icon(Icons.qr_code_2_rounded),
                   buttonColor: AppColors.yellow,
                 ),
               ],
@@ -469,11 +524,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
         backgroundColor: AppColors.yellow,
         actions: [
           PopupMenuButton(
-            icon: Icon(Icons.logout, color: AppColors.offWhite),
+            icon: Icon(Icons.more_vert_rounded, color: AppColors.offWhite),
             itemBuilder: (context) => [
               PopupMenuItem(
                 onTap: () {
-                  // schedule after the menu has closed
+                  context.pushNamed(EDIT_PROFILE_SCREEN);
+                },
+                child: ListTile(
+                  title: Row(
+                    children: [
+                      Icon(Icons.edit, color: AppColors.cinnabar, size: 20),
+                      SizedBox(width: 10),
+                      Text('Edit Profile'),
+                    ],
+                  ),
+                ),
+              ),
+              PopupMenuItem(
+                onTap: () {
                   WidgetsBinding.instance.addPostFrameCallback((_) {
                     _logOutPopup();
                   });
@@ -490,7 +558,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               PopupMenuItem(
                 onTap: () {
-                  // schedule after the menu has closed
                   WidgetsBinding.instance.addPostFrameCallback((_) {
                     _deleteProfilePopup();
                   });
@@ -514,7 +581,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         listener: (context, state) {
           if (state is ProfileUpdated) {
             _appUserProfileCubit.loadProfile();
-            if (mounted) Navigator.of(context).maybePop(); // optional: only if you opened a modal
+            if (mounted) Navigator.of(context).maybePop();
             if (mounted) UtilitiesHelper.showSnackBar(context, message: 'Profile Updated', backgroundColor: Colors.green);
           }
         },
