@@ -3,7 +3,6 @@ import 'package:dunno/constants/routes.dart';
 import 'package:dunno/constants/themes.dart';
 import 'package:dunno/cubits/app_user_profile/app_user_profile_cubit.dart';
 import 'package:dunno/cubits/calender_event_cubit/calender_event_cubit.dart';
-import 'package:dunno/cubits/connections/connection_cubit.dart';
 import 'package:dunno/models/app_user_profile.dart';
 import 'package:dunno/ui/screens/scanner_screen.dart';
 import 'package:dunno/ui/widgets/calender.dart';
@@ -65,8 +64,9 @@ class _HomeScreenState extends State<HomeScreen> {
               Container(
                 margin: const EdgeInsets.only(right: 10),
                 child: CircleAvatar(
+                  backgroundColor: Colors.grey.shade400,
                   backgroundImage: state.mainAppUserProfileState.appUserProfile?.profilePicture != null ? NetworkImage(state.mainAppUserProfileState.appUserProfile!.profilePicture!) : null,
-                  child: state.mainAppUserProfileState.appUserProfile?.profilePicture == null ? Icon(Icons.person, color: AppColors.antiqueWhite) : null,
+                  child: state.mainAppUserProfileState.appUserProfile?.profilePicture == null ? Icon(Icons.person, color: AppColors.offWhite) : null,
                 ),
               ),
             ],

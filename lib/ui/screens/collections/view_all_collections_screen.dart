@@ -51,9 +51,22 @@ class _ViewAllCollectionsScreenState extends State<ViewAllCollectionsScreen> {
         final collections = state.mainCollectionState.searchedCollections ?? state.mainCollectionState.allUserCollections ?? [];
 
         if (collections.isEmpty) {
-          final isSearching = _searchCollection.text.isNotEmpty;
-          final message = isSearching ? 'No collections found matching "${_searchCollection.text}"' : 'No collections found.';
-          return Center(child: Text(message));
+          return Padding(
+            padding: const EdgeInsets.only(top: 40),
+            child: Column(
+              children: [
+                const Icon(Icons.folder_open, size: 64, color: Colors.grey),
+                const SizedBox(height: 12),
+                Text(_searchCollection.text.isNotEmpty ? 'No results for "${_searchCollection.text}"' : 'You have no collections yet.', textAlign: TextAlign.center, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                const SizedBox(height: 6),
+                Text(
+                  _searchCollection.text.isNotEmpty ? 'Try adjusting your search to find what you\'re looking for.' : 'Create a new collection to get started!',
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(color: Colors.grey),
+                ),
+              ],
+            ),
+          );
         }
 
         return ListView.builder(
@@ -117,11 +130,10 @@ class _ViewAllCollectionsScreenState extends State<ViewAllCollectionsScreen> {
                           typeSearch: TypeSearch.collections,
                           controller: _searchCollection,
                           onChanged: (value) {
-                            // If search is cleared, reset to show all collections
                             if (value.isEmpty) {
                               _collectionCubit.searchCollections('', reset: true);
                             }
-                            setState(() {}); // Refresh UI to update empty message
+                            setState(() {});
                           },
                         ),
                         _displayCollections(),

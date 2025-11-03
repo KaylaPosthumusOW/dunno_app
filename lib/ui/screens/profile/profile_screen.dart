@@ -415,7 +415,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
               const SizedBox(height: 10),
 
               if (!hasCollections)
-                Text('No collections found.', style: Theme.of(context).textTheme.bodyMedium)
+                Column(
+                  children: [
+                    SizedBox(height: 20),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 50),
+                      child: Text(
+                        'You have no collections yet. Create a collection to get started!',
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppColors.black),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    DunnoButton(
+                      icon: Icon(Icons.add),
+                      type: ButtonType.saffron,
+                      label: 'Add First Collection!',
+                      onPressed: () {
+                        context.pushNamed(CREATE_COLLECTION_SCREEN);
+                      },
+                    )
+                  ],
+                )
               else
                 SizedBox(
                   height: 150,

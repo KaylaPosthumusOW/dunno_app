@@ -85,11 +85,10 @@ class _GiftBoardScreenState extends State<GiftBoardScreen> {
                             typeSearch: TypeSearch.giftBoards,
                             controller: _searchCollection,
                             onChanged: (value) {
-                              // If search is cleared, reset to show all boards
                               if (value.isEmpty) {
                                 _giftBoardCubit.searchGiftBoards('', reset: true);
                               }
-                              setState(() {}); // Refresh UI to update empty message
+                              setState(() {});
                             },
                           ),
                           if (state is LoadingGiftBoards || state is SearchingGiftBoards)

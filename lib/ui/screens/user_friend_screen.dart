@@ -64,8 +64,21 @@ class _UserFriendScreenState extends State<UserFriendScreen> {
                             }
 
                             if (connections.isEmpty) {
-                              return const Center(
-                                child: Text('No friends yet. Connect with someone to see them here!', style: TextStyle(fontSize: 16), textAlign: TextAlign.center),
+                              return Padding(
+                                padding: const EdgeInsets.only(top: 40),
+                                child: Column(
+                                  children: [
+                                    const Icon(Icons.people_alt_outlined, size: 80, color: Colors.grey),
+                                    const SizedBox(height: 12),
+                                    Text(_searchFriendController.text.isNotEmpty ? 'No friends found' : 'No friends yet', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                                    const SizedBox(height: 6),
+                                    Text(
+                                      _searchFriendController.text.isNotEmpty ? 'Try adjusting your search to find friends.' : 'Connect with friends to see them here.',
+                                      textAlign: TextAlign.center,
+                                      style: const TextStyle(color: Colors.grey),
+                                    ),
+                                  ],
+                                ),
                               );
                             }
 
