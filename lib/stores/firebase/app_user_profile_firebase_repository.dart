@@ -88,4 +88,14 @@ class AppUserProfileFirebaseRepository extends AppUserProfileStore {
     AggregateQuerySnapshot query = await _userProfileCollection.count().get();
     return query.count;
   }
+
+  @override
+  Future<AppUserProfile> getProfileByUid({required String uid}) async {
+    DocumentSnapshot<AppUserProfile> snapshot = await _userProfileCollection.doc(uid).get();
+    if (snapshot.data() != null) {
+      return snapshot.data()!;
+    } else {
+      throw 'User profile not found';
+    }
+  }
 }

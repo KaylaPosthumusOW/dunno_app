@@ -8,4 +8,5 @@ abstract class AppUserProfileStore {
   Future<List<AppUserProfile>> loadAllProfiles();
   Future<List<AppUserProfile>> getAdminProfiles();
   Future<num?> getUserProfileCount();
+  Future<AppUserProfile> getProfileByUid({required String uid});
 }

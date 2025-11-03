@@ -122,6 +122,12 @@ class AppUserProfileCubit extends Cubit<AppUserProfileState> {
     emit(SelectedProfile(state.mainAppUserProfileState.copyWith(selectedProfile: profile, message: 'Loading all profile', errorMessage: '')));
   }
 
+  selectProfileById(String profileId) async {
+    emit(LoadingAllProfiles(state.mainAppUserProfileState.copyWith(message: 'Loading all profile', errorMessage: '')));
+    AppUserProfile? profile = await _appUserProfileRepository.getProfileByUid(uid: profileId);
+    emit(SelectedProfile(state.mainAppUserProfileState.copyWith(selectedProfile: profile, message: 'Loading all profile', errorMessage: '')));
+  }
+
   clearSelectedProfile() {
     emit(ClearedSelectedProfile(state.mainAppUserProfileState.copyWithNull(selectedProfile: null, message: 'Loading all profile', errorMessage: '')));
   }

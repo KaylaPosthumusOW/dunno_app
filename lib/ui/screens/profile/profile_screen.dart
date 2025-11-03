@@ -39,7 +39,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String? _downloadUrl;
 
   Future<void> _chooseAndUploadProfilePhoto() async {
-    // 1) Ask user how to add photo
     final source = await showModalBottomSheet<_PhotoSource>(
       context: context,
       backgroundColor: AppColors.offWhite,
@@ -78,10 +77,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
       },
     );
 
-    if (source == null) return; // cancelled
+    if (source == null) return;
     if (!mounted) return;
 
-    // 2) Handle choice AFTER the sheet has fully closed
     if (source == _PhotoSource.remove) {
       await _deleteImage();
       return;
@@ -89,7 +87,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     final storageReference = sl<FirebaseStorage>().ref().child('user').child(_appUserProfileCubit.state.mainAppUserProfileState.appUserProfile!.uid!);
 
-    // Optional: show a simple loading overlay while the uploader does its thing
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -102,10 +99,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
       } else {
         _imageUploaderCubit.singleSelectImageFromGalleryToUploadToReference(storageRef: storageReference);
       }
-      // The Bloc listener will close the dialog when upload finishes (see section 2).
     } catch (e) {
       if (!mounted) return;
-      Navigator.of(context, rootNavigator: true).pop(); // close loading
+      Navigator.of(context, rootNavigator: true).pop();
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Upload failed: $e')));
     }
   }
@@ -130,9 +126,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   String _profileShareLink(String uid) {
-    final uri = Uri.https(uid);
+    // Create a proper URL that can be parsed
+    final uri = Uri.https('dunno.app', '/profile', {'uid': uid});
     return uri.toString();
   }
+
 
   Future<void> _showProfileQrDialog() async {
     final uid = _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile?.uid;

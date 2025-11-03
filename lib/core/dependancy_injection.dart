@@ -16,6 +16,7 @@ import 'package:dunno/stores/firebase/connection_firebase_repository.dart';
 import 'package:dunno/stores/firebase/gift_board_firebase_repository.dart';
 import 'package:dunno/stores/firebase/main_firebase_repository.dart';
 import 'package:sp_firebase/sp_firebase.dart';
+import 'package:sp_qr/sp_qr_init.dart';
 import 'package:sp_user_repository/sp_user_repository.dart';
 import 'package:sp_utilities/utilities.dart';
 
@@ -36,8 +37,6 @@ class DependencyInjection {
     sl.registerLazySingleton<CollectionFirebaseRepository>(() => CollectionFirebaseRepository());
     sl.registerLazySingleton<ConnectionFirebaseRepository>(() => ConnectionFirebaseRepository());
     sl.registerLazySingleton<GiftBoardFirebaseRepository>(() => GiftBoardFirebaseRepository());
-    
-    // AI Repository
     sl.registerLazySingleton<AiTextGenerationRepository>(() => AiTextGenerationRepository());
   }
 
@@ -48,7 +47,6 @@ class DependencyInjection {
     sl.registerSingleton<CollectionCubit>(CollectionCubit());
     sl.registerSingleton<ConnectionCubit>(ConnectionCubit());
     sl.registerSingleton<GiftBoardCubit>(GiftBoardCubit());
-
     sl.registerFactory<AiGiftSuggestionCubit>(() => AiGiftSuggestionCubit(sl<AiTextGenerationRepository>()));
     sl.registerFactory<FriendGiftSuggestionCubit>(() => FriendGiftSuggestionCubit(sl<AiTextGenerationRepository>()));
   }
@@ -58,5 +56,6 @@ class DependencyInjection {
     await SPFirebaseInitialiser.initialiseDI(name: '[DEFAULT]', options: DefaultFirebaseOptions.currentPlatform);
     await UserRepoInitialiser.initialiseDI();
     await SPUtilitiesInitialiser.initialiseDI();
+    await SpazaQRInitialiser.initialiseDI();
   }
 }

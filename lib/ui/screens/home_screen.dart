@@ -4,6 +4,7 @@ import 'package:dunno/constants/themes.dart';
 import 'package:dunno/cubits/app_user_profile/app_user_profile_cubit.dart';
 import 'package:dunno/cubits/calender_event_cubit/calender_event_cubit.dart';
 import 'package:dunno/models/app_user_profile.dart';
+import 'package:dunno/ui/screens/scanner_screen.dart';
 import 'package:dunno/ui/widgets/calender.dart';
 import 'package:dunno/ui/widgets/calender_notification_card.dart';
 import 'package:flutter/material.dart';
@@ -42,12 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
       bloc: _appUserProfileCubit,
       listener: (context, state) {
         if (state is ProfileError) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Error loading profile: ${state.mainAppUserProfileState.errorMessage}'),
-              backgroundColor: AppColors.cinnabar,
-            ),
-          );
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error loading profile: ${state.mainAppUserProfileState.errorMessage}'), backgroundColor: AppColors.cinnabar));
         }
 
         if (state is ProfileInitialLoaded) {
@@ -155,8 +151,45 @@ class _HomeScreenState extends State<HomeScreen> {
                   SizedBox(width: 10),
                   Expanded(
                     child: InkWell(
-                      onTap: () {
-                        DefaultTabController.of(context).animateTo(2);
+                      onTap: () async {
+                        final scanned = await Navigator.of(context).push(MaterialPageRoute(builder: (_) => const QrScannerScreen()));
+
+                        if (!context.mounted) return;
+
+                        if (scanned is String && scanned.isNotEmpty) {
+                          String? uid;
+                          final uri = Uri.tryParse(scanned);
+                          if (uri != null && uri.hasQuery) {
+                            uid = uri.queryParameters['uid'];
+                          }
+                          uid ??= scanned;
+
+                          if (uid.isNotEmpty) {
+                            // Show loading indicator
+                            showDialog(
+                              context: context,
+                              barrierDismissible: false,
+                              builder: (_) => const Center(child: CircularProgressIndicator()),
+                            );
+
+                            try {
+                              // Wait for the profile to be loaded
+                              await _appUserProfileCubit.selectProfileById(uid);
+                              
+                              if (!context.mounted) return;
+                              Navigator.of(context).pop(); // Close loading dialog
+                              context.pushNamed(FRIEND_PROFILE_SCREEN);
+                            } catch (e) {
+                              if (!context.mounted) return;
+                              Navigator.of(context).pop(); // Close loading dialog
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('Failed to load profile: $e')),
+                              );
+                            }
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Invalid QR code')));
+                          }
+                        }
                       },
                       child: Container(
                         padding: const EdgeInsets.all(16),
@@ -182,12 +215,9 @@ class _HomeScreenState extends State<HomeScreen> {
               BlocBuilder<CalenderEventCubit, CalenderEventState>(
                 bloc: _calenderEventCubit,
                 builder: (context, state) {
-
                   final count = state.mainCalenderEventState.upcomingEventsNotifications?.length ?? 0;
 
-                  final message = count == 0
-                      ? 'You have no upcoming events'
-                      : 'You have $count upcoming ${count == 1 ? 'event' : 'events'}!';
+                  final message = count == 0 ? 'You have no upcoming events' : 'You have $count upcoming ${count == 1 ? 'event' : 'events'}!';
                   return Offstage(
                     offstage: state.mainCalenderEventState.upcomingEventsNotifications == null || state.mainCalenderEventState.upcomingEventsNotifications!.isEmpty,
                     child: Column(
@@ -195,9 +225,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       children: [
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(message, style: Theme.of(context).textTheme.bodyMedium),
-                          ],
+                          children: [Text(message, style: Theme.of(context).textTheme.bodyMedium)],
                         ),
                         _displayUpComingEvents(state),
                       ],
