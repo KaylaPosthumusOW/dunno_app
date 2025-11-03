@@ -42,7 +42,11 @@ class ConnectionCubit extends Cubit<ConnectionState> {
       emit(LoadedConnections(state.mainConnectionState.copyWith(numberOfUserConnections: count, message: 'Counted $count connections')));
       return count;
     } catch (error, stackTrace) {
-      emit(ConnectionError(state.mainConnectionState.copyWith(message: '', errorMessage: error.toString()), stackTrace: stackTrace.toString()),
+      emit(
+        ConnectionError(
+          state.mainConnectionState.copyWith(message: '', errorMessage: error.toString()),
+          stackTrace: stackTrace.toString(),
+        ),
       );
       return 0;
     }
@@ -55,22 +59,14 @@ class ConnectionCubit extends Cubit<ConnectionState> {
       Connection connection = await _connectionFirebaseRepository.createConnection(newConnection);
       connections.add(connection);
 
-      //Create a calender event for the connection if the user has enabled this in their profile settings
       List<Collections> userCollections = _collectionCubit.state.mainCollectionState.allUserCollections ?? [];
       if (userCollections.isNotEmpty) {
         for (var collection in userCollections) {
           if (collection.isDateVisible == true) {
-            await _calenderEventCubit.createNewCalenderEvent(
-              CalenderEvent(
-                user: _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile ?? AppUserProfile(),
-                friend: _appUserProfileCubit.state.mainAppUserProfileState.selectedProfile ?? AppUserProfile(),
-                collection: collection,
-              ),
-            );
+            await _calenderEventCubit.createNewCalenderEvent(CalenderEvent(user: _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile ?? AppUserProfile(), friend: _appUserProfileCubit.state.mainAppUserProfileState.selectedProfile ?? AppUserProfile(), collection: collection));
           }
         }
       }
-
 
       emit(CreatedConnection(state.mainConnectionState.copyWith(allUserConnections: connections, numberOfUserConnections: connections.length, message: 'New connection created')));
     } catch (error, stackTrace) {
@@ -117,11 +113,54 @@ class ConnectionCubit extends Cubit<ConnectionState> {
     final connections = state.mainConnectionState.allUserConnections ?? [];
     final currentUserUid = _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile?.uid ?? '';
 
-    return connections.any((connection) =>
-    connection.user!.uid!.contains(currentUserUid) &&
-        connection.user!.uid!.contains(otherUserUid)
+    return connections.any((connection) => 
+      (connection.user?.uid == currentUserUid && connection.connectedUser?.uid == otherUserUid) ||
+      (connection.user?.uid == otherUserUid && connection.connectedUser?.uid == currentUserUid)
     );
   }
 
+  Future<void> disconnectFromUser(String otherUserUid) async {
+    emit(LoadingConnections(state.mainConnectionState.copyWith(message: 'Disconnecting from user')));
+    try {
+      final connections = state.mainConnectionState.allUserConnections ?? [];
+      final currentUserUid = _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile?.uid ?? '';
 
+      final connectionToDelete = connections.firstWhere(
+        (connection) => 
+          (connection.user?.uid == currentUserUid && connection.connectedUser?.uid == otherUserUid) ||
+          (connection.user?.uid == otherUserUid && connection.connectedUser?.uid == currentUserUid),
+        orElse: () => Connection()
+      );
+
+      if (connectionToDelete.uid != null) {
+        await _connectionFirebaseRepository.deleteConnection(connectionToDelete.uid!);
+
+        await _calenderEventCubit.deleteEventsForConnection(
+          userUid: currentUserUid, 
+          friendUid: otherUserUid
+        );
+
+        connections.removeWhere((connection) => connection.uid == connectionToDelete.uid);
+        emit(LoadedConnections(state.mainConnectionState.copyWith(
+          allUserConnections: connections, 
+          numberOfUserConnections: connections.length, 
+          message: 'Disconnected from user and removed calendar events'
+        )));
+      } else {
+        emit(
+          ConnectionError(
+            state.mainConnectionState.copyWith(message: '', errorMessage: 'No connection found to disconnect'),
+            stackTrace: '',
+          ),
+        );
+      }
+    } catch (error, stackTrace) {
+      emit(
+        ConnectionError(
+          state.mainConnectionState.copyWith(message: '', errorMessage: error.toString()),
+          stackTrace: stackTrace.toString(),
+        ),
+      );
+    }
+  }
 }

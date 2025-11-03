@@ -43,9 +43,9 @@ class _FriendGiftSuggestionManagementState extends State<FriendGiftSuggestionMan
         children: [
           CustomHeaderBar(
             title: 'Gift Suggestion Preferences',
-            backgroundColor: Colors.transparent,
             onBack: () => Navigator.of(context).maybePop(),
             backButtonColor: AppColors.cerise,
+            iconColor: AppColors.offWhite,
           ),
           Expanded(
             child: Column(

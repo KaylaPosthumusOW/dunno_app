@@ -43,6 +43,36 @@ class CalenderEventFirebaseRepository implements CalenderEventStore {
     }
   }
 
+  Future<void> deleteEventsForConnection({required String userUid, required String friendUid}) async {
+    try {
+      // Query for events where user and friend match the connection
+      final userEventsQuery = await _calenderCollection
+          .where('user.uid', isEqualTo: userUid)
+          .where('friend.uid', isEqualTo: friendUid)
+          .get();
+      
+      final friendEventsQuery = await _calenderCollection
+          .where('user.uid', isEqualTo: friendUid)
+          .where('friend.uid', isEqualTo: userUid)
+          .get();
+      
+      // Delete all matching events
+      final batch = _calenderCollection.firestore.batch();
+      
+      for (var doc in userEventsQuery.docs) {
+        batch.delete(doc.reference);
+      }
+      
+      for (var doc in friendEventsQuery.docs) {
+        batch.delete(doc.reference);
+      }
+      
+      await batch.commit();
+    } catch (e) {
+      throw Exception('Failed to delete events for connection: $e');
+    }
+  }
+
   // @override
   // Future<List<CalenderEvent>> getUpcomingEvents({required String userId}) async {
   //   try {

@@ -42,4 +42,26 @@ class CalenderEventCubit extends Cubit<CalenderEventState> {
       emit(CalenderError(state.mainCalenderEventState.copyWith(message: '', errorMessage: error.toString()), stackTrace: stackTrace.toString()));
     }
   }
+
+  Future<void> deleteEventsForConnection({required String userUid, required String friendUid}) async {
+    emit(LoadingCalenderEvent(state.mainCalenderEventState.copyWith(message: 'Deleting calendar events for connection')));
+    try {
+      await _calenderEventFirebaseRepository.deleteEventsForConnection(userUid: userUid, friendUid: friendUid);
+      
+      // Remove the deleted events from the current state
+      List<CalenderEvent> events = List.from(state.mainCalenderEventState.allUserCalenderEvents ?? []);
+      events.removeWhere((event) => 
+        (event.user?.uid == userUid && event.friend?.uid == friendUid) ||
+        (event.user?.uid == friendUid && event.friend?.uid == userUid)
+      );
+      
+      emit(LoadedCalenderEvent(state.mainCalenderEventState.copyWith(
+        allUserCalenderEvents: events, 
+        numberOfUserCalenderEvents: events.length, 
+        message: 'Calendar events for connection deleted'
+      )));
+    } catch (error, stackTrace) {
+      emit(CalenderError(state.mainCalenderEventState.copyWith(message: '', errorMessage: error.toString()), stackTrace: stackTrace.toString()));
+    }
+  }
 }

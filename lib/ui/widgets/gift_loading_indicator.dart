@@ -42,7 +42,7 @@ class _GiftLoadingIndicatorState extends State<GiftLoadingIndicator> {
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Lottie.asset(widget.lottieAsset, width: 300, height: 300, fit: BoxFit.contain, repeat: true),
+        Lottie.asset(widget.lottieAsset, width: 300, height: 300, fit: BoxFit.cover, repeat: true),
         AnimatedSwitcher(
           duration: const Duration(milliseconds: 450),
           transitionBuilder: (child, animation) {

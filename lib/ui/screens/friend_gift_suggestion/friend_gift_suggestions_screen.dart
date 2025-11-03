@@ -79,6 +79,8 @@ class _FriendGiftSuggestionsScreenState extends State<FriendGiftSuggestionsScree
             title: 'Gift Ideas for ${widget.friendData?['name'] ?? 'Friend'}',
             backgroundColor: AppColors.offWhite,
             onBack: () => Navigator.of(context).pop(),
+            backButtonColor: AppColors.cerise,
+            iconColor: AppColors.offWhite,
           ),
           Expanded(
             child: BlocProvider(
@@ -144,7 +146,7 @@ class _FriendGiftSuggestionsScreenState extends State<FriendGiftSuggestionsScree
                     'Almost there, just a moment...',
                   ],
                   interval: Duration(seconds: 3),
-                  color: AppColors.cerise,
+                  color: AppColors.black,
                 ),
               );
             }
@@ -196,20 +198,7 @@ class _FriendGiftSuggestionsScreenState extends State<FriendGiftSuggestionsScree
             if (state is FriendGiftSuggestionLoaded) {
               return Column(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          Text(
-                            'We found ${state.main.suggestions?.length ?? 0} perfect gifts for ${widget.friendData?['name'] ?? 'your friend'}',
-                            style: const TextStyle(fontSize: 16, color: Colors.grey),
-                            textAlign: TextAlign.center,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                  SizedBox(height: 12,),
                   ListView.builder(
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
@@ -220,7 +209,7 @@ class _FriendGiftSuggestionsScreenState extends State<FriendGiftSuggestionsScree
                       return GiftSuggestionCard(
                         suggestion: suggestion,
                         index: index,
-                        isPink: true, // Use pink theme for friend flow
+                        isPink: true,
                       );
                     },
                   ),

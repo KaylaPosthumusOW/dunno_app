@@ -29,7 +29,7 @@ class _FriendProfileScreenState extends State<FriendProfileScreen> {
   @override
   void initState() {
     super.initState();
-    
+
     final selectedProfile = _appUserProfileCubit.state.mainAppUserProfileState.selectedProfile;
     final currentUser = _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile;
 
@@ -45,10 +45,36 @@ class _FriendProfileScreenState extends State<FriendProfileScreen> {
 
   bool _isAlreadyConnected(ConnectionState connectionState, String? friendUid) {
     if (friendUid == null) return false;
-    
+
     final connections = connectionState.mainConnectionState.allUserConnections ?? [];
-    return connections.any((connection) =>
-      (connection.connectedUser?.uid == friendUid || connection.user?.uid == friendUid)
+    return connections.any((connection) => (connection.connectedUser?.uid == friendUid || connection.user?.uid == friendUid));
+  }
+
+  void _showDisconnectDialog(String friendUid) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Disconnect'),
+          content: Text('Are you sure you want to disconnect from this user? This will also remove any shared calendar events.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                _connectionCubit.disconnectFromUser(friendUid);
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Successfully disconnected'), backgroundColor: AppColors.cerise));
+              },
+              child: Text('Disconnect', style: TextStyle(color: AppColors.cerise)),
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -68,10 +94,10 @@ class _FriendProfileScreenState extends State<FriendProfileScreen> {
           child: profilePicture != null && profilePicture.isNotEmpty
               ? DunnoExtendedImage(url: profilePicture)
               : CircleAvatar(
-            radius: 75,
-            backgroundColor: Colors.grey.shade400,
-            child: const Icon(Icons.person, color: Colors.white70, size: 100),
-          ),
+                  radius: 75,
+                  backgroundColor: Colors.grey.shade400,
+                  child: const Icon(Icons.person, color: Colors.white70, size: 100),
+                ),
         ),
       ),
     );
@@ -83,9 +109,7 @@ class _FriendProfileScreenState extends State<FriendProfileScreen> {
       builder: (context, state) {
         final collections = state.mainCollectionState.allUserCollections ?? [];
         final hasCollections = collections.isNotEmpty;
-        final displayCount = hasCollections
-            ? (collections.length > 3 ? 3 : collections.length)
-            : 0;
+        final displayCount = hasCollections ? (collections.length > 3 ? 3 : collections.length) : 0;
 
         return Padding(
           padding: const EdgeInsets.all(20),
@@ -98,28 +122,21 @@ class _FriendProfileScreenState extends State<FriendProfileScreen> {
                 children: [
                   Text(
                     "${profileState.mainAppUserProfileState.selectedProfile?.name?.split(' ').first ?? 'Their'}'s Collections",
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold, color: AppColors.black),
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold, color: AppColors.black),
                   ),
                   if (hasCollections)
                     InkWell(
                       onTap: () => context.pushNamed(COLLECTIONS_SCREEN),
                       child: Text(
                         'View All',
-                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          color: AppColors.black,
-                          decoration: TextDecoration.underline,
-                        ),
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: AppColors.black, decoration: TextDecoration.underline),
                       ),
                     ),
                 ],
               ),
               const SizedBox(height: 10),
               if (!hasCollections)
-                Text(
-                  'No collections found.',
-                  style: Theme.of(context).textTheme.bodyMedium,
-                )
+                Text('No collections found.', style: Theme.of(context).textTheme.bodyMedium)
               else
                 SizedBox(
                   height: 150,
@@ -136,13 +153,7 @@ class _FriendProfileScreenState extends State<FriendProfileScreen> {
                           colorType: CollectionColorType.pink,
                           onPressed: () {
                             final selectedProfile = _appUserProfileCubit.state.mainAppUserProfileState.selectedProfile;
-                            context.pushNamed(
-                              FRIEND_GIFT_SUGGESTION_MANAGEMENT,
-                              extra: {
-                                'friend': selectedProfile?.toMap(),
-                                'collection': collection.toMap(),
-                              },
-                            );
+                            context.pushNamed(FRIEND_GIFT_SUGGESTION_MANAGEMENT, extra: {'friend': selectedProfile?.toMap(), 'collection': collection.toMap()});
                           },
                         ),
                       );
@@ -166,15 +177,9 @@ class _FriendProfileScreenState extends State<FriendProfileScreen> {
           children: [
             Icon(Icons.person_off, size: 64, color: Colors.grey),
             SizedBox(height: 16),
-            Text(
-              'No profile selected',
-              style: TextStyle(fontSize: 18, color: Colors.grey),
-            ),
+            Text('No profile selected', style: TextStyle(fontSize: 18, color: Colors.grey)),
             SizedBox(height: 8),
-            Text(
-              'Please go back and select a user profile.',
-              style: TextStyle(fontSize: 14, color: Colors.grey),
-            ),
+            Text('Please go back and select a user profile.', style: TextStyle(fontSize: 14, color: Colors.grey)),
           ],
         ),
       );
@@ -187,16 +192,8 @@ class _FriendProfileScreenState extends State<FriendProfileScreen> {
           children: [
             Column(
               children: [
-                CustomHeaderBar(
-                  backgroundColor: AppColors.pinkLavender,
-                  onBack: () => Navigator.pop(context),
-                  backButtonColor: AppColors.cerise,
-                  iconColor: AppColors.offWhite,
-                ),
-                Container(
-                  height: 130,
-                  decoration: BoxDecoration(color: AppColors.pinkLavender),
-                ),
+                CustomHeaderBar(backgroundColor: AppColors.pinkLavender, onBack: () => Navigator.pop(context), backButtonColor: AppColors.cerise, iconColor: AppColors.offWhite),
+                Container(height: 130, decoration: BoxDecoration(color: AppColors.pinkLavender)),
                 const SizedBox(height: 15),
                 Divider(height: 0, color: AppColors.pinkLavender),
               ],
@@ -212,10 +209,7 @@ class _FriendProfileScreenState extends State<FriendProfileScreen> {
               child: Text(
                 '${profile.name ?? ''} ${profile.surname ?? ''}',
                 textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.displayLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.black,
-                ),
+                style: Theme.of(context).textTheme.displayLarge?.copyWith(fontWeight: FontWeight.bold, color: AppColors.black),
               ),
             ),
             const SizedBox(height: 20),
@@ -230,30 +224,21 @@ class _FriendProfileScreenState extends State<FriendProfileScreen> {
                     if (state.mainConnectionState.numberOfUserConnections != null && state.mainConnectionState.numberOfUserConnections! > 1)
                       Text(
                         '${state.mainConnectionState.numberOfUserConnections ?? '0'} connections',
-                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          fontWeight: FontWeight.w500,
-                          color: AppColors.black,
-                        ),
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w500, color: AppColors.black),
                       )
                     else if (state.mainConnectionState.numberOfUserConnections == 1)
                       Text(
                         '1 connection',
-                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          fontWeight: FontWeight.w500,
-                          color: AppColors.black,
-                        ),
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w500, color: AppColors.black),
                       )
                     else
                       Text(
                         '0 connections',
-                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          fontWeight: FontWeight.w500,
-                          color: AppColors.black,
-                        ),
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w500, color: AppColors.black),
                       ),
                   ],
                 );
-              }
+              },
             ),
             const SizedBox(height: 20),
             BlocBuilder<ConnectionCubit, ConnectionState>(
@@ -295,28 +280,62 @@ class _FriendProfileScreenState extends State<FriendProfileScreen> {
                   isButtonDisabled = false;
                 }
 
-                return DunnoButton(
-                  onPressed: isButtonDisabled
-                      ? () {}
-                      : () {
-                    _connectionCubit.createNewConnection(
-                      Connection(
-                        connectedUser: selectedProfile ?? AppUserProfile(),
-                        user: currentUser ?? AppUserProfile(),
+                if (isConnected) {
+                  return PopupMenuButton<String>(
+                    onSelected: (value) {
+                      if (value == 'disconnect') {
+                        _showDisconnectDialog(selectedProfile?.uid ?? '');
+                      }
+                    },
+                    itemBuilder: (BuildContext context) => [
+                      PopupMenuItem<String>(
+                        value: 'disconnect',
+                        child: Row(
+                          children: [
+                            Icon(Icons.person_remove, color: AppColors.cerise),
+                            SizedBox(width: 8),
+                            Text('Disconnect', style: TextStyle(color: AppColors.cerise)),
+                          ],
+                        ),
                       ),
-                    );
-                  },
-                  type: ButtonType.secondary,
-                  isLoading: isConnecting,
-                  label: buttonText,
-                  icon: buttonIcon,
-                  buttonColor: buttonColor,
-                  textColor: textColor,
-                  loadingIndicator: CircularProgressIndicator(
-                    strokeWidth: 2,
-                    color: AppColors.offWhite,
-                  ),
-                );
+                    ],
+                    child: Container(
+                      height: 48,
+                      decoration: BoxDecoration(color: buttonColor, borderRadius: BorderRadius.circular(24)),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            buttonIcon,
+                            SizedBox(width: 8),
+                            Text(
+                              buttonText,
+                              style: TextStyle(color: textColor, fontWeight: FontWeight.w600, fontSize: 16),
+                            ),
+                            SizedBox(width: 4),
+                            Icon(Icons.arrow_drop_down, color: textColor),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                } else {
+                  return DunnoButton(
+                    onPressed: isButtonDisabled
+                        ? () {}
+                        : () {
+                            _connectionCubit.createNewConnection(Connection(connectedUser: selectedProfile ?? AppUserProfile(), user: currentUser ?? AppUserProfile()));
+                          },
+                    type: ButtonType.secondary,
+                    isLoading: isConnecting,
+                    label: buttonText,
+                    icon: buttonIcon,
+                    buttonColor: buttonColor,
+                    textColor: textColor,
+                    loadingIndicator: CircularProgressIndicator(strokeWidth: 2, color: AppColors.offWhite),
+                  );
+                }
               },
             ),
           ],
@@ -332,10 +351,8 @@ class _FriendProfileScreenState extends State<FriendProfileScreen> {
     return BlocBuilder<AppUserProfileCubit, AppUserProfileState>(
       bloc: _appUserProfileCubit,
       builder: (context, state) {
-        return Scaffold(
-          body: _buildBody(state),
-        );
-      }
+        return Scaffold(body: _buildBody(state));
+      },
     );
   }
 }
