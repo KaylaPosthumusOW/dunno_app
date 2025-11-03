@@ -134,5 +134,22 @@ class GiftBoardCubit extends Cubit<GiftBoardState> {
     }
   }
 
+  Future<void> deleteGiftBoard({required String boardUid}) async {
+    emit(DeletingGiftBoard(state.mainGiftBoardState.copyWith(message: 'Deleting gift board')));
+    try {
+      List<GiftBoard> allGiftBoards = state.mainGiftBoardState.allUserGiftBoards ?? [];
+      await _giftBoardFirebaseRepository.deleteGiftBoard(boardUid);
+      allGiftBoards.removeWhere((e) => e.uid == boardUid);
+      emit(DeletedGiftBoard(state.mainGiftBoardState.copyWith(allUserGiftBoards: allGiftBoards, message: 'Gift board deleted successfully')));
+    } catch (error, stackTrace) {
+      emit(
+        GiftBoardError(
+          state.mainGiftBoardState.copyWith(message: '', errorMessage: error.toString()),
+          stackTrace: stackTrace.toString(),
+        ),
+      );
+    }
+  }
+
 
 }

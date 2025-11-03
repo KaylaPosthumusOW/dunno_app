@@ -48,41 +48,6 @@ class _GiftBoardSuggestionsState extends State<GiftBoardSuggestions> {
     );
   }
 
-  Widget _displaySuggestions(GiftBoardState state) {
-    return BlocBuilder<GiftBoardCubit, GiftBoardState>(
-      bloc: _giftBoardCubit,
-      builder: (context, state) {
-        if (state is LoadingGiftBoardSuggestion) {
-          return const Center(child: CircularProgressIndicator());
-        }
-
-        final suggestions = state.mainGiftBoardState.allGiftBoardSuggestions ?? [];
-
-        if (suggestions.isEmpty) {
-          return Center(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(height: 30),
-                Icon(Icons.card_giftcard_rounded, size: 45, color: AppColors.black),
-                Text('No gift suggestions found.', style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppColors.black)),
-              ],
-            ),
-          );
-        }
-
-        return ListView.builder(
-          shrinkWrap: true,
-          itemCount: suggestions.length,
-          itemBuilder: (context, index) {
-            final suggestion = suggestions[index];
-            return GiftSuggestionCard(suggestion: suggestion.giftSuggestion, index: index, isSaved: true);
-          },
-        );
-      },
-    );
-  }
-
   @override
   void initState() {
     super.initState();
@@ -97,74 +62,84 @@ class _GiftBoardSuggestionsState extends State<GiftBoardSuggestions> {
         final suggestions = state.mainGiftBoardState.allGiftBoardSuggestions ?? [];
 
         return Scaffold(
-          body: Column(
-            children: [
-              CustomHeaderBar(
-                backButtonColor: AppColors.pinkLavender,
-                iconColor: AppColors.cerise,
-                onBack: () => Navigator.pop(context),
-                actions: [
-                  PopupMenuButton(
-                    icon: Icon(Icons.more_vert_rounded, color: AppColors.black),
-                    itemBuilder: (context) => [
-                      PopupMenuItem(
-                        onTap: () {
-                          showDialog(
-                            context: context,
-                            builder: (context) => CreateBoardDialog(),
-                          );
-                        },
-                        child: ListTile(
-                          title: Row(
-                            children: [
-                              Icon(Icons.edit, color: AppColors.pinkLavender, size: 20),
-                              SizedBox(width: 10),
-                              Text('Edit Board'),
-                            ],
+          body: SingleChildScrollView(
+            child: Column(
+              children: [
+                CustomHeaderBar(
+                  backButtonColor: AppColors.pinkLavender,
+                  iconColor: AppColors.cerise,
+                  onBack: () => Navigator.pop(context),
+                  actions: [
+                    PopupMenuButton(
+                      icon: Icon(Icons.more_vert_rounded, color: AppColors.black),
+                      itemBuilder: (context) => [
+                        PopupMenuItem(
+                          onTap: () {
+                            showDialog(context: context, builder: (context) => CreateBoardDialog());
+                          },
+                          child: ListTile(
+                            title: Row(
+                              children: [
+                                Icon(Icons.edit, color: AppColors.pinkLavender, size: 20),
+                                SizedBox(width: 10),
+                                Text('Edit Board'),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                      PopupMenuItem(
-                        onTap: () {},
-                        child: ListTile(
-                          title: Row(
-                            children: [
-                              Icon(Icons.delete, color: Colors.red, size: 20),
-                              SizedBox(width: 10),
-                              Text('Delete Gift Board'),
-                            ],
+                        PopupMenuItem(
+                          onTap: () {
+                            _giftBoardCubit.deleteGiftBoard(boardUid: state.mainGiftBoardState.selectedGiftBoard?.uid ?? '');
+                            Navigator.pop(context);
+                          },
+                          child: ListTile(
+                            title: Row(
+                              children: [
+                                Icon(Icons.delete, color: Colors.red, size: 20),
+                                SizedBox(width: 10),
+                                Text('Delete Gift Board'),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
+                      ],
+                    ),
+                  ],
+                ),
+            
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  child: _boardHeader(state),
+                ),
+            
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: suggestions.isEmpty
+                      ? Column(
+                    children: const [
+                      SizedBox(height: 30),
+                      Icon(Icons.card_giftcard_rounded, size: 45),
+                      SizedBox(height: 20),
+                      Text('No gift suggestions found.'),
                     ],
+                  )
+                      : ListView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: suggestions.length,
+                    itemBuilder: (context, index) {
+                      final s = suggestions[index];
+                      return GiftSuggestionCard(
+                        suggestion: s.giftSuggestion,
+                        index: index,
+                        isSaved: true,
+                      );
+                    },
                   ),
-                ],
-              ),
-
-              Padding(padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8), child: _boardHeader(state)),
-
-              Expanded(
-                child: suggestions.isEmpty
-                    ? ListView(
-                        padding: const EdgeInsets.all(16),
-                        children: const [
-                          SizedBox(height: 30),
-                          Icon(Icons.card_giftcard_rounded, size: 45),
-                          SizedBox(height: 20),
-                          Center(child: Text('No gift suggestions found.')),
-                        ],
-                      )
-                    : ListView.separated(
-                        padding: const EdgeInsets.all(16),
-                        itemCount: suggestions.length,
-                        separatorBuilder: (_, __) => const SizedBox(height: 12),
-                        itemBuilder: (context, index) {
-                          final s = suggestions[index];
-                          return GiftSuggestionCard(suggestion: s.giftSuggestion, index: index, isSaved: true);
-                        },
-                      ),
-              ),
-            ],
+                ),
+                SizedBox(height: 20,)
+              ],
+            ),
           ),
         );
       },

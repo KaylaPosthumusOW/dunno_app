@@ -126,6 +126,14 @@ class ToggledGiftBoardSelection extends GiftBoardState {
   const ToggledGiftBoardSelection(super.mainGiftBoardState);
 }
 
+class DeletingGiftBoard extends GiftBoardState {
+  const DeletingGiftBoard(super.mainGiftBoardState);
+}
+
+class DeletedGiftBoard extends GiftBoardState {
+  const DeletedGiftBoard(super.mainGiftBoardState);
+}
+
 class GiftBoardError extends GiftBoardState {
   final String stackTrace;
 
