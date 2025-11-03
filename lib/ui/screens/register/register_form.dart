@@ -1,4 +1,5 @@
 import 'package:dunno/constants/constants.dart';
+import 'package:dunno/constants/themes.dart';
 import 'package:dunno/cubits/app_user_profile/app_user_profile_cubit.dart';
 import 'package:dunno/models/app_user_profile.dart';
 import 'package:dunno/ui/screens/register/register_button.dart';
@@ -119,6 +120,7 @@ class _RegisterFormState extends State<RegisterForm> {
                 DunnoTextField(
                   isLight: true,
                   label: 'Name & Surname',
+                  supportingText: 'Please enter your full name',
                   controller: _nameController,
                   keyboardType: TextInputType.emailAddress,
                   onChanged: (value) {
@@ -126,13 +128,14 @@ class _RegisterFormState extends State<RegisterForm> {
                   },
                 ),
                 SizedBox(height: 10),
-                DunnoTextField(isLight: true, label: 'Email', controller: _emailController, keyboardType: TextInputType.emailAddress, onChanged: (value) => _registerCubit.emailChanged(value)),
+                DunnoTextField(isLight: true, label: 'Email', supportingText: 'Email Address', controller: _emailController, keyboardType: TextInputType.emailAddress, onChanged: (value) => _registerCubit.emailChanged(value)),
                 SizedBox(height: 10),
                 DunnoTextField(
                   isLight: true,
                   label: 'Password',
                   controller: _passwordController,
                   obscureText: !_passwordVisible,
+                  supportingText: 'Enter at least 6 characters',
                   onChanged: (value) => _registerCubit.passwordChanged(value),
                   suffixIcon: IconButton(
                     icon: Icon(_passwordVisible ? Icons.visibility : Icons.visibility_off),
@@ -148,6 +151,7 @@ class _RegisterFormState extends State<RegisterForm> {
                   isLight: true,
                   label: 'Confirm Password',
                   controller: _confirmPasswordController,
+                  supportingText: 'Enter at least 6 characters',
                   obscureText: !_passwordVisible,
                   onChanged: (value) => _registerCubit.confirmPasswordChanged(value),
                   suffixIcon: IconButton(
@@ -161,12 +165,19 @@ class _RegisterFormState extends State<RegisterForm> {
                 ),
                 SizedBox(height: 30),
                 RegisterButton(onPressed: isRegisterButtonEnabled(state) ? _onFormSubmitted : () {}),
-                DunnoButton(
-                  label: 'Back to Login',
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  type: ButtonType.outline,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('Already have an account?'),
+                    ButtonTheme(
+                      minWidth: 220.0,
+                      child: TextButton(
+                        style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0))),
+                        onPressed: () => Navigator.pop(context),
+                        child: Text('Log In', style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: AppColors.cinnabar)),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),

@@ -90,19 +90,6 @@ class _GiftSuggestionCardState extends State<GiftSuggestionCard> {
             Row(
               children: [
                 Text(widget.suggestion?.location != null ? '${widget.suggestion!.location}:' : '', style: const TextStyle(fontSize: 14, color: Colors.grey, height: 1.5)),
-                SizedBox(width: 6),
-                if ((widget.suggestion?.purchaseLink ?? '').isNotEmpty) ...[
-                  const SizedBox(height: 6),
-                  InkWell(
-                    onTap: () => _generalCubit.openWebsite(url: widget.suggestion?.purchaseLink ?? ''),
-                    child: Text(
-                      'Link',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(fontSize: 14, decoration: TextDecoration.underline, fontWeight: FontWeight.w600, height: 1.5),
-                    ),
-                  ),
-                ],
               ],
             ),
 

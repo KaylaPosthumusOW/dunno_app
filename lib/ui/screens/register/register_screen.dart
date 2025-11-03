@@ -12,20 +12,17 @@ class RegisterScreen extends StatelessWidget {
     return Scaffold(
       body: Column(
         children: [
-          CustomHeaderBar(
-            title: 'Create Account',
-          ),
           Expanded(
             child: ListView(
               padding: const EdgeInsets.all(20),
               children: [
                 Column(
                   children: [
-                    Container(margin: const EdgeInsets.only(top: 20), child: SvgPicture.asset('assets/svg/celebration.svg', width: 160, height: 160)),
-              SizedBox(height: 20),
-              Text('Create Your Account', style: Theme.of(context).textTheme.displayLarge?.copyWith(fontWeight: FontWeight.w600, height: 1.2)),
-              SizedBox(height: 30),
-              const RegisterForm(),
+                    Container(margin: const EdgeInsets.only(top: 80), child: SvgPicture.asset('assets/svg/celebration.svg', width: 160, height: 160)),
+                    SizedBox(height: 20),
+                    Text('Create Your Account', style: Theme.of(context).textTheme.displayLarge?.copyWith(fontWeight: FontWeight.w600, height: 1.2)),
+                    SizedBox(height: 30),
+                    const RegisterForm(),
                   ],
                 ),
               ],

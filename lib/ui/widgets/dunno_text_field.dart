@@ -90,7 +90,7 @@ class DunnoTextFieldState extends State<DunnoTextField> {
                   )
                 : widget.suffixIcon,
             hintText: widget.supportingText,
-            hintStyle: theme.textTheme.labelLarge?.copyWith(color: isErrorState ? AppColors.errorRed : colors.textColor.withValues(alpha: 0.7)),
+            hintStyle: theme.textTheme.bodyLarge?.copyWith(color: isErrorState ? AppColors.errorRed : colors.textColor.withValues(alpha: 0.5)),
             errorText: widget.errorText?.isNotEmpty == true ? widget.errorText : null,
             errorStyle: theme.textTheme.labelLarge?.copyWith(color: AppColors.errorRed),
             counterText: "",
