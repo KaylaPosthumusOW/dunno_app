@@ -1,6 +1,7 @@
 import 'package:dunno/constants/constants.dart';
 import 'package:dunno/constants/themes.dart';
 import 'package:dunno/cubits/gift_board/gift_board_cubit.dart';
+import 'package:dunno/ui/screens/gift_boards/create_board_dialog.dart';
 import 'package:dunno/ui/widgets/gift_suggestion_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,6 +20,10 @@ class _GiftBoardSuggestionsState extends State<GiftBoardSuggestions> {
     return BlocBuilder<GiftBoardCubit, GiftBoardState>(
       bloc: _giftBoardCubit,
       builder: (context, state) {
+        if (state is LoadingGiftBoardSuggestion) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
         final suggestions = state.mainGiftBoardState.allGiftBoardSuggestions ?? [];
 
         if (suggestions.isEmpty) {
@@ -48,7 +53,45 @@ class _GiftBoardSuggestionsState extends State<GiftBoardSuggestions> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Gift Board Suggestions')),
+      appBar: AppBar(
+        title: Text('${_giftBoardCubit.state.mainGiftBoardState.selectedGiftBoard?.boardName}'),
+        actions: [
+          PopupMenuButton(
+            icon: Icon(Icons.more_vert_rounded, color: AppColors.black),
+            itemBuilder: (context) => [
+              PopupMenuItem(
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) => CreateBoardDialog(),
+                  );
+                },
+                child: ListTile(
+                  title: Row(
+                    children: [
+                      Icon(Icons.edit, color: AppColors.pinkLavender, size: 20),
+                      SizedBox(width: 10),
+                      Text('Edit Board'),
+                    ],
+                  ),
+                ),
+              ),
+              PopupMenuItem(
+                onTap: () {},
+                child: ListTile(
+                  title: Row(
+                    children: [
+                      Icon(Icons.delete, color: Colors.red, size: 20),
+                      SizedBox(width: 10),
+                      Text('Delete Gift Board'),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
       body: SingleChildScrollView(
         child: Container(
           padding: const EdgeInsets.all(16),

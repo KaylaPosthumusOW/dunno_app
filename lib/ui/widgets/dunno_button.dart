@@ -126,7 +126,7 @@ class _DunnoButtonState extends State<DunnoButton> {
           backgroundColor: isDisabled
               ? AppColors.yellow.withValues(alpha: 0.4)
               : AppColors.yellow,
-          foregroundColor: AppColors.black,
+          foregroundColor: AppColors.offWhite,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
         );
 

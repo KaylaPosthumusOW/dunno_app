@@ -6,6 +6,7 @@ import 'package:dunno/cubits/gift_board/gift_board_cubit.dart';
 import 'package:dunno/models/ai_gift_suggestion.dart';
 import 'package:dunno/models/board_gift_suggestion.dart';
 import 'package:dunno/ui/widgets/dunno_button.dart';
+import 'package:dunno/ui/widgets/dunno_extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -198,6 +199,17 @@ class _SelectingGiftBoardsState extends State<SelectingGiftBoards> {
                                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                                     color: Colors.grey[600],
                                   ),
+                                ),
+                                secondary: CircleAvatar(
+                                  radius: 20,
+                                  backgroundColor: AppColors.pinkLavender,
+                                  child: board.thumbnailUrl?.isNotEmpty == true
+                                      ? ClipOval(
+                                          child: DunnoExtendedImage(
+                                            url: board.thumbnailUrl!,
+                                          ),
+                                        )
+                                      : const Icon(Icons.dashboard, color: Colors.white, size: 20),
                                 ),
                                 controlAffinity: ListTileControlAffinity.leading,
                                 activeColor: AppColors.cerise,

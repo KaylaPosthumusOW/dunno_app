@@ -1,5 +1,4 @@
 import 'package:dunno/constants/constants.dart';
-import 'package:dunno/constants/routes.dart';
 import 'package:dunno/constants/themes.dart';
 import 'package:dunno/cubits/app_user_profile/app_user_profile_cubit.dart';
 import 'package:dunno/cubits/gift_board/gift_board_cubit.dart';
@@ -9,7 +8,6 @@ import 'package:dunno/ui/widgets/dunno_search_field.dart';
 import 'package:dunno/ui/widgets/gift_board_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 
 class GiftBoardScreen extends StatefulWidget {
   const GiftBoardScreen({super.key});
@@ -67,9 +65,10 @@ class _GiftBoardScreenState extends State<GiftBoardScreen> {
                         const SizedBox(width: 10),
                         DunnoButton(
                           label: 'Create',
-                          type: ButtonType.primary,
-                          icon: const Icon(Icons.add, color: Colors.white),
+                          type: ButtonType.pinkLavender,
+                          icon: Icon(Icons.add, color: AppColors.cerise),
                           onPressed: () {
+                            _giftBoardCubit.clearSelectedGiftBoard();
                             showDialog(
                               context: context,
                               builder: (context) {

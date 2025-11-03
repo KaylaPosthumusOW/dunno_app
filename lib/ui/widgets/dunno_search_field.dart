@@ -92,7 +92,7 @@ class DunnoSearchFieldState extends State<DunnoSearchField> {
           contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
           hintStyle: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.cerise),
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(30), borderSide: BorderSide.none),
-          fillColor: widget.color ?? AppColors.pinkLavender.withValues(alpha: 0.6),
+          fillColor: widget.color ?? AppColors.pinkLavender.withValues(alpha: 0.5),
           filled: true,
         ),
         onChanged: (value) {
