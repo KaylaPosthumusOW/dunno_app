@@ -45,7 +45,6 @@ class _GiftSuggestionManagementState extends State<GiftSuggestionManagement> {
       return;
     }
 
-    // Navigate to the receive gift suggestion screen with the data
     context.pushNamed(RECEIVE_GIFT_SUGGESTION_SCREEN, extra: {'profile': _profileData?.toMap(), 'filters': _filterData?.toMap()});
   }
 
@@ -55,31 +54,22 @@ class _GiftSuggestionManagementState extends State<GiftSuggestionManagement> {
       backgroundColor: AppColors.offWhite,
       body: Column(
         children: [
-          CustomHeaderBar(title: 'Add Profile Details', onBack: () => Navigator.pop(context)),
+          CustomHeaderBar(
+            title: 'Add Gift Suggestion Details',
+            onBack: () => Navigator.pop(context),
+            backButtonColor: AppColors.cinnabar,
+            iconColor: AppColors.offWhite,
+          ),
           Expanded(
             child: Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 60),
+                  padding: const EdgeInsets.only(left: 60, right: 60, top: 20),
                   child: Row(
                     children: [
                       _buildStepButton(stepNumber: 1, title: 'Profile', isActive: _selectedTab == 0, onTap: () => _goToStep(0)),
                       Expanded(child: Divider(color: _selectedTab >= 1 ? AppColors.tangerine : Colors.grey[300], thickness: 2)),
                       _buildStepButton(stepNumber: 2, title: 'Filter', isActive: _selectedTab == 1, onTap: () => _goToStep(1)),
-                      // Expanded(
-                      //   child: Divider(
-                      //     color: _selectedTab >= 2
-                      //         ? AppColors.tangerine
-                      //         : Colors.grey[300],
-                      //     thickness: 2,
-                      //   ),
-                      // ),
-                      // _buildStepButton(
-                      //   stepNumber: 3,
-                      //   title: 'Gifts',
-                      //   isActive: _selectedTab == 2,
-                      //   onTap: _suggestionsGenerated ? () => _goToStep(2) : null,
-                      // ),
                     ],
                   ),
                 ),

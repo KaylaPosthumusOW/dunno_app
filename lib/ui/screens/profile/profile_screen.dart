@@ -132,7 +132,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return uri.toString();
   }
 
-
   Future<void> _showProfileQrDialog() async {
     final uid = _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile?.uid;
 
@@ -451,12 +450,70 @@ class _ProfileScreenState extends State<ProfileScreen> {
               children: [
                 Column(
                   children: [
+                    CustomHeaderBar(
+                      backgroundColor: AppColors.yellow,
+                      actions: [
+                        PopupMenuButton(
+                          icon: Icon(Icons.more_vert_rounded, color: AppColors.offWhite),
+                          itemBuilder: (context) => [
+                            PopupMenuItem(
+                              onTap: () {
+                                context.pushNamed(EDIT_PROFILE_SCREEN);
+                              },
+                              child: ListTile(
+                                title: Row(
+                                  children: [
+                                    Icon(Icons.edit, color: AppColors.cinnabar, size: 20),
+                                    SizedBox(width: 10),
+                                    Text('Edit Profile'),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            PopupMenuItem(
+                              onTap: () {
+                                WidgetsBinding.instance.addPostFrameCallback((_) {
+                                  _logOutPopup();
+                                });
+                              },
+                              child: ListTile(
+                                title: Row(
+                                  children: [
+                                    Icon(Icons.logout, color: AppColors.cinnabar, size: 20),
+                                    SizedBox(width: 10),
+                                    Text('Log Out'),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            PopupMenuItem(
+                              onTap: () {
+                                WidgetsBinding.instance.addPostFrameCallback((_) {
+                                  _deleteProfilePopup();
+                                });
+                              },
+                              child: ListTile(
+                                title: Row(
+                                  children: [
+                                    Icon(Icons.delete, color: Colors.red, size: 20),
+                                    SizedBox(width: 10),
+                                    Text('Delete Profile'),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                      backButtonColor: AppColors.offWhite,
+                      iconColor: AppColors.cinnabar,
+                    ),
                     Container(height: 130, decoration: BoxDecoration(color: AppColors.yellow)),
                     SizedBox(height: 15),
                     Divider(height: 0, color: AppColors.yellow),
                   ],
                 ),
-                Positioned(top: 30, left: 0, right: 0, child: _profilePicture()),
+                Positioned(top: 120, left: 0, right: 0, child: _profilePicture()),
               ],
             ),
             Column(
@@ -493,12 +550,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   },
                 ),
                 SizedBox(height: 20),
-                DunnoButton(
-                  onPressed: _showProfileQrDialog,
-                  type: ButtonType.secondary, label: 'Share via QR Code',
-                  icon: const Icon(Icons.qr_code_2_rounded),
-                  buttonColor: AppColors.yellow,
-                ),
+                DunnoButton(onPressed: _showProfileQrDialog, type: ButtonType.secondary, label: 'Share via QR Code', icon: const Icon(Icons.qr_code_2_rounded), buttonColor: AppColors.yellow),
               ],
             ),
             SizedBox(height: 30),
@@ -521,79 +573,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
       body: Column(
         children: [
-          CustomHeaderBar(
-            backgroundColor: AppColors.yellow,
-            title: 'Profile',
-            actions: [
-              PopupMenuButton(
-                icon: Icon(Icons.more_vert_rounded, color: AppColors.offWhite),
-                itemBuilder: (context) => [
-                  PopupMenuItem(
-                    onTap: () {
-                      context.pushNamed(EDIT_PROFILE_SCREEN);
-                    },
-                    child: ListTile(
-                      title: Row(
-                        children: [
-                          Icon(Icons.edit, color: AppColors.cinnabar, size: 20),
-                          SizedBox(width: 10),
-                          Text('Edit Profile'),
-                        ],
-                      ),
-                    ),
-                  ),
-                  PopupMenuItem(
-                    onTap: () {
-                      WidgetsBinding.instance.addPostFrameCallback((_) {
-                        _logOutPopup();
-                      });
-                    },
-                    child: ListTile(
-                      title: Row(
-                        children: [
-                          Icon(Icons.logout, color: AppColors.cinnabar, size: 20),
-                          SizedBox(width: 10),
-                          Text('Log Out'),
-                        ],
-                      ),
-                    ),
-                  ),
-                  PopupMenuItem(
-                    onTap: () {
-                      WidgetsBinding.instance.addPostFrameCallback((_) {
-                        _deleteProfilePopup();
-                      });
-                    },
-                    child: ListTile(
-                      title: Row(
-                        children: [
-                          Icon(Icons.delete, color: Colors.red, size: 20),
-                          SizedBox(width: 10),
-                          Text('Delete Profile'),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
           Expanded(
             child: BlocConsumer<AppUserProfileCubit, AppUserProfileState>(
               bloc: _appUserProfileCubit,
               listener: (context, state) {
-          if (state is ProfileUpdated) {
-            _appUserProfileCubit.loadProfile();
-            if (mounted) Navigator.of(context).maybePop();
-            if (mounted) UtilitiesHelper.showSnackBar(context, message: 'Profile Updated', backgroundColor: Colors.green);
-          }
-        },
-        builder: (context, state) {
-          if (state is ProfileUpdating) {
-            return const LoadingIndicator(message: 'Updating Profile');
-          }
-          return _buildBody(state);
-        },
+                if (state is ProfileUpdated) {
+                  _appUserProfileCubit.loadProfile();
+                  if (mounted) Navigator.of(context).maybePop();
+                  if (mounted) UtilitiesHelper.showSnackBar(context, message: 'Profile Updated', backgroundColor: Colors.green);
+                }
+              },
+              builder: (context, state) {
+                if (state is ProfileUpdating) {
+                  return const LoadingIndicator(message: 'Updating Profile');
+                }
+                return _buildBody(state);
+              },
             ),
           ),
         ],

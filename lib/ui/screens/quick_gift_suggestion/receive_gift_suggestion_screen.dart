@@ -41,6 +41,7 @@ class _ReceiveGiftSuggestionScreenState extends State<ReceiveGiftSuggestionScree
             backgroundColor: Colors.transparent,
             onBack: () => Navigator.of(context).maybePop(),
             backButtonColor: AppColors.cinnabar,
+            iconColor: AppColors.offWhite,
           ),
           Expanded(
             child: BlocProvider(
@@ -120,20 +121,7 @@ class _ReceiveGiftSuggestionScreenState extends State<ReceiveGiftSuggestionScree
               if (state is AiGiftSuggestionLoaded) {
                 return Column(
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.all(20),
-                      child: SingleChildScrollView(
-                        child: Column(
-                          children: [
-                            Text(
-                              'We found ${state.suggestions.length} perfect gifts for you',
-                              style: const TextStyle(fontSize: 16, color: Colors.grey),
-                              textAlign: TextAlign.center,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                    SizedBox(height: 20),
                     ListView.builder(
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
@@ -156,15 +144,12 @@ class _ReceiveGiftSuggestionScreenState extends State<ReceiveGiftSuggestionScree
                             isLight: true,
                             colorScheme: DunnoTextFieldColor.antiqueWhite,
                             maxLines: 3,
-                            onChanged: (value) {
-                              // Handle input changes if needed
-                            },
                           ),
                           const SizedBox(height: 16),
                           Row(
                             children: [
                               Expanded(
-                                child: DunnoButton(type: ButtonType.outlineCinnabar, label: 'Edit Profile/Filter', onPressed: widget.onBackToEdit),
+                                child: DunnoButton(type: ButtonType.outlineCinnabar, label: 'Edit Profile/Filter', onPressed: widget.onBackToEdit,),
                               ),
                               const SizedBox(width: 12),
                               Expanded(

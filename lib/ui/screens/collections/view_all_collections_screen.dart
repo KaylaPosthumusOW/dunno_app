@@ -79,13 +79,14 @@ class _ViewAllCollectionsScreenState extends State<ViewAllCollectionsScreen> {
                 subtitle: 'Manage and explore your collections',
                 onBack: () => Navigator.pop(context),
                 backButtonColor: AppColors.yellow,
+                iconColor: AppColors.offWhite,
                 actions: [
                   Offstage(
                     offstage: state.mainAppUserProfileState.appUserProfile?.uid != state.mainAppUserProfileState.selectedProfile?.uid,
                     child: Expanded(
                       flex: 1,
                       child: DunnoButton(
-                        label: 'Create',
+                        label: 'Create Collection',
                         type: ButtonType.saffron,
                         textColor: AppColors.offWhite,
                         icon: Icon(Icons.add, color: Colors.white),

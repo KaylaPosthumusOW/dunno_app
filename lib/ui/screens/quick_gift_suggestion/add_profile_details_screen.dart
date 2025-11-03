@@ -37,7 +37,6 @@ class _AddProfileDetailsPageState extends State<AddProfileDetailsPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Event Type Dropdown
             DunnoDropdownField<String>(
               label: 'What\'s the occasion?',
               hintText: 'Select occasion',
@@ -50,34 +49,15 @@ class _AddProfileDetailsPageState extends State<AddProfileDetailsPage> {
               },
               dropDownColor: AppColors.offWhite,
               dropDownTextColor: AppColors.black,
-              items:
-                  [
-                    'Birthday',
-                    'Anniversary',
-                    'Wedding',
-                    'Graduation',
-                    'Holiday',
-                    'Valentine\'s Day',
-                    'Mother\'s Day',
-                    'Father\'s Day',
-                    'Christmas',
-                    'Just Because',
-                    'Other',
-                  ].map((type) {
-                    return DropdownMenuItem<String>(
-                      value: type,
-                      child: Text(
-                        type,
-                        style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                          color: AppColors.black,
-                        ),
-                      ),
-                    );
-                  }).toList(),
+              items: ['Birthday', 'Anniversary', 'Wedding', 'Graduation', 'Holiday', 'Valentine\'s Day', 'Mother\'s Day', 'Father\'s Day', 'Christmas', 'Just Because', 'Other'].map((type) {
+                return DropdownMenuItem<String>(
+                  value: type,
+                  child: Text(type, style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.black)),
+                );
+              }).toList(),
             ),
             const SizedBox(height: 16),
 
-            // Gender Dropdown
             DunnoDropdownField<GenderType>(
               label: 'Who are you shopping for?',
               hintText: 'Select gender',
@@ -93,18 +73,12 @@ class _AddProfileDetailsPageState extends State<AddProfileDetailsPage> {
               items: GenderType.values.map((gender) {
                 return DropdownMenuItem<GenderType>(
                   value: gender,
-                  child: Text(
-                    _getGenderDisplayName(gender),
-                    style: Theme.of(
-                      context,
-                    ).textTheme.labelLarge?.copyWith(color: AppColors.black),
-                  ),
+                  child: Text(_getGenderDisplayName(gender), style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.black)),
                 );
               }).toList(),
             ),
             const SizedBox(height: 16),
 
-            // Age Field
             DunnoTextField(
               controller: _ageController,
               label: 'Age (optional)',
@@ -118,7 +92,6 @@ class _AddProfileDetailsPageState extends State<AddProfileDetailsPage> {
             ),
             const SizedBox(height: 16),
 
-            // Interests Field
             DunnoTextField(
               controller: _interestsController,
               label: 'What are their interests?',
@@ -128,17 +101,12 @@ class _AddProfileDetailsPageState extends State<AddProfileDetailsPage> {
               colorScheme: DunnoTextFieldColor.antiqueWhite,
               maxLines: 2,
               onChanged: (value) {
-                _interests = value
-                    .split(',')
-                    .map((String e) => e.trim())
-                    .where((String e) => e.isNotEmpty)
-                    .toList();
+                _interests = value.split(',').map((String e) => e.trim()).where((String e) => e.isNotEmpty).toList();
                 _updateProfile();
               },
             ),
             const SizedBox(height: 16),
 
-            // Hobbies Field
             DunnoTextField(
               controller: _hobbiesController,
               label: 'What are their hobbies?',
@@ -148,17 +116,11 @@ class _AddProfileDetailsPageState extends State<AddProfileDetailsPage> {
               colorScheme: DunnoTextFieldColor.antiqueWhite,
               maxLines: 2,
               onChanged: (value) {
-                _hobbies = value
-                    .split(',')
-                    .map((String e) => e.trim())
-                    .where((String e) => e.isNotEmpty)
-                    .toList();
+                _hobbies = value.split(',').map((String e) => e.trim()).where((String e) => e.isNotEmpty).toList();
                 _updateProfile();
               },
             ),
             const SizedBox(height: 16),
-
-            // Likes Field
             DunnoTextField(
               controller: _likesController,
               label: 'What do they like?',
@@ -168,17 +130,11 @@ class _AddProfileDetailsPageState extends State<AddProfileDetailsPage> {
               colorScheme: DunnoTextFieldColor.antiqueWhite,
               maxLines: 2,
               onChanged: (value) {
-                _likes = value
-                    .split(',')
-                    .map((String e) => e.trim())
-                    .where((String e) => e.isNotEmpty)
-                    .toList();
+                _likes = value.split(',').map((String e) => e.trim()).where((String e) => e.isNotEmpty).toList();
                 _updateProfile();
               },
             ),
             const SizedBox(height: 16),
-
-            // Extra Notes Field
             DunnoTextField(
               controller: _extraNotesController,
               label: 'Any extra notes?',
@@ -211,19 +167,9 @@ class _AddProfileDetailsPageState extends State<AddProfileDetailsPage> {
   }
 
   void _updateProfile() {
-    final collectionLikes = CollectionLikes(
-      interests: _interests,
-      hobbies: _hobbies,
-      likes: _likes,
-    );
+    final collectionLikes = CollectionLikes(interests: _interests, hobbies: _hobbies, likes: _likes);
 
-    final quickSuggestion = QuickSuggestion(
-      eventType: _eventType,
-      gender: _gender,
-      age: _age,
-      likes: collectionLikes,
-      extraNotes: _extraNotes,
-    );
+    final quickSuggestion = QuickSuggestion(eventType: _eventType, gender: _gender, age: _age, likes: collectionLikes, extraNotes: _extraNotes);
 
     widget.onProfileUpdated?.call(quickSuggestion);
   }
