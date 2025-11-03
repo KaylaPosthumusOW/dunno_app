@@ -137,7 +137,7 @@ class _CreateCollectionScreenState extends State<CreateCollectionScreen> {
             title: title,
             subtitle: 'Share your interests and preferences',
             onBack: widget.isFirstTimeUser ? null : () => Navigator.pop(context),
-            backButtonColor: AppColors.yellow,
+            backButtonColor: widget.isFirstTimeUser ? AppColors.offWhite : AppColors.yellow,
             iconColor: AppColors.offWhite,
           ),
           Expanded(
@@ -203,6 +203,23 @@ class _CreateCollectionScreenState extends State<CreateCollectionScreen> {
                       icon: Icon(_isEditing ? Icons.update : Icons.add, color: Colors.white),
                       label: (_isLoading ? (_isEditing ? 'Updating...' : 'Creating...') : (_isEditing ? 'Update Collection' : 'Create Collection')),
                       type: ButtonType.saffron,
+                    ),
+                    if (widget.isFirstTimeUser)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text('Don\'t want to create one now?', style: Theme.of(context).textTheme.bodyMedium),
+                        ButtonTheme(
+                          minWidth: 220.0,
+                          child: TextButton(
+                            style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0))),
+                            onPressed: () {
+                              _appUserProfileCubit.updateProfile(_appUserProfileCubit.state.mainAppUserProfileState.appUserProfile!.copyWith(hasCreatedFirstCollection: true));
+                            },
+                            child: Text('Skip For Now', style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppColors.cinnabar, fontWeight: FontWeight.w600)),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
