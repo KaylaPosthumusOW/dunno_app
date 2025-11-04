@@ -183,7 +183,7 @@ class _CreateBoardDialogState extends State<CreateBoardDialog> {
                   ],
                 ),
                 SizedBox(height: 10.0),
-                DunnoTextField(controller: _boardNameController, label: 'Board Name', supportingText: 'Enter board name', colorScheme: DunnoTextFieldColor.yellow, isLight: true),
+                DunnoTextField(controller: _boardNameController, label: 'Board Name', supportingText: 'Enter board name', colorScheme: DunnoTextFieldColor.antiqueWhite, isLight: true),
                 SizedBox(height: 20.0),
                 Center(
                   child: Column(
@@ -200,8 +200,7 @@ class _CreateBoardDialogState extends State<CreateBoardDialog> {
                 DunnoButton(
                   onPressed: () {
                     final boardName = _boardNameController.text.trim();
-                    
-                    // Safety check: ensure board name is not empty
+
                     if (boardName.isEmpty) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
@@ -213,10 +212,16 @@ class _CreateBoardDialogState extends State<CreateBoardDialog> {
                     }
                     
                     Navigator.of(context).pop();
-                    _giftBoardCubit.createNewBoard(GiftBoard(boardName: boardName, owner: _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile, thumbnailUrl: _thumbnailUrl.isNotEmpty ? _thumbnailUrl : null));
+                    _giftBoardCubit.createNewBoard(
+                      GiftBoard(
+                        boardName: boardName,
+                        owner: _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile,
+                        thumbnailUrl: _thumbnailUrl.isNotEmpty ? _thumbnailUrl : null,
+                      ),
+                    );
                   },
                   label: 'Create Board',
-                  type: ButtonType.saffron,
+                  type: ButtonType.tangerine,
                 ),
               ],
             ),

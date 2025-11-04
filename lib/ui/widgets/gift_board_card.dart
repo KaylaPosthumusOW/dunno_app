@@ -35,14 +35,14 @@ class _GiftBoardCardState extends State<GiftBoardCard> {
         decoration: BoxDecoration(
           color: AppColors.offWhite,
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: AppColors.pinkLavender, width: 1.5),
-          boxShadow: [BoxShadow(color: AppColors.pinkLavender, offset: const Offset(3, 4))],
+          border: Border.all(color: AppColors.tangerine, width: 1.5),
+          boxShadow: [BoxShadow(color: AppColors.tangerine, offset: const Offset(3, 4))],
         ),
         child: Row(
           children: [
             CircleAvatar(
               radius: 24,
-              backgroundColor: AppColors.pinkLavender,
+              backgroundColor: AppColors.tangerine,
               child: ClipOval(
                 child: hasThumb
                     ? SizedBox(
@@ -70,7 +70,7 @@ class _GiftBoardCardState extends State<GiftBoardCard> {
                 ],
               ),
             ),
-            Icon(Icons.arrow_forward_ios, size: 18, color: AppColors.pinkLavender),
+            Icon(Icons.arrow_forward_ios, size: 18, color: AppColors.tangerine),
           ],
         ),
       ),

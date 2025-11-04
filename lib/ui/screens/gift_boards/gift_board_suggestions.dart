@@ -26,9 +26,9 @@ class _GiftBoardSuggestionsState extends State<GiftBoardSuggestions> {
       children: [
         CircleAvatar(
           radius: 80,
-          backgroundColor: AppColors.pinkLavender,
+          backgroundColor: AppColors.tangerine.withValues(alpha: 0.4),
           backgroundImage: (board?.thumbnailUrl != null && board!.thumbnailUrl!.isNotEmpty) ? NetworkImage(board.thumbnailUrl!) : null,
-          child: (board?.thumbnailUrl == null || board!.thumbnailUrl!.isEmpty) ? Icon(Icons.dashboard, color: AppColors.cerise) : null,
+          child: (board?.thumbnailUrl == null || board!.thumbnailUrl!.isEmpty) ? Icon(Icons.dashboard, color: AppColors.tangerine, size: 60,) : null,
         ),
         SizedBox(height: 12),
         Column(
@@ -66,8 +66,8 @@ class _GiftBoardSuggestionsState extends State<GiftBoardSuggestions> {
             child: Column(
               children: [
                 CustomHeaderBar(
-                  backButtonColor: AppColors.pinkLavender,
-                  iconColor: AppColors.cerise,
+                  backButtonColor: AppColors.tangerine,
+                  iconColor: AppColors.offWhite,
                   onBack: () => Navigator.pop(context),
                   actions: [
                     PopupMenuButton(
@@ -80,7 +80,7 @@ class _GiftBoardSuggestionsState extends State<GiftBoardSuggestions> {
                           child: ListTile(
                             title: Row(
                               children: [
-                                Icon(Icons.edit, color: AppColors.pinkLavender, size: 20),
+                                Icon(Icons.edit, color: AppColors.tangerine, size: 20),
                                 SizedBox(width: 10),
                                 Text('Edit Board'),
                               ],
@@ -133,6 +133,7 @@ class _GiftBoardSuggestionsState extends State<GiftBoardSuggestions> {
                         suggestion: s.giftSuggestion,
                         index: index,
                         isSaved: true,
+                        isPink: false,
                       );
                     },
                   ),

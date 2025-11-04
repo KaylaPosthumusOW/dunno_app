@@ -47,13 +47,13 @@ class _GiftBoardScreenState extends State<GiftBoardScreen> {
           CustomHeaderBar(
             title: 'Your Gift Boards',
             onBack: () => Navigator.pop(context),
-            backButtonColor: AppColors.pinkLavender,
-            iconColor: AppColors.cerise,
+            backButtonColor: AppColors.tangerine,
+            iconColor: AppColors.offWhite,
             actions: [
               DunnoButton(
                 label: 'Create Board',
-                type: ButtonType.pinkLavender,
-                icon: Icon(Icons.add, color: AppColors.cerise),
+                type: ButtonType.tangerine,
+                icon: Icon(Icons.add, color: AppColors.offWhite),
                 onPressed: () {
                   _giftBoardCubit.clearSelectedGiftBoard();
                   showDialog(
