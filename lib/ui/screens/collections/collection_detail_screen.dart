@@ -81,6 +81,8 @@ class _CollectionDetailsScreenState extends State<CollectionDetailsScreen> {
                 onBack: () => Navigator.pop(context),
                 backButtonColor: AppColors.yellow,
                 iconColor: AppColors.offWhite,
+                title: 'My Wedding',
+                subtitle: 'This is your collection details, you can edit it here',
               ),
               Expanded(
                 child: SingleChildScrollView(
@@ -88,105 +90,6 @@ class _CollectionDetailsScreenState extends State<CollectionDetailsScreen> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       const SizedBox(height: 20),
-                      
-                      // Collection info card
-                      Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 20),
-                        padding: const EdgeInsets.all(20),
-                        decoration: BoxDecoration(
-                          color: AppColors.offWhite,
-                          borderRadius: BorderRadius.circular(20),
-                          boxShadow: [
-                            BoxShadow(
-                              color: AppColors.tangerine.withValues(alpha: 0.15),
-                              blurRadius: 12,
-                              offset: const Offset(0, 4),
-                            ),
-                          ],
-                          border: Border.all(
-                            color: AppColors.tangerine.withValues(alpha: 0.2),
-                            width: 1,
-                          ),
-                        ),
-                        child: Row(
-                          children: [
-                            CircleAvatar(
-                              radius: 35,
-                              backgroundColor: AppColors.tangerine.withValues(alpha: 0.1),
-                              backgroundImage: ((owner?.profilePicture ?? '').isNotEmpty)
-                                  ? NetworkImage(owner!.profilePicture!)
-                                  : null,
-                              child: ((owner?.profilePicture ?? '').isEmpty)
-                                  ? Icon(
-                                      Icons.person,
-                                      color: AppColors.tangerine,
-                                      size: 35,
-                                    )
-                                  : null,
-                            ),
-                            const SizedBox(width: 16),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    collection.title ?? 'Untitled Collection',
-                                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                      color: AppColors.black,
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 6),
-                                  Text(
-                                    'By ${owner?.name ?? "Unknown"}',
-                                    style: TextStyle(
-                                      color: AppColors.black.withValues(alpha: 0.6),
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                  if (collection.isDateVisible == true && eventDate != null) ...[
-                                    const SizedBox(height: 12),
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                                      decoration: BoxDecoration(
-                                        color: AppColors.tangerine.withValues(alpha: 0.1),
-                                        borderRadius: BorderRadius.circular(12),
-                                        border: Border.all(
-                                          color: AppColors.tangerine.withValues(alpha: 0.3),
-                                        ),
-                                      ),
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Icon(
-                                            Icons.calendar_today,
-                                            size: 16,
-                                            color: AppColors.tangerine,
-                                          ),
-                                          const SizedBox(width: 8),
-                                          Text(
-                                            StringHelpers.printFirebaseTimeStamp(
-                                              eventDate,
-                                              format: 'dd MMM yyyy',
-                                            ),
-                                            style: TextStyle(
-                                              color: AppColors.tangerine,
-                                              fontWeight: FontWeight.w600,
-                                              fontSize: 13,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-
                       Padding(
                         padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
                         child: Wrap(

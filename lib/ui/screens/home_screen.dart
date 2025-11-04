@@ -22,18 +22,40 @@ class _HomeScreenState extends State<HomeScreen> {
   final AppUserProfileCubit _appUserProfileCubit = sl<AppUserProfileCubit>()..loadProfile();
   final CalenderEventCubit _calenderEventCubit = sl<CalenderEventCubit>();
 
+  bool _viewMoreUpcomingEvents = false;
+
   Widget _displayUpComingEvents(CalenderEventState state) {
     final upcomingEvents = state.mainCalenderEventState.upcomingEventsNotifications ?? [];
 
-    return ListView.separated(
-      shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
-      itemCount: upcomingEvents.length,
-      separatorBuilder: (context, index) => SizedBox(height: 10),
-      itemBuilder: (context, index) {
-        final event = upcomingEvents[index];
-        return CalenderNotificationCard(upcomingEvent: event);
-      },
+    return Column(
+      children: [
+        ListView.separated(
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          itemCount: _viewMoreUpcomingEvents ? upcomingEvents.length : (upcomingEvents.length >  1 ? 1 : upcomingEvents.length),
+          separatorBuilder: (context, index) => SizedBox(height: 10),
+          itemBuilder: (context, index) {
+            final event = upcomingEvents[index];
+            return CalenderNotificationCard(upcomingEvent: event);
+          },
+        ),
+        if (upcomingEvents.length > 1)
+          TextButton(
+            onPressed: () {
+              setState(() {
+                _viewMoreUpcomingEvents = !_viewMoreUpcomingEvents;
+              });
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(_viewMoreUpcomingEvents ? 'View Less' : 'View More', style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppColors.black)),
+                Icon(_viewMoreUpcomingEvents ? Icons.expand_less : Icons.expand_more, color: AppColors.black),
+              ],
+            ),
+          ),
+      ],
     );
   }
 
@@ -107,16 +129,16 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                       child: Container(
                         padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(color: AppColors.pinkLavender, borderRadius: BorderRadius.circular(20)),
+                        decoration: BoxDecoration(color: AppColors.tangerine, borderRadius: BorderRadius.circular(20)),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
-                              children: [Icon(Icons.card_giftcard_rounded, color: AppColors.cerise)],
+                              children: [Icon(Icons.card_giftcard_rounded, color: AppColors.offWhite)],
                             ),
                             SizedBox(height: 5),
-                            Text('Your \nGift Boards', style: Theme.of(context).textTheme.displayMedium?.copyWith(color: AppColors.cerise)),
+                            Text('Your \nGift Boards', style: Theme.of(context).textTheme.displayMedium?.copyWith(color: AppColors.offWhite)),
                           ],
                         ),
                       ),
@@ -190,16 +212,16 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                       child: Container(
                         padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(color: AppColors.cinnabar, borderRadius: BorderRadius.circular(20)),
+                        decoration: BoxDecoration(color: AppColors.pinkLavender, borderRadius: BorderRadius.circular(20)),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
-                              children: [Icon(Icons.camera_alt_outlined, color: AppColors.antiqueWhite)],
+                              children: [Icon(Icons.camera_alt_outlined, color: AppColors.cerise)],
                             ),
                             SizedBox(height: 5),
-                            Text('Connect \nWith QR', style: Theme.of(context).textTheme.displayMedium?.copyWith(color: AppColors.antiqueWhite)),
+                            Text('Connect \nWith QR', style: Theme.of(context).textTheme.displayMedium?.copyWith(color: AppColors.cerise)),
                           ],
                         ),
                       ),
