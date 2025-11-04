@@ -21,8 +21,15 @@ class _CollectionDetailsScreenState extends State<CollectionDetailsScreen> {
 
   Widget _buildChipsSection(String title, List<String>? items) {
     if (items == null || items.isEmpty) return const SizedBox.shrink();
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 12.0),
+    return Container(
+      padding: const EdgeInsets.all(16),
+      margin: const EdgeInsets.only(bottom: 15),
+      decoration: BoxDecoration(
+        color: AppColors.offWhite,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [BoxShadow(color: AppColors.yellow, offset: const Offset(3, 4))],
+        border: Border.all(width: 1.5, color: AppColors.yellow),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -38,10 +45,7 @@ class _CollectionDetailsScreenState extends State<CollectionDetailsScreen> {
                 .map(
                   (item) => Container(
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                    decoration: BoxDecoration(
-                      color: AppColors.yellow.withValues(alpha: 0.6),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
+                    decoration: BoxDecoration(color: AppColors.yellow.withValues(alpha: 0.6), borderRadius: BorderRadius.circular(20)),
                     child: Text(
                       item,
                       style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: AppColors.black),
@@ -70,7 +74,6 @@ class _CollectionDetailsScreenState extends State<CollectionDetailsScreen> {
         }
 
         final likes = collection.likes;
-        final owner = collection.owner;
         final eventDate = collection.eventCollectionDate;
 
         return Scaffold(
@@ -83,6 +86,17 @@ class _CollectionDetailsScreenState extends State<CollectionDetailsScreen> {
                 iconColor: AppColors.offWhite,
                 title: 'My Wedding',
                 subtitle: 'This is your collection details, you can edit it here',
+                actions: [
+                  DunnoButton(
+                    icon: const Icon(Icons.edit, color: Colors.white),
+                    type: ButtonType.saffron,
+                    label: 'Edit Collection',
+                    onPressed: () {
+                      _collectionCubit.setSelectedCollection(collection);
+                      context.push(CREATE_COLLECTION_SCREEN);
+                    },
+                  ),
+                ],
               ),
               Expanded(
                 child: SingleChildScrollView(
@@ -91,7 +105,7 @@ class _CollectionDetailsScreenState extends State<CollectionDetailsScreen> {
                     children: [
                       const SizedBox(height: 20),
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: Wrap(
                           spacing: 8,
                           runSpacing: 8,
@@ -107,36 +121,30 @@ class _CollectionDetailsScreenState extends State<CollectionDetailsScreen> {
                         ),
                       ),
 
+                      SizedBox(height: 30),
+
                       if (likes != null) ...[
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 20),
                           child: Text(
-                            'Likes & Interests',
+                            'Your Preferences',
                             style: Theme.of(context).textTheme.titleLarge?.copyWith(color: AppColors.black, fontWeight: FontWeight.w600),
                           ),
                         ),
+                        SizedBox(height: 5),
                         Padding(
-                          padding: const EdgeInsets.fromLTRB(20, 12, 20, 8),
-                          child: Container(
-                            padding: const EdgeInsets.all(16),
-                            decoration: BoxDecoration(color: AppColors.antiqueWhite, borderRadius: BorderRadius.circular(20)),
-                            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [_buildChipsSection('Hobbies', likes.hobbies), _buildChipsSection('Interests', likes.interests), _buildChipsSection('Likes', likes.likes), _buildChipsSection('Aesthetic Preferences', likes.aestheticPreferences)]),
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              _buildChipsSection('Hobbies', likes.hobbies),
+                              _buildChipsSection('Interests', likes.interests),
+                              _buildChipsSection('Likes', likes.likes),
+                              _buildChipsSection('Aesthetic Preferences', likes.aestheticPreferences),
+                            ],
                           ),
                         ),
                       ],
-
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(20, 16, 20, 40),
-                        child: DunnoButton(
-                          icon: const Icon(Icons.edit, color: Colors.white),
-                          type: ButtonType.saffron,
-                          label: 'Edit Collection',
-                          onPressed: () {
-                            _collectionCubit.setSelectedCollection(collection);
-                            context.push(CREATE_COLLECTION_SCREEN);
-                          },
-                        ),
-                      ),
                     ],
                   ),
                 ),
@@ -159,24 +167,20 @@ class _StatPill extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-      decoration: BoxDecoration(
-        color: AppColors.yellow,
-        borderRadius: BorderRadius.circular(999),
-        border: Border.all(color: AppColors.tangerine.withValues(alpha: 0.5)),
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      decoration: BoxDecoration(color: AppColors.black, borderRadius: BorderRadius.circular(35)),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 16, color: AppColors.cinnabar),
+          Icon(icon, size: 16, color: AppColors.offWhite),
           const SizedBox(width: 8),
           Text(
             '$label: ',
-            style: TextStyle(color: AppColors.black.withValues(alpha: 0.7), fontWeight: FontWeight.w600),
+            style: TextStyle(color: AppColors.offWhite, fontWeight: FontWeight.w600),
           ),
           Text(
             value,
-            style: TextStyle(color: AppColors.cinnabar, fontWeight: FontWeight.w700),
+            style: TextStyle(color: AppColors.offWhite, fontWeight: FontWeight.w900),
           ),
         ],
       ),

@@ -51,7 +51,7 @@ class _DunnoButtonState extends State<DunnoButton> {
         return OutlinedButton.styleFrom(
           backgroundColor: Colors.transparent,
           side: BorderSide(color: isDisabled ? AppColors.cerise : widget.outlineColor ?? AppColors.cerise),
-          foregroundColor: isDisabled ? AppColors.cerise : AppColors.cerise,
+          foregroundColor: isDisabled ? AppColors.cerise : widget.outlineColor,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
         );
 
