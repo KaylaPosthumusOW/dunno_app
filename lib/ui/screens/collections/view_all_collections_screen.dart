@@ -112,6 +112,7 @@ class _ViewAllCollectionsScreenState extends State<ViewAllCollectionsScreen> {
                         textColor: AppColors.offWhite,
                         icon: Icon(Icons.add, color: Colors.white),
                         onPressed: () {
+                          _collectionCubit.clearSelectedCollection();
                           context.pushNamed(CREATE_COLLECTION_SCREEN);
                         },
                       ),

@@ -71,6 +71,11 @@ class CollectionCubit extends Cubit<CollectionState> {
     emit(SelectedCollection(state.mainCollectionState.copyWith(selectedCollection: collection, message: 'Collection selected', errorMessage: '')));
   }
 
+  clearSelectedCollection() {
+    emit(LoadingAllCollections(state.mainCollectionState.copyWith(message: 'Clearing selected collection')));
+    emit(SelectedCollection(state.mainCollectionState.copyWithNull(message: 'Selected collection cleared', errorMessage: '')));
+  }
+
   void searchCollections(String query, {bool reset = false}) {
     emit(SearchingCollections(state.mainCollectionState.copyWith(message: 'Searching collections...')));
     try {

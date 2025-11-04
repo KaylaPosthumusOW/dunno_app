@@ -127,7 +127,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   String _profileShareLink(String uid) {
-    // Create a proper URL that can be parsed
     final uri = Uri.https('dunno.app', '/profile', {'uid': uid});
     return uri.toString();
   }
@@ -432,6 +431,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       type: ButtonType.saffron,
                       label: 'Add First Collection!',
                       onPressed: () {
+                        _collectionCubit.clearSelectedCollection();
                         context.pushNamed(CREATE_COLLECTION_SCREEN);
                       },
                     )
