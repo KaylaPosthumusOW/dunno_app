@@ -88,7 +88,7 @@ class FrameTheme {
       ),
       checkboxTheme: CheckboxThemeData(
         fillColor: WidgetStateProperty.all(AppColors.offWhite),
-        checkColor: WidgetStateProperty.all(AppColors.cerise),
+        checkColor: WidgetStateProperty.all(AppColors.offWhite),
       ),
       dividerTheme: DividerThemeData(color: AppColors.black),
       splashColor: Colors.transparent,

@@ -107,6 +107,10 @@ class _FriendProfileScreenState extends State<FriendProfileScreen> {
     return BlocBuilder<CollectionCubit, CollectionState>(
       bloc: _collectionCubit,
       builder: (context, state) {
+        if (state is LoadingAllCollections) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
         final collections = state.mainCollectionState.allUserCollections ?? [];
         final hasCollections = collections.isNotEmpty;
         final displayCount = hasCollections ? (collections.length > 3 ? 3 : collections.length) : 0;

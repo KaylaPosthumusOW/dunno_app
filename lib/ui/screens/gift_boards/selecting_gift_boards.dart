@@ -102,9 +102,9 @@ class _SelectingGiftBoardsState extends State<SelectingGiftBoards> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       if (isLoading)
-                        const Padding(
+                        Padding(
                           padding: EdgeInsets.symmetric(vertical: 40),
-                          child: Center(child: CircularProgressIndicator()),
+                          child: Center(child: CircularProgressIndicator(color: AppColors.cinnabar,)),
                         )
                       else if (state is GiftBoardError)
                         Padding(
@@ -114,23 +114,26 @@ class _SelectingGiftBoardsState extends State<SelectingGiftBoards> {
                       else if (boards.isEmpty)
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 24),
-                          child: Center(child: Column(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 20),
-                                child: Text('You have no boards yet. Create a board to save your gift suggestions!', style: Theme.of(context).textTheme.bodyMedium, textAlign: TextAlign.center,),
-                              ),
-                              const SizedBox(height: 20),
-                              DunnoButton(type: ButtonType.saffron, label: 'Create a Board', onPressed: () {
-                                showDialog(
-                                  context: context,
-                                  builder: (context) => CreateBoardDialog(),
-                                ).then((value) {
-                                  _giftBoardCubit.loadAllUserGiftBoards(ownerUid: _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile?.uid ?? '');
-                                });
-                              }),
-                            ],
-                          )),
+                          child: Center(
+                            child: Column(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                                  child: Text('You have no boards yet. Create a board to save your gift suggestions!', style: Theme.of(context).textTheme.bodyMedium, textAlign: TextAlign.center),
+                                ),
+                                const SizedBox(height: 20),
+                                DunnoButton(
+                                  type: ButtonType.saffron,
+                                  label: 'Create a Board',
+                                  onPressed: () {
+                                    showDialog(context: context, builder: (context) => CreateBoardDialog()).then((value) {
+                                      _giftBoardCubit.loadAllUserGiftBoards(ownerUid: _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile?.uid ?? '');
+                                    });
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
                         )
                       else
                         Container(
@@ -149,7 +152,7 @@ class _SelectingGiftBoardsState extends State<SelectingGiftBoards> {
                                 subtitle: Text('Board', style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey[600])),
                                 secondary: CircleAvatar(
                                   radius: 20,
-                                  backgroundColor: AppColors.pinkLavender,
+                                  backgroundColor: AppColors.tangerine.withValues(alpha: 0.3),
                                   child: (board.thumbnailUrl?.isNotEmpty ?? false)
                                       ? ClipOval(
                                           child: SizedBox(
@@ -158,20 +161,45 @@ class _SelectingGiftBoardsState extends State<SelectingGiftBoards> {
                                             child: DunnoExtendedImage(url: board.thumbnailUrl!, fit: BoxFit.cover),
                                           ),
                                         )
-                                      : const Icon(Icons.dashboard, color: Colors.white, size: 20),
+                                      : Icon(Icons.dashboard, color: AppColors.tangerine, size: 20),
                                 ),
                                 controlAffinity: ListTileControlAffinity.trailing,
-                                activeColor: AppColors.cerise,
+                                activeColor: AppColors.tangerine,
+
                                 contentPadding: const EdgeInsets.symmetric(horizontal: 0),
                               );
                             },
                           ),
                         ),
-
                       const SizedBox(height: 20),
-
-                      // Save button
-                      DunnoButton(type: hasSelection ? ButtonType.saffron : ButtonType.pinkLavender, isDisabled: !hasSelection, label: hasSelection ? 'Save to ${selectedBoards.length} board${selectedBoards.length > 1 ? 's' : ''}' : 'Select a board to save', onPressed: hasSelection ? _saveSuggestionsToBoards : null),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: DunnoButton(
+                              type: ButtonType.tangerine,
+                              isDisabled: !hasSelection,
+                              label: hasSelection ? 'Save to ${selectedBoards.length} board${selectedBoards.length > 1 ? 's' : ''}' : 'Select board to save',
+                              onPressed: hasSelection ? _saveSuggestionsToBoards : null,
+                            ),
+                          ),
+                          SizedBox(width: boards.isNotEmpty ? 10 : 0),
+                          if (boards.isNotEmpty)
+                            Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: AppColors.tangerine,
+                              ),
+                              child: IconButton(
+                                icon: Icon(Icons.add, size: 30, color: AppColors.offWhite),
+                                onPressed: () {
+                                  showDialog(context: context, builder: (context) => CreateBoardDialog()).then((value) {
+                                    _giftBoardCubit.loadAllUserGiftBoards(ownerUid: _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile?.uid ?? '');
+                                  });
+                                },
+                              ),
+                            ),
+                        ],
+                      ),
                     ],
                   );
                 },

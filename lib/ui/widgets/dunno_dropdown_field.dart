@@ -90,8 +90,9 @@ class DunnoDropdownField<T> extends StatelessWidget {
           hint: hintText != null
               ? Text(
             hintText!,
-            style: theme.textTheme.labelLarge?.copyWith(
-              color: AppColors.black,
+            style: theme.textTheme.bodyLarge?.copyWith(
+              color: AppColors.black.withValues(alpha: 0.5),
+              fontWeight: FontWeight.w400,
             ),
           )
               : null,
