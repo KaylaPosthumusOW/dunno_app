@@ -111,6 +111,13 @@ class _FriendGiftSuggestionsScreenState extends State<FriendGiftSuggestionsScree
             onBack: () => Navigator.of(context).pop(),
             backButtonColor: AppColors.cerise,
             iconColor: AppColors.offWhite,
+            actions: [
+              DunnoButton(
+                type: ButtonType.outlineCerise,
+                label: 'Edit Filters',
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+            ]
           ),
           Expanded(
             child: BlocProvider(
@@ -266,50 +273,50 @@ class _FriendGiftSuggestionsScreenState extends State<FriendGiftSuggestionsScree
                               );
                             },
                           ),
-                          Padding(
-                            padding: const EdgeInsets.all(20),
-                            child: Column(
-                              children: [
-                                DunnoTextField(
-                                  controller: _refinementController,
-                                  label: 'Refine suggestions',
-                                  supportingText: 'e.g., "I like the first suggestion, but prefer something more practical"',
-                                  keyboardType: TextInputType.text,
-                                  isLight: true,
-                                  colorScheme: DunnoTextFieldColor.pink,
-                                  maxLines: 3,
-                                  onChanged: (value) {},
-                                ),
-                                const SizedBox(height: 16),
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: DunnoButton(
-                                        type: ButtonType.outlineCerise,
-                                        label: 'Edit Filters',
-                                        onPressed: () => Navigator.of(context).pop(),
-                                      ),
-                                    ),
-                                    const SizedBox(width: 12),
-                                    Expanded(
-                                      child: DunnoButton(
-                                        type: ButtonType.primary,
-                                        label: 'Regenerate',
-                                        onPressed: () {
-                                          final refinement = _refinementController.text.trim();
-                                          final updatedFilters = Map<String, dynamic>.from(widget.filterData ?? {});
-                                          if (refinement.isNotEmpty) updatedFilters['refinement'] = refinement;
-                                          final profile = _buildProfileFromFriendData();
-                                          context.read<FriendGiftSuggestionCubit>().generateSuggestions(profile: profile, filters: updatedFilters);
-                                          _refinementController.clear();
-                                        },
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
+                          // Padding(
+                          //   padding: const EdgeInsets.all(20),
+                          //   child: Column(
+                          //     children: [
+                          //       DunnoTextField(
+                          //         controller: _refinementController,
+                          //         label: 'Refine suggestions',
+                          //         supportingText: 'e.g., "I like the first suggestion, but prefer something more practical"',
+                          //         keyboardType: TextInputType.text,
+                          //         isLight: true,
+                          //         colorScheme: DunnoTextFieldColor.pink,
+                          //         maxLines: 3,
+                          //         onChanged: (value) {},
+                          //       ),
+                          //       const SizedBox(height: 16),
+                          //       Row(
+                          //         children: [
+                          //           Expanded(
+                          //             child: DunnoButton(
+                          //               type: ButtonType.outlineCerise,
+                          //               label: 'Edit Filters',
+                          //               onPressed: () => Navigator.of(context).pop(),
+                          //             ),
+                          //           ),
+                          //           const SizedBox(width: 12),
+                          //           Expanded(
+                          //             child: DunnoButton(
+                          //               type: ButtonType.primary,
+                          //               label: 'Regenerate',
+                          //               onPressed: () {
+                          //                 final refinement = _refinementController.text.trim();
+                          //                 final updatedFilters = Map<String, dynamic>.from(widget.filterData ?? {});
+                          //                 if (refinement.isNotEmpty) updatedFilters['refinement'] = refinement;
+                          //                 final profile = _buildProfileFromFriendData();
+                          //                 context.read<FriendGiftSuggestionCubit>().generateSuggestions(profile: profile, filters: updatedFilters);
+                          //                 _refinementController.clear();
+                          //               },
+                          //             ),
+                          //           ),
+                          //         ],
+                          //       ),
+                          //     ],
+                          //   ),
+                          // ),
                         ],
                       );
                     }
@@ -345,6 +352,52 @@ class _FriendGiftSuggestionsScreenState extends State<FriendGiftSuggestionsScree
           ),
         ],
       ),
+      bottomNavigationBar: AnimatedPadding(
+        padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+        duration: const Duration(milliseconds: 180),
+        curve: Curves.easeOut,
+        child: SafeArea(
+          minimum: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: DunnoTextField(
+                      controller: _refinementController,
+                      supportingText: 'e.g., "I like the first suggestion, but prefer something more practical"',
+                      keyboardType: TextInputType.text,
+                      isLight: true,
+                      colorScheme: DunnoTextFieldColor.pink,
+                      maxLines: 1,
+                      onChanged: (value) {},
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  IconButton(onPressed: () {}, icon: Icon(Icons.send, color: AppColors.cerise)),
+                  // DunnoButton(
+                  //   type: ButtonType.primary,
+                  //   label: 'Regenerate',
+                  //   onPressed: () {
+                  //     final refinement = _refinementController.text.trim();
+                  //     final updatedFilters = Map<String, dynamic>.from(widget.filterData ?? {});
+                  //     if (refinement.isNotEmpty) updatedFilters['refinement'] = refinement;
+                  //     final profile = _buildProfileFromFriendData();
+                  //     context.read<FriendGiftSuggestionCubit>().generateSuggestions(profile: profile, filters: updatedFilters);
+                  //     _refinementController.clear();
+                  //   },
+                  // ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+
     );
   }
 }

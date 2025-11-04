@@ -42,7 +42,8 @@ class _FriendGiftSuggestionManagementState extends State<FriendGiftSuggestionMan
       body: Column(
         children: [
           CustomHeaderBar(
-            title: 'Gift Suggestion Preferences',
+            title: 'Fine-tune Preferences',
+            subtitle: 'Fine-tune your friend’s likes to help Dunno find the perfect gift match',
             onBack: () => Navigator.of(context).maybePop(),
             backButtonColor: AppColors.cerise,
             iconColor: AppColors.offWhite,
