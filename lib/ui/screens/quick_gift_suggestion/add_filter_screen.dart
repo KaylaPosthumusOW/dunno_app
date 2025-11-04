@@ -69,8 +69,6 @@ class _AddFilterPageState extends State<AddFilterPage> {
               },
             ),
             const SizedBox(height: 20),
-
-            // Budget Slider
             Align(
               alignment: Alignment.centerLeft,
               child: Padding(
@@ -115,8 +113,6 @@ class _AddFilterPageState extends State<AddFilterPage> {
               },
             ),
             const SizedBox(height: 16),
-
-            // Gift Category Dropdown
             DunnoDropdownField<GiftCategory>(
               label: 'Gift Category',
               hintText: 'Select category',
@@ -140,8 +136,6 @@ class _AddFilterPageState extends State<AddFilterPage> {
               }).toList(),
             ),
             const SizedBox(height: 16),
-
-            // Gift Value Dropdown
             DunnoDropdownField<GiftValue>(
               label: 'Gift Value Type',
               hintText: 'Select value type',
@@ -165,8 +159,6 @@ class _AddFilterPageState extends State<AddFilterPage> {
               }).toList(),
             ),
             const SizedBox(height: 16),
-
-            // Gift Type Field
             DunnoTextField(
               controller: _giftTypeController,
               label: 'Type of gift?',
@@ -180,8 +172,6 @@ class _AddFilterPageState extends State<AddFilterPage> {
               },
             ),
             const SizedBox(height: 16),
-
-            // Number of Suggestions Field
             DunnoTextField(
               controller: _numberOfSuggestionsController,
               label: 'Number of Suggestions',
@@ -190,7 +180,6 @@ class _AddFilterPageState extends State<AddFilterPage> {
               isLight: true,
               colorScheme: widget.isFriendFlow ? DunnoTextFieldColor.pink : DunnoTextFieldColor.antiqueWhite,
               onChanged: (value) {
-                // Parse and validate the input
                 final parsedValue = int.tryParse(value);
                 if (parsedValue != null && parsedValue >= 1 && parsedValue <= 10) {
                   setState(() {
@@ -198,7 +187,6 @@ class _AddFilterPageState extends State<AddFilterPage> {
                   });
                   _updateFilter();
                 } else if (value.isEmpty) {
-                  // Reset to default if field is empty
                   setState(() {
                     _numberOfSuggestions = 3;
                   });
@@ -207,8 +195,6 @@ class _AddFilterPageState extends State<AddFilterPage> {
               },
             ),
             const SizedBox(height: 16),
-
-            // Location Field
             DunnoTextField(
               controller: _locationController,
               label: 'Your Location',
@@ -222,8 +208,6 @@ class _AddFilterPageState extends State<AddFilterPage> {
               },
             ),
             const SizedBox(height: 16),
-
-            // Extra Notes Field
             DunnoTextField(
               controller: _extraNotesController,
               label: 'Additional preferences?',

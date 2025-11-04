@@ -47,7 +47,7 @@ class CustomDropdown<T> extends StatelessWidget {
               icon: const Icon(Icons.keyboard_arrow_down_rounded),
               hint: Text(
                 hint ?? 'Select an option',
-                style: TextStyle(color: Colors.grey[600]),
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey),
               ),
               items: items.map((T item) {
                 return DropdownMenuItem<T>(

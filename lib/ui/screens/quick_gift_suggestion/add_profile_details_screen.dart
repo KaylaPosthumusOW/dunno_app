@@ -82,6 +82,7 @@ class _AddProfileDetailsPageState extends State<AddProfileDetailsPage> {
             DunnoTextField(
               controller: _ageController,
               label: 'Age (optional)',
+              supportingText: 'Enter their age',
               keyboardType: TextInputType.number,
               isLight: true,
               colorScheme: DunnoTextFieldColor.antiqueWhite,

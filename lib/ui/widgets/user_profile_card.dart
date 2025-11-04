@@ -7,6 +7,7 @@ import 'package:dunno/models/app_user_profile.dart';
 import 'package:flutter/material.dart' hide ConnectionState;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sp_utilities/utilities.dart';
 
 class UserProfileCard extends StatefulWidget {
   final AppUserProfile userProfile;
@@ -72,7 +73,7 @@ class _UserProfileCardState extends State<UserProfileCard> {
                       Row(
                         children: [
                           Text(
-                            '${widget.userProfile.name ?? ''} ${widget.userProfile.surname ?? ''}',
+                            '${widget.userProfile.name ?? widget.userProfile.email} ${widget.userProfile.surname ?? ''}',
                             style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold),
                           ),
                           SizedBox(width: 10),
