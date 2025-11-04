@@ -9,6 +9,7 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMixin {
+  // TODO: nicer splash screen
   @override
   Widget build(BuildContext context) {
     return Scaffold(

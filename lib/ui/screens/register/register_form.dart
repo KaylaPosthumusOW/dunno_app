@@ -23,7 +23,6 @@ class _RegisterFormState extends State<RegisterForm> {
   final TextEditingController _nameController = TextEditingController();
 
   final RegisterCubit _registerCubit = sl<RegisterCubit>();
-  final AuthenticationCubit _authenticationCubit = sl<AuthenticationCubit>();
   final AppUserProfileCubit _appUserProfileCubit = sl<AppUserProfileCubit>();
 
   bool _passwordVisible = false;
@@ -67,7 +66,10 @@ class _RegisterFormState extends State<RegisterForm> {
         }
 
         if (state.isSuccess) {
-          _authenticationCubit.sendVerificationEmail();
+          Navigator.of(context).pop();
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(SnackBar(content: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Expanded(child: Text('Registration Success:\n${state.message ?? ''}', style: const TextStyle(color: Colors.white))), const Icon(Icons.check_circle_outline)]), backgroundColor: Colors.green));
         }
 
         if (state.isFailure) {

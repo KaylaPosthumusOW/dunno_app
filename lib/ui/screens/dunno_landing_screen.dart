@@ -41,7 +41,6 @@ class _DunnoLandingScreenState extends State<DunnoLandingScreen> {
         if (state is Authenticated) {
           return const DunnoNavigationScreen();
         }
-        // return DunnoNavigationScreen();
 
         return const Scaffold(body: Center(child: CircularProgressIndicator()));
       },
