@@ -67,8 +67,6 @@ class _GiftBoardCardState extends State<GiftBoardCard> {
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
-                  const SizedBox(height: 4),
-                  Text('Items:', style: TextStyle(fontSize: 14, color: Colors.grey[600])),
                 ],
               ),
             ),

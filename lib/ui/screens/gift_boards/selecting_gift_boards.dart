@@ -5,6 +5,7 @@ import 'package:dunno/cubits/app_user_profile/app_user_profile_cubit.dart';
 import 'package:dunno/cubits/gift_board/gift_board_cubit.dart';
 import 'package:dunno/models/ai_gift_suggestion.dart';
 import 'package:dunno/models/board_gift_suggestion.dart';
+import 'package:dunno/ui/screens/gift_boards/create_board_dialog.dart';
 import 'package:dunno/ui/widgets/dunno_button.dart';
 import 'package:dunno/ui/widgets/dunno_extended_image.dart';
 import 'package:flutter/material.dart';
@@ -113,7 +114,23 @@ class _SelectingGiftBoardsState extends State<SelectingGiftBoards> {
                       else if (boards.isEmpty)
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 24),
-                          child: Center(child: Text('No boards available', style: Theme.of(context).textTheme.bodyMedium)),
+                          child: Center(child: Column(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 20),
+                                child: Text('You have no boards yet. Create a board to save your gift suggestions!', style: Theme.of(context).textTheme.bodyMedium, textAlign: TextAlign.center,),
+                              ),
+                              const SizedBox(height: 20),
+                              DunnoButton(type: ButtonType.saffron, label: 'Create a Board', onPressed: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => CreateBoardDialog(),
+                                ).then((value) {
+                                  _giftBoardCubit.loadAllUserGiftBoards(ownerUid: _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile?.uid ?? '');
+                                });
+                              }),
+                            ],
+                          )),
                         )
                       else
                         Container(

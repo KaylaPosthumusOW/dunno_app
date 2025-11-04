@@ -224,7 +224,7 @@ class _ReceiveGiftSuggestionScreenState extends State<ReceiveGiftSuggestionScree
                           Row(
                             children: [
                               Expanded(
-                                child: DunnoButton(type: ButtonType.outlineCinnabar, label: 'Edit Profile/Filter', onPressed: widget.onBackToEdit,),
+                                child: DunnoButton(type: ButtonType.outlineCinnabar, label: 'Edit Profile/Filter', onPressed:() => Navigator.of(context).pop()),
                               ),
                               const SizedBox(width: 12),
                               Expanded(

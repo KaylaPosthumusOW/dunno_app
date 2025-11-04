@@ -58,9 +58,7 @@ class _CreateBoardDialogState extends State<CreateBoardDialog> {
                   title: Text('Remove Photo'),
                 ),
                 onTap: () {
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    Navigator.of(context).pop(_ThumbnailSource.remove);
-                  });
+                  WidgetsBinding.instance.addPostFrameCallback((_) { });
                 },
               ),
             ],
@@ -68,18 +66,14 @@ class _CreateBoardDialogState extends State<CreateBoardDialog> {
               value: _ThumbnailSource.camera,
               child: const ListTile(leading: Icon(Icons.camera_alt), title: Text('Take Photo')),
               onTap: () {
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  Navigator.of(context).pop(_ThumbnailSource.camera);
-                });
+                WidgetsBinding.instance.addPostFrameCallback((_) {});
               },
             ),
             PopupMenuItem<_ThumbnailSource>(
               value: _ThumbnailSource.gallery,
               child: const ListTile(leading: Icon(Icons.photo_library), title: Text('Choose from Gallery')),
               onTap: () {
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  Navigator.of(context).pop(_ThumbnailSource.gallery);
-                });
+                WidgetsBinding.instance.addPostFrameCallback((_) {});
               },
             ),
             const SizedBox(height: 20),
@@ -138,7 +132,6 @@ class _CreateBoardDialogState extends State<CreateBoardDialog> {
             height: 120,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              border: Border.all(color: Colors.grey[300]!, width: 2),
             ),
             child: ClipOval(
               child: _thumbnailUrl.isNotEmpty
@@ -146,7 +139,7 @@ class _CreateBoardDialogState extends State<CreateBoardDialog> {
                   : state.mainSPFileUploadState.uploadTasks != null && state.mainSPFileUploadState.uploadTasks!.isNotEmpty
                   ? DunnoImageUploadingTile(task: state.mainSPFileUploadState.uploadTasks!.first, size: 120.0, isCircular: true)
                   : Container(
-                      color: Colors.grey[100],
+                      color: Colors.grey[300],
                       child: Icon(Icons.add_photo_alternate, size: 40, color: Colors.grey[600]),
                     ),
             ),
@@ -206,8 +199,21 @@ class _CreateBoardDialogState extends State<CreateBoardDialog> {
                 SizedBox(height: 16.0),
                 DunnoButton(
                   onPressed: () {
+                    final boardName = _boardNameController.text.trim();
+                    
+                    // Safety check: ensure board name is not empty
+                    if (boardName.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Please enter a board name'),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                      return;
+                    }
+                    
                     Navigator.of(context).pop();
-                    _giftBoardCubit.createNewBoard(GiftBoard(boardName: _boardNameController.text, owner: _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile, thumbnailUrl: _thumbnailUrl.isNotEmpty ? _thumbnailUrl : null));
+                    _giftBoardCubit.createNewBoard(GiftBoard(boardName: boardName, owner: _appUserProfileCubit.state.mainAppUserProfileState.appUserProfile, thumbnailUrl: _thumbnailUrl.isNotEmpty ? _thumbnailUrl : null));
                   },
                   label: 'Create Board',
                   type: ButtonType.saffron,
