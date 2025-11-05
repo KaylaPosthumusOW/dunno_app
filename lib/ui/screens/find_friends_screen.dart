@@ -61,7 +61,10 @@ class _FindFriendsScreenState extends State<FindFriendsScreen> {
                 child: child,
               ),
             ),
-            child: _isSearching ? _buildSearchMode(context, users, state) : _buildDefaultMode(context),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              child: _isSearching ? _buildSearchMode(context, users, state) : _buildDefaultMode(context),
+            ),
           ),
         );
       },
