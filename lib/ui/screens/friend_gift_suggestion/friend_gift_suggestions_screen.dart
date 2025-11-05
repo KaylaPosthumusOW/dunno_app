@@ -15,12 +15,7 @@ class FriendGiftSuggestionsScreen extends StatefulWidget {
   final Map<String, dynamic>? collectionData;
   final Map<String, dynamic>? filterData;
 
-  const FriendGiftSuggestionsScreen({
-    super.key,
-    this.friendData,
-    this.collectionData,
-    this.filterData,
-  });
+  const FriendGiftSuggestionsScreen({super.key, this.friendData, this.collectionData, this.filterData});
 
   @override
   State<FriendGiftSuggestionsScreen> createState() => _FriendGiftSuggestionsScreenState();
@@ -29,18 +24,13 @@ class FriendGiftSuggestionsScreen extends StatefulWidget {
 class _FriendGiftSuggestionsScreenState extends State<FriendGiftSuggestionsScreen> {
   final TextEditingController _refinementController = TextEditingController();
 
-  // UI state
   Timer? _messageTimer;
   int _msgIndex = 0;
   bool _isGenerating = false;
   bool _showIntroAnimation = false;
   bool _showCards = false;
 
-  final List<String> _defaultMessages = [
-    'Thinking of the perfect gift...',
-    'Browsing the best options...',
-    'Almost there, just a moment...',
-  ];
+  final List<String> _defaultMessages = ['Thinking of the perfect gift...', 'Browsing the best options...', 'Almost there, just a moment...'];
 
   void _startMessageCycler([List<String>? messages, Duration? interval]) {
     _messageTimer?.cancel();
@@ -67,12 +57,7 @@ class _FriendGiftSuggestionsScreenState extends State<FriendGiftSuggestionsScree
     final collection = widget.collectionData!;
     final likes = collection['likes'] as Map<String, dynamic>?;
 
-    return {
-      'eventType': 'Gift for Friend',
-      'gender': _inferGenderFromName(friend['name']),
-      'likes': likes,
-      'extraNotes': 'Gift for ${friend['name']} ${friend['surname'] ?? ''}',
-    };
+    return {'eventType': 'Gift for Friend', 'gender': _inferGenderFromName(friend['name']), 'likes': likes, 'extraNotes': 'Gift for ${friend['name']} ${friend['surname'] ?? ''}'};
   }
 
   String _inferGenderFromName(String? name) {
@@ -101,27 +86,22 @@ class _FriendGiftSuggestionsScreenState extends State<FriendGiftSuggestionsScree
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.offWhite,
-      body: Column(
-        children: [
-          CustomHeaderBar(
-            title: 'Gift Ideas for ${widget.friendData?['name'] ?? 'Friend'}',
-            backgroundColor: AppColors.offWhite,
-            onBack: () => Navigator.of(context).pop(),
-            backButtonColor: AppColors.cerise,
-            iconColor: AppColors.offWhite,
-            actions: [
-              DunnoButton(
-                type: ButtonType.outlineCerise,
-                label: 'Edit Filters',
-                onPressed: () => Navigator.of(context).pop(),
-              ),
-            ]
-          ),
-          Expanded(
-            child: BlocProvider(
-              create: (_) => sl<FriendGiftSuggestionCubit>(),
+    return BlocProvider(
+      create: (_) => sl<FriendGiftSuggestionCubit>(),
+      child: Scaffold(
+        backgroundColor: AppColors.offWhite,
+        resizeToAvoidBottomInset: true,
+        body: Column(
+          children: [
+            CustomHeaderBar(
+              title: 'Gift Ideas for ${widget.friendData?['name'] ?? 'Friend'}',
+              backgroundColor: AppColors.offWhite,
+              onBack: () => Navigator.of(context).pop(),
+              backButtonColor: AppColors.cerise,
+              iconColor: AppColors.offWhite,
+              actions: [DunnoButton(type: ButtonType.outlineCerise, label: 'Edit Filters', icon: Icon(Icons.edit), onPressed: () => Navigator.of(context).pop())],
+            ),
+            Expanded(
               child: SingleChildScrollView(
                 child: BlocConsumer<FriendGiftSuggestionCubit, FriendGiftSuggestionState>(
                   listener: (context, state) {
@@ -171,10 +151,7 @@ class _FriendGiftSuggestionsScreenState extends State<FriendGiftSuggestionsScree
                         context.read<FriendGiftSuggestionCubit>().reset();
                         final profile = _buildProfileFromFriendData();
                         final filters = widget.filterData ?? {};
-                        context.read<FriendGiftSuggestionCubit>().generateSuggestions(
-                          profile: profile,
-                          filters: filters,
-                        );
+                        context.read<FriendGiftSuggestionCubit>().generateSuggestions(profile: profile, filters: filters);
                       });
 
                       return Padding(
@@ -213,14 +190,9 @@ class _FriendGiftSuggestionsScreenState extends State<FriendGiftSuggestionsScree
                             children: [
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(8),
-                                child: LinearProgressIndicator(
-                                  minHeight: 8,
-                                  backgroundColor: AppColors.offWhite,
-                                  valueColor: AlwaysStoppedAnimation<Color>(AppColors.cerise),
-                                ),
+                                child: LinearProgressIndicator(minHeight: 8, backgroundColor: AppColors.offWhite, valueColor: AlwaysStoppedAnimation<Color>(AppColors.cerise)),
                               ),
                               const SizedBox(height: 20),
-
                               AnimatedSwitcher(
                                 duration: const Duration(milliseconds: 400),
                                 child: Text(
@@ -240,15 +212,7 @@ class _FriendGiftSuggestionsScreenState extends State<FriendGiftSuggestionsScree
                       return Column(
                         children: [
                           const SizedBox(height: 24),
-                          Center(
-                            child: Lottie.asset(
-                              'assets/animations/birthday_gifts_pink.json',
-                              repeat: false,
-                              width: 300,
-                              height: 300,
-                              fit: BoxFit.contain,
-                            ),
-                          ),
+                          Center(child: Lottie.asset('assets/animations/birthday_gifts_pink.json', repeat: false, width: 300, height: 300, fit: BoxFit.contain)),
                         ],
                       );
                     }
@@ -265,58 +229,9 @@ class _FriendGiftSuggestionsScreenState extends State<FriendGiftSuggestionsScree
                             itemCount: suggestions.length,
                             itemBuilder: (context, index) {
                               final suggestion = suggestions[index];
-                              return GiftSuggestionCard(
-                                suggestion: suggestion,
-                                index: index,
-                                isPink: true,
-                                isSaved: false,
-                              );
+                              return GiftSuggestionCard(suggestion: suggestion, index: index, isPink: true, isSaved: false);
                             },
                           ),
-                          // Padding(
-                          //   padding: const EdgeInsets.all(20),
-                          //   child: Column(
-                          //     children: [
-                          //       DunnoTextField(
-                          //         controller: _refinementController,
-                          //         label: 'Refine suggestions',
-                          //         supportingText: 'e.g., "I like the first suggestion, but prefer something more practical"',
-                          //         keyboardType: TextInputType.text,
-                          //         isLight: true,
-                          //         colorScheme: DunnoTextFieldColor.pink,
-                          //         maxLines: 3,
-                          //         onChanged: (value) {},
-                          //       ),
-                          //       const SizedBox(height: 16),
-                          //       Row(
-                          //         children: [
-                          //           Expanded(
-                          //             child: DunnoButton(
-                          //               type: ButtonType.outlineCerise,
-                          //               label: 'Edit Filters',
-                          //               onPressed: () => Navigator.of(context).pop(),
-                          //             ),
-                          //           ),
-                          //           const SizedBox(width: 12),
-                          //           Expanded(
-                          //             child: DunnoButton(
-                          //               type: ButtonType.primary,
-                          //               label: 'Regenerate',
-                          //               onPressed: () {
-                          //                 final refinement = _refinementController.text.trim();
-                          //                 final updatedFilters = Map<String, dynamic>.from(widget.filterData ?? {});
-                          //                 if (refinement.isNotEmpty) updatedFilters['refinement'] = refinement;
-                          //                 final profile = _buildProfileFromFriendData();
-                          //                 context.read<FriendGiftSuggestionCubit>().generateSuggestions(profile: profile, filters: updatedFilters);
-                          //                 _refinementController.clear();
-                          //               },
-                          //             ),
-                          //           ),
-                          //         ],
-                          //       ),
-                          //     ],
-                          //   ),
-                          // ),
                         ],
                       );
                     }
@@ -332,9 +247,17 @@ class _FriendGiftSuggestionsScreenState extends State<FriendGiftSuggestionsScree
                               children: [
                                 Icon(Icons.error_outline, size: 64, color: AppColors.errorRed),
                                 const SizedBox(height: 20),
-                                Text('Oops! Something went wrong', style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w600, color: AppColors.black), textAlign: TextAlign.center),
+                                Text(
+                                  'Oops! Something went wrong',
+                                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w600, color: AppColors.black),
+                                  textAlign: TextAlign.center,
+                                ),
                                 const SizedBox(height: 12),
-                                Text(state.main.errorMessage ?? 'Unknown error occurred', style: const TextStyle(fontSize: 16, color: Colors.grey), textAlign: TextAlign.center),
+                                Text(
+                                  state.main.errorMessage ?? 'Unknown error occurred',
+                                  style: const TextStyle(fontSize: 16, color: Colors.grey),
+                                  textAlign: TextAlign.center,
+                                ),
                                 const SizedBox(height: 30),
                                 DunnoButton(type: ButtonType.primary, label: 'Try Again', onPressed: () => context.read<FriendGiftSuggestionCubit>().retryGeneration()),
                               ],
@@ -349,55 +272,74 @@ class _FriendGiftSuggestionsScreenState extends State<FriendGiftSuggestionsScree
                 ),
               ),
             ),
-          ),
-        ],
-      ),
-      bottomNavigationBar: AnimatedPadding(
-        padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-        duration: const Duration(milliseconds: 180),
-        curve: Curves.easeOut,
-        child: SafeArea(
-          minimum: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Expanded(
-                    child: DunnoTextField(
-                      controller: _refinementController,
-                      supportingText: 'e.g., "I like the first suggestion, but prefer something more practical"',
-                      keyboardType: TextInputType.text,
-                      isLight: true,
-                      colorScheme: DunnoTextFieldColor.pink,
-                      maxLines: 1,
-                      onChanged: (value) {},
-                    ),
+          ],
+        ),
+        bottomNavigationBar: BlocBuilder<FriendGiftSuggestionCubit, FriendGiftSuggestionState>(
+          builder: (context, state) {
+            if (state is! FriendGiftSuggestionLoaded) {
+              return const SizedBox.shrink();
+            }
+
+            return AnimatedPadding(
+              padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+              duration: const Duration(milliseconds: 180),
+              curve: Curves.easeOut,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: AppColors.black,
+                  boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 8, offset: const Offset(0, -2))],
+                ),
+                child: SafeArea(
+                  minimum: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            child: Container(
+                              decoration: BoxDecoration(color: AppColors.offWhite, borderRadius: BorderRadius.circular(30)),
+                              child: DunnoTextField(controller: _refinementController, supportingText: 'e.g., "I like the first suggestion, but prefer something more practical"', keyboardType: TextInputType.text, isLight: true, colorScheme: DunnoTextFieldColor.pink, onChanged: (value) {}),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          InkWell(
+                            onTap: () {
+                              final refinement = _refinementController.text.trim();
+                              if (refinement.isEmpty) {
+                                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please enter some refinement instructions'), backgroundColor: Colors.orange));
+                                return;
+                              }
+
+                              final updatedFilters = Map<String, dynamic>.from(widget.filterData ?? {});
+                              updatedFilters['refinement'] = refinement;
+                              final profile = _buildProfileFromFriendData();
+                              context.read<FriendGiftSuggestionCubit>().generateSuggestions(profile: profile, filters: updatedFilters);
+                              _refinementController.clear();
+
+                              FocusScope.of(context).unfocus();
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                color: AppColors.cerise,
+                                shape: BoxShape.circle,
+                                boxShadow: [BoxShadow(color: AppColors.cerise.withOpacity(0.3), blurRadius: 4, offset: const Offset(0, 2))],
+                              ),
+                              child: Icon(Icons.send, color: AppColors.offWhite, size: 20),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
-                  const SizedBox(width: 10),
-                  IconButton(onPressed: () {}, icon: Icon(Icons.send, color: AppColors.cerise)),
-                  // DunnoButton(
-                  //   type: ButtonType.primary,
-                  //   label: 'Regenerate',
-                  //   onPressed: () {
-                  //     final refinement = _refinementController.text.trim();
-                  //     final updatedFilters = Map<String, dynamic>.from(widget.filterData ?? {});
-                  //     if (refinement.isNotEmpty) updatedFilters['refinement'] = refinement;
-                  //     final profile = _buildProfileFromFriendData();
-                  //     context.read<FriendGiftSuggestionCubit>().generateSuggestions(profile: profile, filters: updatedFilters);
-                  //     _refinementController.clear();
-                  //   },
-                  // ),
-                ],
+                ),
               ),
-            ],
-          ),
+            );
+          },
         ),
       ),
-
     );
   }
 }

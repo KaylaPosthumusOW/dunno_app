@@ -75,11 +75,14 @@ class CustomHeaderBar extends StatelessWidget {
 
               if ((subtitle ?? '').isNotEmpty) ...[
                 const SizedBox(height: 6),
-                Text(
-                  subtitle!,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppColors.black),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  child: Text(
+                    subtitle!,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppColors.black),
+                  ),
                 ),
               ],
             ],

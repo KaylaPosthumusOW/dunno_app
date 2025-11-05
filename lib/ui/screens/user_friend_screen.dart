@@ -48,7 +48,13 @@ class _UserFriendScreenState extends State<UserFriendScreen> {
         return Scaffold(
           body: Column(
             children: [
-              CustomHeaderBar(title: 'Your Friends', onBack: () => Navigator.pop(context), backButtonColor: AppColors.cerise, iconColor: AppColors.offWhite, subtitle: 'Here you can see and manage your friends'),
+              CustomHeaderBar(
+                title: 'Your Friends',
+                subtitle: 'See all the friends you’ve connected with and make their next gift extra special.',
+                onBack: () => Navigator.pop(context),
+                backButtonColor: AppColors.cerise,
+                iconColor: AppColors.offWhite,
+              ),
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.all(20),

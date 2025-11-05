@@ -55,7 +55,7 @@ class _FriendGiftSuggestionManagementState extends State<FriendGiftSuggestionMan
           Expanded(child: AddFilterPage(onFilterUpdated: _handleFilterData, isFriendFlow: true)),
 
           Padding(
-            padding:  EdgeInsets.all(20),
+            padding:  EdgeInsets.only(left: 20, right: 20, bottom: 20),
             child: DunnoButton(type: ButtonType.primary, onPressed: _generateSuggestions, label: 'Generate Gift Suggestions'),
           ),
               ],

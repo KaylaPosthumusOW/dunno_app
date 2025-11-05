@@ -28,7 +28,8 @@ class _QrScannerScreenState extends State<QrScannerScreen> {
       body: Column(
         children: [
           CustomHeaderBar(
-            title: 'Scan QR', onBack: () => Navigator.pop(context),
+            title: 'Scan a QR Code', onBack: () => Navigator.pop(context),
+            subtitle: 'Quickly find a friend by scanning their profile QR code, no search needed.',
             backButtonColor: AppColors.cinnabar,
             iconColor: AppColors.offWhite,
           ),
@@ -47,28 +48,30 @@ class _QrScannerScreenState extends State<QrScannerScreen> {
                 }
               },
               builder: (context, state) {
-                return Stack(
-                  alignment: Alignment.bottomCenter,
-                  children: [
-                    state.mainQrState.cameraPreview,
-
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 24),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          IconButton(
-                            onPressed: () => _qrCubit.toggleFlash(state.mainQrState.flashStatus),
-                            icon: Icon(state.mainQrState.flashStatus ? Icons.flash_off : Icons.flash_on, color: Colors.white, size: 32),
-                          ),
-                          IconButton(
-                            onPressed: () => _qrCubit.flipCamera(flipStatus: state.mainQrState.flipStatus),
-                            icon: const Icon(Icons.flip_camera_ios, color: Colors.white, size: 32),
-                          ),
-                        ],
+                return Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Stack(
+                    alignment: Alignment.bottomCenter,
+                    children: [
+                      state.mainQrState.cameraPreview,
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 24),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            IconButton(
+                              onPressed: () => _qrCubit.toggleFlash(state.mainQrState.flashStatus),
+                              icon: Icon(state.mainQrState.flashStatus ? Icons.flash_off : Icons.flash_on, color: Colors.white, size: 32),
+                            ),
+                            IconButton(
+                              onPressed: () => _qrCubit.flipCamera(flipStatus: state.mainQrState.flipStatus),
+                              icon: const Icon(Icons.flip_camera_ios, color: Colors.white, size: 32),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 );
               },
             ),

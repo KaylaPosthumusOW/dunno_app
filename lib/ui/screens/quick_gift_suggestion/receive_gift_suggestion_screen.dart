@@ -65,6 +65,7 @@ class _ReceiveGiftSuggestionScreenState extends State<ReceiveGiftSuggestionScree
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.offWhite,
+      resizeToAvoidBottomInset: true, // Ensure keyboard handling works properly
       body: Column(
         children: [
           CustomHeaderBar(
