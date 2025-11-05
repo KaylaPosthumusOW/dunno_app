@@ -113,7 +113,7 @@ The app features a sophisticated social component where users can connect with f
   <img src="assets/mockup/onboarding.png" alt="Onboarding Flow" style="height: 300px; min-width: 200px; object-fit: contain;">
 </div>
 
-**Guided setup for new users** - Seamless introduction to Dunno with explanations of collection creation, finding and connecting with friends, and using quick suggestions.
+**1. Guided setup for new users** - Seamless introduction to Dunno with explanations of collection creation, finding and connecting with friends, and using quick suggestions.
 
 ---
 
@@ -144,6 +144,7 @@ The app features a sophisticated social component where users can connect with f
 </div>
 
 **1. Express your interests** - Create personalised collections of your favorite things, brands, hobbies, and preferences to help friends find the perfect gifts for you.
+
 **2. Keep preferences current** - Easily update and modify your collections as your interests evolve, ensuring friends always have up-to-date gift guidance.
 
 ---
@@ -154,35 +155,35 @@ The app features a sophisticated social component where users can connect with f
   <img src="assets/mockup/gift_boards.png" alt="Gift Board Management" style="height: 300px; min-width: 200px; object-fit: contain;">
 </div>
 
-**Complete gift organisation system** - Comprehensive gift board management with full CRUD functionality for organising and tracking your gift ideas.
+**1. Complete gift organisation system** - Comprehensive gift board management with full CRUD functionality for organising and tracking your gift ideas.
 
 ---
 
 ### Friend Gift Suggestions Flow
-
-#### Find & Connect with Friends
 <div align="center">
   <img src="assets/mockup/find_friends.png" alt="Friend Discovery" style="height: 300px; min-width: 200px; object-fit: contain;">
 </div>
 
 **1. Discover your network** - Search and connect with friends through various methods including username search, contact integration, and mutual friend suggestions.
+
 **2. View their profiles & Collections** - View detailed friend profiles showcasing their collections.
+
 **3. Add Your Preferences** - Filter your gift suggestion by adding your preferences, and amount of suggestions you would like to receive.
+
 **4. Receive Gift suggestions** - Receive your gift suggestions, based on the friends collection and your preferences.
+
 **5. Refine Suggestions** - You are able to refine your suggestions afterwards as well
 
 ---
 
 ### Quick Gift Suggestions Flow
-
-#### Quick Profile Input
 <div align="center">
   <img src="assets/mockup/quick_suggestions.png" alt="Quick Profile Input" style="height: 300px; min-width: 200px; object-fit: contain;">
 </div>
 
-**Fast recipient profiling** - Quickly input basic information about the gift recipient including age, gender, interests, and occasion for instant suggestions.
+**1. Fast recipient profiling** - Quickly input basic information about the gift recipient including age, gender, interests, and occasion for instant suggestions.
 
-**Immediate results** - Get instant AI-generated gift ideas without needing friend connections, perfect for last-minute shopping or distant acquaintances.
+**2. Immediate results** - Get instant AI-generated gift ideas without needing friend connections, perfect for last-minute shopping or distant acquaintances.
 
 ---
 
