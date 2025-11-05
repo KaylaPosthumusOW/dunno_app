@@ -56,6 +56,7 @@ class _GiftSuggestionManagementState extends State<GiftSuggestionManagement> {
         children: [
           CustomHeaderBar(
             title: 'Add Gift Suggestion Details',
+            subtitle: 'Tell us what you know, every little detail helps Dunno pick gifts that truly fit.',
             onBack: () => Navigator.pop(context),
             backButtonColor: AppColors.cinnabar,
             iconColor: AppColors.offWhite,

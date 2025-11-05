@@ -97,7 +97,7 @@ class _ViewAllCollectionsScreenState extends State<ViewAllCollectionsScreen> {
               CustomHeaderBar(
                 backgroundColor: AppColors.offWhite,
                 title: 'Your Collections',
-                subtitle: 'Manage and explore your collections',
+                subtitle: 'Manage and explore your collections.',
                 onBack: () => Navigator.pop(context),
                 backButtonColor: AppColors.yellow,
                 iconColor: AppColors.offWhite,

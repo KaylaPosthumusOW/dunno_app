@@ -46,7 +46,7 @@ class _GiftBoardScreenState extends State<GiftBoardScreen> {
         children: [
           CustomHeaderBar(
             title: 'Your Gift Boards',
-            subtitle: 'Organise and save your favorite gift suggestions in personal boards',
+            subtitle: 'Organise and save your favorite gift suggestions in personal boards.',
             onBack: () => Navigator.pop(context),
             backButtonColor: AppColors.tangerine,
             iconColor: AppColors.offWhite,

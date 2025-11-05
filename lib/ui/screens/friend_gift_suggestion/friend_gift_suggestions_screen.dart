@@ -92,7 +92,14 @@ class _FriendGiftSuggestionsScreenState extends State<FriendGiftSuggestionsScree
               onBack: () => Navigator.of(context).pop(),
               backButtonColor: AppColors.cerise,
               iconColor: AppColors.offWhite,
-              actions: [DunnoButton(type: ButtonType.outlineCerise, label: 'Edit Filters', icon: Icon(Icons.edit), onPressed: () => Navigator.of(context).pop())],
+              actions: [
+                DunnoButton(
+                  type: ButtonType.outlineCerise,
+                  label: 'Edit Filters',
+                  icon: Icon(Icons.edit),
+                  onPressed: () => Navigator.of(context).pop(),
+                ),
+              ],
             ),
             Expanded(
               child: SingleChildScrollView(

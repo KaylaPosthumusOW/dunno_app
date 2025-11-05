@@ -85,7 +85,7 @@ class _CollectionDetailsScreenState extends State<CollectionDetailsScreen> {
                 backButtonColor: AppColors.yellow,
                 iconColor: AppColors.offWhite,
                 title: 'My Wedding',
-                subtitle: 'This is your collection details, you can edit it here',
+                subtitle: 'This is your collection details, you can edit it here.',
                 actions: [
                   DunnoButton(
                     icon: const Icon(Icons.edit, color: Colors.white),

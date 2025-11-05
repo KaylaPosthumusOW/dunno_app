@@ -39,7 +39,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         children: [
           CustomHeaderBar(
             title: 'Edit Profile Details',
-            subtitle: 'Update your personal information',
+            subtitle: 'Update your personal information.',
             onBack: () => Navigator.pop(context),
             backButtonColor: AppColors.yellow,
             iconColor: AppColors.offWhite,

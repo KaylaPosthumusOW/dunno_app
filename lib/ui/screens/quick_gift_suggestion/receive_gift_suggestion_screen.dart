@@ -59,7 +59,21 @@ class _ReceiveGiftSuggestionScreenState extends State<ReceiveGiftSuggestionScree
         resizeToAvoidBottomInset: true,
         body: Column(
           children: [
-            CustomHeaderBar(title: 'Your Gift Suggestions', backgroundColor: Colors.transparent, onBack: () => Navigator.of(context).maybePop(), backButtonColor: AppColors.cinnabar, iconColor: AppColors.offWhite),
+            CustomHeaderBar(
+              title: 'Your Gift Suggestions',
+              backgroundColor: Colors.transparent,
+              onBack: () => Navigator.of(context).maybePop(),
+              backButtonColor: AppColors.cinnabar,
+              iconColor: AppColors.offWhite,
+              actions: [
+                DunnoButton(
+                  type: ButtonType.outlineCinnabar,
+                  label: 'Edit Profile/Filters',
+                  icon: Icon(Icons.edit),
+                  onPressed: () => Navigator.of(context).pop(),
+                ),
+              ],
+            ),
             Expanded(
               child: SingleChildScrollView(
                 child: BlocConsumer<AiGiftSuggestionCubit, AiGiftSuggestionState>(

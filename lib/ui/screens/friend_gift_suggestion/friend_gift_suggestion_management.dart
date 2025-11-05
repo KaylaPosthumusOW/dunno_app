@@ -43,7 +43,7 @@ class _FriendGiftSuggestionManagementState extends State<FriendGiftSuggestionMan
         children: [
           CustomHeaderBar(
             title: 'Fine-tune Preferences',
-            subtitle: 'Fine-tune your friend’s likes to help Dunno find the perfect gift match',
+            subtitle: 'Fine-tune your friend’s likes to help Dunno find the perfect gift match.',
             onBack: () => Navigator.of(context).maybePop(),
             backButtonColor: AppColors.cerise,
             iconColor: AppColors.offWhite,

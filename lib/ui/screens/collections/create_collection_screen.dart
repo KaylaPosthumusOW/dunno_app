@@ -135,7 +135,7 @@ class _CreateCollectionScreenState extends State<CreateCollectionScreen> {
         children: [
           CustomHeaderBar(
             title: title,
-            subtitle: 'Share your interests and preferences',
+            subtitle: 'Share your interests and preferences.',
             onBack: widget.isFirstTimeUser ? null : () => Navigator.pop(context),
             backButtonColor: widget.isFirstTimeUser ? AppColors.offWhite : AppColors.yellow,
             iconColor: AppColors.offWhite,
