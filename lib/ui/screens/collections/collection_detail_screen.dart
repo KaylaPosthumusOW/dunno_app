@@ -96,6 +96,26 @@ class _CollectionDetailsScreenState extends State<CollectionDetailsScreen> {
                       context.push(CREATE_COLLECTION_SCREEN);
                     },
                   ),
+                  PopupMenuButton(
+                    icon: Icon(Icons.more_vert_rounded, color: AppColors.black),
+                    itemBuilder: (context) => [
+                      PopupMenuItem(
+                        onTap: () {
+                          _collectionCubit.deleteCollection(collection.uid ?? '');
+                          Navigator.pop(context);
+                        },
+                        child: ListTile(
+                          title: Row(
+                            children: [
+                              Icon(Icons.edit, color: AppColors.tangerine, size: 20),
+                              SizedBox(width: 10),
+                              Text('Delete Collection'),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ],
               ),
               Expanded(
