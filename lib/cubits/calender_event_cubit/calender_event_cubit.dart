@@ -1,5 +1,6 @@
 import 'package:dunno/constants/constants.dart';
 import 'package:dunno/models/calender_events.dart';
+import 'package:dunno/models/collections.dart';
 import 'package:dunno/stores/firebase/calender_event_firebase_repository.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -59,6 +60,30 @@ class CalenderEventCubit extends Cubit<CalenderEventState> {
         allUserCalenderEvents: events, 
         numberOfUserCalenderEvents: events.length, 
         message: 'Calendar events for connection deleted'
+      )));
+    } catch (error, stackTrace) {
+      emit(CalenderError(state.mainCalenderEventState.copyWith(message: '', errorMessage: error.toString()), stackTrace: stackTrace.toString()));
+    }
+  }
+
+  Future<void> updateEventsWithCollection({required String collectionUid, required Collections updatedCollection}) async {
+    try {
+      await _calenderEventFirebaseRepository.updateEventsWithCollection(
+        collectionUid: collectionUid, 
+        updatedCollection: updatedCollection
+      );
+      
+      // Update the local state to reflect the collection changes
+      List<CalenderEvent> events = List.from(state.mainCalenderEventState.allUserCalenderEvents ?? []);
+      for (int i = 0; i < events.length; i++) {
+        if (events[i].collection?.uid == collectionUid) {
+          events[i] = events[i].copyWith(collection: updatedCollection);
+        }
+      }
+      
+      emit(LoadedCalenderEvent(state.mainCalenderEventState.copyWith(
+        allUserCalenderEvents: events,
+        message: 'Calendar events updated with collection changes'
       )));
     } catch (error, stackTrace) {
       emit(CalenderError(state.mainCalenderEventState.copyWith(message: '', errorMessage: error.toString()), stackTrace: stackTrace.toString()));

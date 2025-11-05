@@ -1,4 +1,5 @@
 import 'package:dunno/constants/constants.dart';
+import 'package:dunno/cubits/calender_event_cubit/calender_event_cubit.dart';
 import 'package:dunno/models/collections.dart';
 import 'package:dunno/stores/firebase/collection_firebase_repository.dart';
 import 'package:equatable/equatable.dart';
@@ -8,6 +9,7 @@ part 'collection_state.dart';
 
 class CollectionCubit extends Cubit<CollectionState> {
   final CollectionFirebaseRepository _collectionFirebaseRepository = sl<CollectionFirebaseRepository>();
+  final CalenderEventCubit _calenderEventCubit = sl<CalenderEventCubit>();
 
   CollectionCubit() : super(const CollectionInitial());
 
@@ -37,6 +39,14 @@ class CollectionCubit extends Cubit<CollectionState> {
     emit(UpdatingCollection(state.mainCollectionState.copyWith(message: 'Updating collection')));
     try {
       await _collectionFirebaseRepository.updateCollection(collection);
+
+      if (collection.uid != null) {
+        await _calenderEventCubit.updateEventsWithCollection(
+          collectionUid: collection.uid!,
+          updatedCollection: collection,
+        );
+      }
+      
       List<Collections> collectionsList = List.from(state.mainCollectionState.allUserCollections ?? []);
       int index = collectionsList.indexWhere((c) => c.uid == collection.uid);
       if (index != -1) {
@@ -48,7 +58,7 @@ class CollectionCubit extends Cubit<CollectionState> {
         selected = collection;
       }
 
-      emit(UpdatedCollection(state.mainCollectionState.copyWith(allUserCollections: collectionsList, selectedCollection: selected, message: 'Collection updated', errorMessage: '')));
+      emit(UpdatedCollection(state.mainCollectionState.copyWith(allUserCollections: collectionsList, selectedCollection: selected, message: 'Collection and related calendar events updated', errorMessage: '')));
     } catch (error, stackTrace) {
       emit(CollectionError(state.mainCollectionState.copyWith(message: '', errorMessage: error.toString()), stackTrace: stackTrace.toString()));
     }
@@ -100,29 +110,4 @@ class CollectionCubit extends Cubit<CollectionState> {
       );
     }
   }
-
-  // void searchGiftBoards(String query, {bool reset = false}) {
-  //   emit(SearchingGiftBoards(state.mainGiftBoardState.copyWith(message: 'Searching gift boards...')));
-  //   try {
-  //     List<GiftBoard>? allItems = state.mainGiftBoardState.allUserGiftBoards ?? [];
-  //     List<GiftBoard>? searchedItems = [];
-  //     if (reset) {
-  //       searchedItems = allItems;
-  //     } else {
-  //       searchedItems = allItems.where((item) {
-  //         final title = item.boardName?.toLowerCase();
-  //         final searchLower = query.toLowerCase();
-  //         return (title != null && title.contains(searchLower));
-  //       }).toList();
-  //     }
-  //     emit(SearchedGiftBoards(state.mainGiftBoardState.copyWith(searchedBoards: searchedItems, message: 'Searched gift boards', errorMessage: '')));
-  //   } catch (error, stackTrace) {
-  //     emit(
-  //       GiftBoardError(
-  //         state.mainGiftBoardState.copyWith(message: '', errorMessage: error.toString()),
-  //         stackTrace: stackTrace.toString(),
-  //       ),
-  //     );
-  //   }
-  // }
 }

@@ -81,7 +81,6 @@ class AppUserProfileCubit extends Cubit<AppUserProfileState> {
       }
       await _appUserProfileRepository.updateUserProfile(userProfile: appUserProfile);
 
-      // Update related entities when user profile is updated
       if (myProfile) {
         await _updateRelatedEntities(appUserProfile);
       }
@@ -114,6 +113,11 @@ class AppUserProfileCubit extends Cubit<AppUserProfileState> {
       for (final event in events) {
         bool needsUpdate = false;
         var updatedEvent = event;
+
+        if (event.user?.uid == updatedProfile.uid) {
+          updatedEvent = updatedEvent.copyWith(user: updatedProfile);
+          needsUpdate = true;
+        }
 
         if (event.user?.uid == updatedProfile.uid) {
           updatedEvent = updatedEvent.copyWith(user: updatedProfile);

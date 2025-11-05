@@ -84,7 +84,7 @@ class _CollectionDetailsScreenState extends State<CollectionDetailsScreen> {
                 onBack: () => Navigator.pop(context),
                 backButtonColor: AppColors.yellow,
                 iconColor: AppColors.offWhite,
-                title: 'My Wedding',
+                title: state.mainCollectionState.selectedCollection?.title ?? 'Collection',
                 subtitle: 'This is your collection details, you can edit it here.',
                 actions: [
                   DunnoButton(

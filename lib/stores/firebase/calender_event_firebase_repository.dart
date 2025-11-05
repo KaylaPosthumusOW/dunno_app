@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dunno/models/calender_events.dart';
+import 'package:dunno/models/collections.dart';
 import 'package:dunno/stores/calender_event_store.dart';
 import 'package:get_it/get_it.dart';
 
@@ -70,6 +71,33 @@ class CalenderEventFirebaseRepository implements CalenderEventStore {
       await batch.commit();
     } catch (e) {
       throw Exception('Failed to delete events for connection: $e');
+    }
+  }
+
+  @override
+  Future<void> updateEventsWithCollection({required String collectionUid, required Collections updatedCollection}) async {
+    try {
+      // Find all calendar events that reference this collection
+      final eventsQuery = await _calenderCollection
+          .where('collection.uid', isEqualTo: collectionUid)
+          .get();
+      
+      if (eventsQuery.docs.isEmpty) {
+        return; // No events to update
+      }
+      
+      // Update all matching events with the new collection data
+      final batch = _calenderCollection.firestore.batch();
+      
+      for (var doc in eventsQuery.docs) {
+        final event = doc.data();
+        final updatedEvent = event.copyWith(collection: updatedCollection);
+        batch.set(doc.reference, updatedEvent, SetOptions(merge: true));
+      }
+      
+      await batch.commit();
+    } catch (e) {
+      throw Exception('Failed to update calendar events with collection: $e');
     }
   }
 
