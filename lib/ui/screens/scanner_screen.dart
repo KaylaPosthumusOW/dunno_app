@@ -30,8 +30,8 @@ class _QrScannerScreenState extends State<QrScannerScreen> {
           CustomHeaderBar(
             title: 'Scan a QR Code', onBack: () => Navigator.pop(context),
             subtitle: 'Quickly find a friend by scanning their profile QR code, no search needed.',
-            backButtonColor: AppColors.cinnabar,
-            iconColor: AppColors.offWhite,
+            backButtonColor: AppColors.pinkLavender,
+            iconColor: AppColors.cerise,
           ),
           Expanded(
             child: BlocConsumer<QrCubit, QrState>(

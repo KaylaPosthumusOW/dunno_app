@@ -12,7 +12,7 @@
 </br>
 <p align="center">
   <div align="center">
-   <img src="assets/mockups/dunno_logo_placeholder.png" alt="Dunno Logo" height="70">
+   <img src="assets/mockup/app_icon.png" alt="Dunno Logo" height="70">
   </div>
   <h3 align="center">Dunno</h3>
   <p align="center">
@@ -39,7 +39,7 @@
 - [Contact](#contact)
 
 ## About Dunno
-<img src="assets/mockups/homepage_mockup.png" alt="Dunno Homepage" height="400" align="center">
+<img src="assets/mockup/homepage_with_hand.png" alt="Dunno Homepage" height="400" align="center">
 
 ### Project Description
 Dunno is an innovative AI-powered gift suggestion application that eliminates the guesswork from gift-giving. Whether you're shopping for a close friend, family member, or colleague, Dunno leverages artificial intelligence to generate personalized gift recommendations based on detailed profiles, preferences, and occasions.
@@ -108,45 +108,142 @@ The app features a sophisticated social component where users can connect with f
 
 ## Dunno Features & Functionality
 
-### 🎁 AI-Powered Gift Suggestions
-<img src="assets/mockups/ai_suggestions_mockup.png" alt="AI Gift Suggestions" height="300" align="right">
+### Easy Onboarding
+<div align="center">
+  <img src="assets/mockups/onboarding_flow_placeholder.png" alt="Onboarding Flow" style="height: 300px; min-width: 200px; object-fit: contain;">
+</div>
 
-- **Quick Suggestions**: Generate instant gift ideas based on basic recipient information
-- **Friend-Based Suggestions**: Leverage friend's collection data for personalized recommendations
-- **Advanced Filtering**: Filter by budget, category, relationship type, and location
-- **Smart Refinement**: Iterative improvement of suggestions based on user feedback
-- **Local Store Integration**: Prioritizes South African retailers (Takealot, Woolworths, etc.)
+**Guided setup for new users** - Seamless introduction to Dunno with step-by-step profile creation, preference setting, and feature walkthrough to get users started quickly.
 
-### 👥 Social Features
-- **Friend Connections**: Connect with friends to access their gift preferences
-- **Collections**: Create and share personal collections of interests and preferences
-- **Profile Management**: Detailed user profiles with preferences and gift history
-- **Friend Discovery**: Find and connect with friends through search functionality
+---
 
-### 📋 Gift Board Management
-<img src="assets/mockups/gift_boards_mockup.png" alt="Gift Boards" height="300" align="left">
+### Homepage & Dashboard
+<div align="center">
+  <img src="assets/mockups/homepage_placeholder.png" alt="Homepage Dashboard" style="height: 300px; min-width: 200px; object-fit: contain;">
+</div>
 
-- **Custom Gift Boards**: Organize gift ideas by recipient, occasion, or category
-- **Board Sharing**: Share gift boards with friends and family
-- **Suggestion Saving**: Save favorite gift suggestions to boards for later reference
-- **Visual Organization**: Image-rich boards for easy browsing
+**Personalized home experience** - Central hub featuring quick access to gift suggestions, upcoming events, friend activity, and personalized recommendations based on your connections and preferences.
 
-### 🔍 Advanced Search & Discovery
-- **Real-time Search**: Find collections and gift boards with smart debounced search
-- **Filter Integration**: Multiple filtering options for precise results
-- **Smart Recommendations**: AI-driven suggestions based on user behavior and preferences
+---
 
-### 📱 User Experience Features
-- **Onboarding Flow**: Guided setup for new users
-- **Custom UI Components**: Consistent design system with custom headers, buttons, and forms
-- **Loading Animations**: Engaging Lottie animations during AI processing
-- **Success Feedback**: Visual confirmation of completed actions
-- **Error Handling**: Graceful error recovery with retry mechanisms
+### Calendar Integration
+<div align="center">
+  <img src="assets/mockups/calendar_placeholder.png" alt="Calendar Integration" style="height: 300px; min-width: 200px; object-fit: contain;">
+</div>
 
-### 🛡️ Security & Privacy
-- **Firebase Authentication**: Secure user authentication with multiple providers
-- **Data Encryption**: Secure storage of user data and preferences
-- **Privacy Controls**: User control over data sharing and visibility
+**Never miss an occasion** - Smart calendar that tracks important dates, birthdays, and events for your friends and family with integrated gift reminder notifications.
+
+---
+
+### QR Code Scanner
+<div align="center">
+  <img src="assets/mockups/qr_scanner_placeholder.png" alt="QR Code Scanner" style="height: 300px; min-width: 200px; object-fit: contain;">
+</div>
+
+**Instant friend connections** - Quick and easy way to connect with friends by scanning QR codes from their profiles, making the social aspect seamless and immediate.
+
+---
+
+### Find & Connect with Friends
+<div align="center">
+  <img src="assets/mockups/friend_discovery_placeholder.png" alt="Friend Discovery" style="height: 300px; min-width: 200px; object-fit: contain;">
+</div>
+
+**Discover your network** - Search and connect with friends through various methods including username search, contact integration, and mutual friend suggestions.
+
+---
+
+### Friend Profile Viewing
+<div align="center">
+  <img src="assets/mockups/friend_profile_placeholder.png" alt="Friend Profile" style="height: 300px; min-width: 200px; object-fit: contain;">
+</div>
+
+**Understand their preferences** - View detailed friend profiles showcasing their collections, interests, preferred brands, and gift history to make informed gift decisions.
+
+---
+
+### Collections Management
+
+#### Create Collections
+<div align="center">
+  <img src="assets/mockups/create_collection_placeholder.png" alt="Create Collection" style="height: 300px; min-width: 200px; object-fit: contain;">
+</div>
+
+**Express your interests** - Create personalized collections of your favorite things, brands, hobbies, and preferences to help friends find the perfect gifts for you.
+
+#### View Collections
+<div align="center">
+  <img src="assets/mockups/view_collections_placeholder.png" alt="View Collections" style="height: 300px; min-width: 200px; object-fit: contain;">
+</div>
+
+**Browse and explore** - Discover collections from friends and family, exploring their interests and getting inspiration for gift ideas.
+
+#### Edit Collections
+<div align="center">
+  <img src="assets/mockups/edit_collection_placeholder.png" alt="Edit Collection" style="height: 300px; min-width: 200px; object-fit: contain;">
+</div>
+
+**Keep preferences current** - Easily update and modify your collections as your interests evolve, ensuring friends always have up-to-date gift guidance.
+
+---
+
+### Friend Gift Suggestions Flow
+
+#### Select Friend & Collection
+<div align="center">
+  <img src="assets/mockups/friend_selection_placeholder.png" alt="Friend Selection" style="height: 300px; min-width: 200px; object-fit: contain;">
+</div>
+
+**Choose your recipient** - Select a friend and explore their collections to understand their preferences before generating personalized gift suggestions.
+
+#### Apply Filters
+<div align="center">
+  <img src="assets/mockups/gift_filters_placeholder.png" alt="Gift Filters" style="height: 300px; min-width: 200px; object-fit: contain;">
+</div>
+
+**Refine your search** - Apply advanced filters including budget range, category, relationship type, occasion, and preferred retailers for targeted suggestions.
+
+#### AI-Generated Suggestions
+<div align="center">
+  <img src="assets/mockups/friend_suggestions_placeholder.png" alt="Friend Gift Suggestions" style="height: 300px; min-width: 200px; object-fit: contain;">
+</div>
+
+**Personalized recommendations** - Receive AI-powered gift suggestions based on your friend's collection data, filtered preferences, and local store availability.
+
+---
+
+### Quick Gift Suggestions Flow
+
+#### Quick Profile Input
+<div align="center">
+  <img src="assets/mockups/quick_profile_placeholder.png" alt="Quick Profile Input" style="height: 300px; min-width: 200px; object-fit: contain;">
+</div>
+
+**Fast recipient profiling** - Quickly input basic information about the gift recipient including age, gender, interests, and occasion for instant suggestions.
+
+#### Instant AI Suggestions
+<div align="center">
+  <img src="assets/mockups/quick_suggestions_placeholder.png" alt="Quick Suggestions" style="height: 300px; min-width: 200px; object-fit: contain;">
+</div>
+
+**Immediate results** - Get instant AI-generated gift ideas without needing friend connections, perfect for last-minute shopping or distant acquaintances.
+
+---
+
+### Gift Board Management
+<div align="center">
+  <img src="assets/mockups/gift_board_management_placeholder.png" alt="Gift Board Management" style="height: 300px; min-width: 200px; object-fit: contain;">
+</div>
+
+**Complete gift organization system** - Comprehensive gift board management with full CRUD functionality for organizing and tracking your gift ideas.
+
+**Key Features:**
+- **Create Gift Boards**: Design custom gift boards for different people, occasions, or categories to keep your gift planning organized and accessible
+- **View Gift Boards**: Browse your entire collection with visual organization and easy navigation to find stored suggestions quickly
+- **Edit Gift Boards**: Update board details, reorganize saved suggestions, and modify settings to keep your planning current and relevant
+- **Save Suggestions**: Capture any AI-generated gift suggestions to your boards for future reference and organized gift planning
+- **Board Categories**: Organize by recipient, occasion, budget range, or custom categories for maximum flexibility
+- **Visual Organization**: Image-rich boards with thumbnails and previews for easy browsing and quick identification
 
 ## User Testing
 
@@ -201,6 +298,28 @@ The app features a sophisticated social component where users can connect with f
   <img src="assets/mockups/collection_details_mockup.png" alt="Collection Details" width="200" style="margin: 10px;">
 </div>
 
+## Challenges & Solutions
+
+Throughout the development of Dunno, several significant challenges were encountered and overcome, each providing valuable learning experiences and technical growth.
+
+**Challenges:**
+- Data consistency between calendar events and collections
+- Profile image upload blocking entire interface 
+- Inconsistent UI styling across screens
+- Documentation lacking logical structure and visual appeal
+- QR code implementation requiring specialized knowledge
+- AI integration while maintaining performance
+- Gathering actionable feedback from diverse user groups
+
+**Solutions:**
+- Implemented cascade update system using Firebase batch operations
+- Removed blocking dialogs and added contextual loading feedback
+- Standardized components with consistent styling patterns
+- Restructured documentation with user flow-based approach
+- Collaborated with experienced developers for technical expertise
+- Used smart caching, error handling, and AI assistance for optimization
+- Conducted comprehensive testing sessions with iterative improvements
+
 ## Development
 
 ### Architecture
@@ -241,18 +360,28 @@ lib/
 - Institution: The Open Window
 - Year: 2025
 
+## Acknowledgements
+
+I would like to extend my sincere gratitude to the following individuals and resources who made this project possible:
+
+### Development Support
+- **Herman Potgieter** - For invaluable assistance with QR code implementation and technical guidance
+- **Donovin de Kock** - For contributing expertise and support with QR code functionality and integration
+
+### AI Assistance
+- **OpenAI & ChatGPT** - For providing AI-powered development assistance, code suggestions, and problem-solving support throughout the development process
+- **GitHub Copilot** - For intelligent code completion and development acceleration
+
+### Academic Guidance
+- **Course Lecturer** - For providing essential feedback, insights on AI integration, and academic direction that shaped the project's development and learning outcomes
+
+### User Experience
+- **User Testers** - For their valuable feedback, suggestions, and real-world testing that helped identify issues and improve the overall app experience and usability
+
+Their contributions, feedback, and support have been instrumental in bringing Dunno to life and ensuring its quality and functionality.
+
 ## Contact
 
 - **GitHub**: [@KaylaPosthumusOW](https://github.com/KaylaPosthumusOW)
 - **Email**: [231096@virtualwindow.co.za](mailto:231096@virtualwindow.co.za)
 - **Project Link**: [https://github.com/KaylaPosthumusOW/dunno_app](https://github.com/KaylaPosthumusOW/dunno_app)
-
----
-
-<p align="center">
-  Made with ❤️ for gift-givers everywhere
-</p>
-- **CachedNetworkImage**: Image caching
-- **Google Fonts**: Typography
-- **FontAwesome**: Icon library
-- **Frame Packages**: Custom packages for Frame functionality (see `pubspec.yaml`)
