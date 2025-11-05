@@ -54,15 +54,21 @@ class _UserProfileCardState extends State<UserProfileCard> {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                CircleAvatar(
-                  radius: 30,
-                  backgroundColor: AppColors.pinkLavender.withValues(alpha: 0.5),
-                  backgroundImage: widget.userProfile.profilePicture != null
-                      ? NetworkImage(widget.userProfile.profilePicture!)
-                      : null,
-                  child: widget.userProfile.profilePicture == null
-                      ? Icon(Icons.person, size: 30, color: AppColors.cerise)
-                      : null,
+                Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(color: AppColors.offWhite, width: 2),
+                    shape: BoxShape.circle,
+                  ),
+                  child: CircleAvatar(
+                    radius: 30,
+                    backgroundColor: AppColors.pinkLavender.withValues(alpha: 0.5),
+                    backgroundImage: widget.userProfile.profilePicture != null
+                        ? NetworkImage(widget.userProfile.profilePicture!)
+                        : null,
+                    child: widget.userProfile.profilePicture == null
+                        ? Icon(Icons.person, size: 30, color: AppColors.cerise)
+                        : null,
+                  ),
                 ),
                 const SizedBox(width: 16),
                 Expanded(

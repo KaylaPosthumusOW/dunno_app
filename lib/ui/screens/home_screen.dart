@@ -85,6 +85,10 @@ class _HomeScreenState extends State<HomeScreen> {
             actions: [
               Container(
                 margin: const EdgeInsets.only(right: 10),
+                decoration: BoxDecoration(
+                  border: Border.all(color: AppColors.offWhite, width: 2),
+                  shape: BoxShape.circle,
+                ),
                 child: CircleAvatar(
                   backgroundColor: Colors.grey.shade400,
                   backgroundImage: state.mainAppUserProfileState.appUserProfile?.profilePicture != null ? NetworkImage(state.mainAppUserProfileState.appUserProfile!.profilePicture!) : null,

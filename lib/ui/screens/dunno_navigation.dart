@@ -66,8 +66,8 @@ class _DunnoNavigationScreenState extends State<DunnoNavigationScreen> {
                     unselectedLabelColor: AppColors.pinkLavender,
                     tabs: [
                       Tab(icon: Icon(Icons.home_rounded), text: 'Home'),
-                      Tab(icon: Icon(Icons.image_rounded), text: 'Find Friends'),
-                      Tab(icon: Icon(Icons.people_rounded), text: 'Quick Suggestion'),
+                      Tab(icon: Icon(Icons.image_rounded), text: 'Friends'),
+                      Tab(icon: Icon(Icons.people_rounded), text: 'Suggestion'),
                       Tab(icon: Icon(Icons.person_rounded), text: 'Profile'),
                     ],
                   ),

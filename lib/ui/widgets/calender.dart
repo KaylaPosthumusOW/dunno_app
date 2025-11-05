@@ -167,18 +167,24 @@ class _ModernCalendarState extends State<ModernCalendar> {
         ),
         child: Row(
           children: [
-            CircleAvatar(
-              radius: 12,
-              backgroundColor: AppColors.offWhite,
-              backgroundImage: event.friend?.profilePicture != null
-                  ? NetworkImage(event.friend!.profilePicture!)
-                  : null,
-              child: event.friend?.profilePicture == null
-                  ? Text(
-                      _initials(event.friend?.name, event.friend?.surname),
-                      style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
-                    )
-                  : null,
+            Container(
+              decoration: BoxDecoration(
+                border: Border.all(color: AppColors.offWhite, width: 1),
+                shape: BoxShape.circle,
+              ),
+              child: CircleAvatar(
+                radius: 12,
+                backgroundColor: AppColors.offWhite,
+                backgroundImage: event.friend?.profilePicture != null
+                    ? NetworkImage(event.friend!.profilePicture!)
+                    : null,
+                child: event.friend?.profilePicture == null
+                    ? Text(
+                        _initials(event.friend?.name, event.friend?.surname),
+                        style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
+                      )
+                    : null,
+              ),
             ),
             const SizedBox(width: 8),
             Expanded(

@@ -88,12 +88,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     final storageReference = sl<FirebaseStorage>().ref().child('user').child(_appUserProfileCubit.state.mainAppUserProfileState.appUserProfile!.uid!);
 
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (_) => const Center(child: CircularProgressIndicator()),
-    );
-
     try {
       if (source == _PhotoSource.camera) {
         _imageUploaderCubit.singleSelectImageFromCameraToUploadToReference(storageRef: storageReference);
@@ -102,7 +96,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       }
     } catch (e) {
       if (!mounted) return;
-      Navigator.of(context, rootNavigator: true).pop();
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Upload failed: $e')));
     }
   }
@@ -201,13 +194,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
             await _appUserProfileCubit.updateProfile(profile.copyWith(profilePicture: _downloadUrl));
           }
           if (!mounted) return;
-          Navigator.of(context, rootNavigator: true).maybePop();
           setState(() {});
         }
 
         if (state is SPFileUploaderErrorState) {
           if (mounted) {
-            Navigator.of(context, rootNavigator: true).maybePop();
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.mainSPFileUploadState.errorMessage ?? state.mainSPFileUploadState.message ?? 'Upload error')));
           }
         }
@@ -278,9 +269,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         child: SizedBox(
                           width: 200,
                           height: 200,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(75.0),
-                            child: DunnoExtendedImage(url: _downloadUrl!),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border.fromBorderSide(BorderSide(color: AppColors.offWhite, width: 4)),
+                              shape: BoxShape.circle,
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(100),
+                              child: DunnoExtendedImage(url: _downloadUrl!),
+                            ),
                           ),
                         ),
                       ),
@@ -448,7 +445,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       final collection = collections[index];
                       return Container(
                         margin: EdgeInsets.only(right: index == displayCount - 1 ? 0 : 15),
-                        child: CollectionCard(collection: collection, colorType: CollectionColorType.yellow),
+                        child: CollectionCard(collection: collection, colorType: CollectionColorType.yellow, onPressed: () {
+                          _collectionCubit.setSelectedCollection(collection);
+                          context.pushNamed(COLLECTION_DETAIL_SCREEN);
+                        },),
                       );
                     },
                   ),

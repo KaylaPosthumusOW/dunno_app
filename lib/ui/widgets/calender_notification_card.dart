@@ -53,16 +53,22 @@ class _CalenderNotificationCardState extends State<CalenderNotificationCard> {
           return Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              CircleAvatar(
-                radius: 24,
-                backgroundColor: AppColors.yellow,
-                backgroundImage: (photoUrl.isNotEmpty) ? NetworkImage(photoUrl) : null,
-                child: (photoUrl.isEmpty)
-                    ? Text(
-                        _initials(friend?.name, friend?.surname),
-                        style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
-                      )
-                    : null,
+              Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: AppColors.offWhite, width: 2),
+                  shape: BoxShape.circle,
+                ),
+                child: CircleAvatar(
+                  radius: 24,
+                  backgroundColor: AppColors.yellow,
+                  backgroundImage: (photoUrl.isNotEmpty) ? NetworkImage(photoUrl) : null,
+                  child: (photoUrl.isEmpty)
+                      ? Text(
+                          _initials(friend?.name, friend?.surname),
+                          style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+                        )
+                      : null,
+                ),
               ),
               const SizedBox(width: 12),
               Expanded(
