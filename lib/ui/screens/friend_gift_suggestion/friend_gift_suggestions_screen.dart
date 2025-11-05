@@ -78,13 +78,6 @@ class _FriendGiftSuggestionsScreenState extends State<FriendGiftSuggestionsScree
   }
 
   @override
-  void dispose() {
-    _refinementController.dispose();
-    _stopMessageCycler();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => sl<FriendGiftSuggestionCubit>(),
@@ -190,7 +183,7 @@ class _FriendGiftSuggestionsScreenState extends State<FriendGiftSuggestionsScree
                             children: [
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(8),
-                                child: LinearProgressIndicator(minHeight: 8, backgroundColor: AppColors.offWhite, valueColor: AlwaysStoppedAnimation<Color>(AppColors.cerise)),
+                                child: LinearProgressIndicator(minHeight: 8, backgroundColor: AppColors.pinkLavender, valueColor: AlwaysStoppedAnimation<Color>(AppColors.cerise)),
                               ),
                               const SizedBox(height: 20),
                               AnimatedSwitcher(
@@ -325,9 +318,9 @@ class _FriendGiftSuggestionsScreenState extends State<FriendGiftSuggestionsScree
                               decoration: BoxDecoration(
                                 color: AppColors.cerise,
                                 shape: BoxShape.circle,
-                                boxShadow: [BoxShadow(color: AppColors.cerise.withOpacity(0.3), blurRadius: 4, offset: const Offset(0, 2))],
+                                boxShadow: [BoxShadow(color: AppColors.cerise.withValues(alpha: 0.3), blurRadius: 4, offset: const Offset(0, 2))],
                               ),
-                              child: Icon(Icons.send, color: AppColors.offWhite, size: 20),
+                              child: Icon(Icons.send, color: AppColors.offWhite, size: 30),
                             ),
                           ),
                         ],
@@ -341,5 +334,12 @@ class _FriendGiftSuggestionsScreenState extends State<FriendGiftSuggestionsScree
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _refinementController.dispose();
+    _stopMessageCycler();
+    super.dispose();
   }
 }
