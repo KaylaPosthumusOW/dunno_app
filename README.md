@@ -29,6 +29,7 @@
 
 ## Table of Contents
 - [About Dunno](#about-dunno)
+- [Concept Process](#concept-process)
 - [Built With](#built-with)
 - [Getting Started](#getting-started)
 - [Dunno Features & Functionality](#dunno-features--functionality)
@@ -45,6 +46,61 @@
 Dunno is an innovative AI-powered gift suggestion application that eliminates the guesswork from gift-giving. Whether you're shopping for a close friend, family member, or colleague, Dunno leverages artificial intelligence to generate personalised gift recommendations based on detailed profiles, preferences, and occasions.
 
 The app features a sophisticated social component where users can connect with friends, create and share collections of their interests, and receive gift suggestions based on their personal preferences. With integrated AI technology powered by OpenAI, Dunno provides contextual, budget-aware, and location-specific gift recommendations.
+
+## Concept Process
+
+### Ideation
+
+The concept for Dunno emerged from a universal challenge: **gift-giving is difficult**. Despite our best intentions, finding the perfect gift often becomes a stressful, time-consuming experience that leaves us second-guessing our choices.
+
+### The Problem: Why Gift-Giving is Difficult
+
+Several factors make gift-giving challenging:
+
+- **Lack of Information**: We often don't know enough about someone's current interests, preferences, or what they already own
+- **Decision Paralysis**: Endless options and possibilities make it overwhelming to choose the "right" gift
+- **Time Constraints**: Busy schedules leave little time for thoughtful gift research and shopping
+- **Fear of Disappointment**: The anxiety of giving a gift that might be unwanted or duplicate something they have
+- **Budget Management**: Balancing meaningful gifts with financial constraints
+- **Relationship Context**: Different relationships require different levels of personalization and appropriateness
+- **Changing Preferences**: People's interests evolve, making past gift-giving experiences unreliable guides
+
+### What Needed to be Addressed
+
+To solve the gift-giving problem, the solution needed to address:
+
+1. **Information Gap**: Create a system where people can share their preferences, interests, and collections
+2. **Personalization**: Leverage personal data to generate truly relevant, individualized suggestions
+3. **Social Connection**: Enable friends and family to understand each other's preferences better
+4. **Speed & Convenience**: Provide quick suggestions for both close connections and distant acquaintances
+5. **AI Intelligence**: Utilize artificial intelligence to process preferences and generate contextual recommendations
+6. **Organization**: Allow users to save, categorize, and manage gift ideas for multiple people and occasions
+7. **Budget Awareness**: Respect financial constraints while maintaining thoughtfulness
+8. **Local Relevance**: Suggest gifts available in the user's geographic area
+
+### Database Structure
+
+The application's data architecture is designed to support complex relationships between users, their preferences, and gift suggestions:
+
+<div align="center">
+  <img src="assets/mockup/entity_relationship_diagram.png" alt="Entity Relationship Diagram" style="width: 100%; max-width: 800px; object-fit: contain;">
+</div>
+
+**Key Entities:**
+- **Users**: Core user profiles with authentication and personal information
+- **Collections**: User-curated lists of interests, brands, and preferences
+- **Connections**: Friend relationships between users
+- **Calendar Events**: Important dates linked to connections and collections
+
+Added Later:
+- **Gift Boards**: Organized collections of saved gift suggestions
+- **Gift Board Suggestions**: AI-generated or manually added gift ideas
+
+This relational structure enables:
+- Personalized recommendations based on friend collections
+- Event-driven gift reminders
+- Organized gift planning across multiple recipients
+- Social discovery and connection management
 
 ## Built With
 - **Flutter 3.9+**: Cross-platform UI toolkit for native mobile applications
@@ -214,7 +270,7 @@ User testing was conducted through hands-on walkthrough sessions where participa
 
 **Implementation**: Enhanced text hierarchy and contrast to ensure important information stands out while maintaining the vibrant design aesthetic.
 
-#### Color-Coded Feature Organization
+#### Color-Coded Feature Organisation
 **Feedback Received**: Users recommended implementing a color-coding system to help distinguish between different app features and contexts.
 
 **Implementation**: Developed a strategic color palette system:
@@ -303,10 +359,55 @@ I would like to extend my sincere gratitude to the following individuals and res
 ### User Experience
 - **User Testers** - For their valuable feedback, suggestions, and real-world testing that helped identify issues and improve the overall app experience and usability
 
-Their contributions, feedback, and support have been instrumental in bringing Dunno to life and ensuring its quality and functionality.
+### Technologies & Libraries
+
+Special acknowledgement to the open-source community and the developers of the following packages from [pub.dev](https://pub.dev):
+
+**Firebase Integration:**
+- `firebase_core`, `firebase_auth`, `cloud_firestore`, `firebase_storage` - Complete Firebase suite for backend services
+- `firebase_analytics`, `firebase_crashlytics` - Analytics and crash reporting
+- `firebase_messaging` - Push notification support
+- `firebase_remote_config` - Feature flag management
+
+**State Management & Architecture:**
+- `flutter_bloc` - BLoC pattern implementation for state management
+- `equatable` - Value equality for state comparison
+- `get_it` - Service locator for dependency injection
+
+**UI Components & Calendar:**
+- `table_calendar` - Interactive calendar functionality for event tracking
+- `syncfusion_flutter_sliders` - Custom slider components
+- `lottie` - Animated illustrations and loading indicators
+- `flutter_svg` - SVG rendering support
+
+**Networking & Media:**
+- `http` - HTTP client for API requests
+- `cached_network_image` - Optimized image loading and caching
+- `image_picker` - Camera and gallery image selection
+- `image_cropper` - Image editing functionality
+- `file_picker` - File selection capabilities
+
+**Navigation & Search:**
+- `go_router` - Declarative routing and navigation
+- `flutter_typeahead` - Autocomplete search functionality
+
+**Utilities:**
+- `flutter_dotenv` - Environment variable management
+- `shared_preferences` - Local data persistence
+- `package_info_plus` - App version information
+- `connectivity_plus` - Network connectivity monitoring
+- `url_launcher` - External URL and app linking
+- `share_plus` - Native sharing capabilities
+- `qr_flutter` & `mobile_scanner` - QR code generation and scanning
+
+These technologies, libraries, and the incredible support from the community have been instrumental in bringing Dunno to life and ensuring its quality and functionality.
 
 ## Contact
 
 - **GitHub**: [@KaylaPosthumusOW](https://github.com/KaylaPosthumusOW)
 - **Email**: [231096@virtualwindow.co.za](mailto:231096@virtualwindow.co.za)
 - **Project Link**: [https://github.com/KaylaPosthumusOW/dunno_app](https://github.com/KaylaPosthumusOW/dunno_app)
+
+<div align="center">
+  <img src="assets/mockup/mockup3.png" alt="Mock up 2" style="height: 400px; min-width: 200px; object-fit: contain;">
+</div>
