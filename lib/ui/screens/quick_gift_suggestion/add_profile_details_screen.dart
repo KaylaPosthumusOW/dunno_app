@@ -38,7 +38,7 @@ class _AddProfileDetailsPageState extends State<AddProfileDetailsPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             DunnoDropdownField<String>(
-              label: 'What\'s the occasion?',
+              label: 'What\'s the occasion? *',
               hintText: 'Select occasion',
               value: _eventType,
               onChanged: (value) {
@@ -59,7 +59,7 @@ class _AddProfileDetailsPageState extends State<AddProfileDetailsPage> {
             const SizedBox(height: 16),
 
             DunnoDropdownField<GenderType>(
-              label: 'Who are you shopping for?',
+              label: 'Who are you shopping for? *',
               hintText: 'Select gender',
               value: _gender,
               onChanged: (value) {
@@ -95,7 +95,7 @@ class _AddProfileDetailsPageState extends State<AddProfileDetailsPage> {
 
             DunnoTextField(
               controller: _interestsController,
-              label: 'What are their interests?',
+              label: 'What are their interests? *',
               supportingText: 'e.g., Photography, Reading, Cooking',
               keyboardType: TextInputType.text,
               isLight: true,

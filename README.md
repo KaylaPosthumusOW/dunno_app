@@ -62,7 +62,7 @@ Several factors make gift-giving challenging:
 - **Time Constraints**: Busy schedules leave little time for thoughtful gift research and shopping
 - **Fear of Disappointment**: The anxiety of giving a gift that might be unwanted or duplicate something they have
 - **Budget Management**: Balancing meaningful gifts with financial constraints
-- **Relationship Context**: Different relationships require different levels of personalization and appropriateness
+- **Relationship Context**: Different relationships require different levels of personalisation and appropriateness
 - **Changing Preferences**: People's interests evolve, making past gift-giving experiences unreliable guides
 
 ### What Needed to be Addressed
@@ -70,11 +70,11 @@ Several factors make gift-giving challenging:
 To solve the gift-giving problem, the solution needed to address:
 
 1. **Information Gap**: Create a system where people can share their preferences, interests, and collections
-2. **Personalization**: Leverage personal data to generate truly relevant, individualized suggestions
+2. **Personalisation**: Leverage personal data to generate truly relevant, individualised suggestions
 3. **Social Connection**: Enable friends and family to understand each other's preferences better
 4. **Speed & Convenience**: Provide quick suggestions for both close connections and distant acquaintances
-5. **AI Intelligence**: Utilize artificial intelligence to process preferences and generate contextual recommendations
-6. **Organization**: Allow users to save, categorize, and manage gift ideas for multiple people and occasions
+5. **AI Intelligence**: Utilise artificial intelligence to process preferences and generate contextual recommendations
+6. **Organisation**: Allow users to save, categorise, and manage gift ideas for multiple people and occasions
 7. **Budget Awareness**: Respect financial constraints while maintaining thoughtfulness
 8. **Local Relevance**: Suggest gifts available in the user's geographic area
 
@@ -93,13 +93,13 @@ The application's data architecture is designed to support complex relationships
 - **Calendar Events**: Important dates linked to connections and collections
 
 Added Later:
-- **Gift Boards**: Organized collections of saved gift suggestions
+- **Gift Boards**: Organised collections of saved gift suggestions
 - **Gift Board Suggestions**: AI-generated or manually added gift ideas
 
 This relational structure enables:
-- Personalized recommendations based on friend collections
+- Personalised recommendations based on friend collections
 - Event-driven gift reminders
-- Organized gift planning across multiple recipients
+- Organised gift planning across multiple recipients
 - Social discovery and connection management
 
 ## Built With
@@ -281,19 +281,19 @@ User testing was conducted through hands-on walkthrough sessions where participa
 This color coding helps users quickly identify and navigate between different functional areas of the app.
 
 #### Gift Board Functionality
-**Feedback Received**: A key user insight led to the development of the gift board feature. Users expressed the need to save specific individual suggestions to boards of their choosing, rather than saving all suggestions at once or having limited organization options.
+**Feedback Received**: A key user insight led to the development of the gift board feature. Users expressed the need to save specific individual suggestions to boards of their choosing, rather than saving all suggestions at once or having limited organisation options.
 
 **Implementation**: Created a comprehensive gift board system allowing users to:
 - Create custom boards for different recipients or occasions
 - Selectively save individual suggestions to specific boards
-- Organize saved suggestions across multiple boards
+- Organise saved suggestions across multiple boards
 - Manage and edit board contents as needed
 
 ### Results Summary
 The user testing sessions provided actionable feedback that directly influenced the app's visual design and core functionality. The implementation of user suggestions resulted in:
 - Improved visual hierarchy and readability
 - Intuitive color-coded navigation system
-- Enhanced user control over saving and organizing gift suggestions
+- Enhanced user control over saving and organising gift suggestions
 - Better overall user experience and feature discoverability
 
 These insights demonstrate the value of direct user engagement in refining app functionality and ensuring the final product meets real user needs and preferences.
@@ -382,7 +382,7 @@ Special acknowledgement to the open-source community and the developers of the f
 
 **Networking & Media:**
 - `http` - HTTP client for API requests
-- `cached_network_image` - Optimized image loading and caching
+- `cached_network_image` - Optimised image loading and caching
 - `image_picker` - Camera and gallery image selection
 - `image_cropper` - Image editing functionality
 - `file_picker` - File selection capabilities

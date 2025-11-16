@@ -58,7 +58,7 @@ class _AddFilterPageState extends State<AddFilterPage> {
           children: [
             DunnoTextField(
               controller: _relationController,
-              label: 'What\'s your relationship to them?',
+              label: 'What\'s your relationship to them? *',
               supportingText: 'e.g., Friend, Sister, Colleague',
               keyboardType: TextInputType.text,
               isLight: true,
@@ -73,7 +73,7 @@ class _AddFilterPageState extends State<AddFilterPage> {
               alignment: Alignment.centerLeft,
               child: Padding(
                 padding: const EdgeInsets.only(bottom: 8, left: 15),
-                child: Text('Budget: R${_minBudget.toStringAsFixed(0)} - R${_maxBudget.toStringAsFixed(0)}', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                child: Text('Budget: R${_minBudget.toStringAsFixed(0)} - R${_maxBudget.toStringAsFixed(0)} *', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
               ),
             ),
             SfRangeSlider(
@@ -114,7 +114,7 @@ class _AddFilterPageState extends State<AddFilterPage> {
             ),
             const SizedBox(height: 16),
             DunnoDropdownField<GiftCategory>(
-              label: 'Gift Category',
+              label: 'Gift Category *',
               hintText: 'Select category',
               value: _giftCategory,
               onChanged: (value) {
@@ -197,7 +197,7 @@ class _AddFilterPageState extends State<AddFilterPage> {
             const SizedBox(height: 16),
             DunnoTextField(
               controller: _locationController,
-              label: 'Your Location',
+              label: 'Your Location *',
               supportingText: 'e.g., Cape Town, Johannesburg, Durban',
               keyboardType: TextInputType.text,
               isLight: true,
