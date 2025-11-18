@@ -13,34 +13,34 @@ packages:
     dependency: transitive
     description:
       name: algolia_client_core
-      sha256: cffb099e46172839b6e50bf197d8bd4ff14903d763b2e3abaa4e2f779f311c54
+      sha256: d0d63d054e23df8227d56a2d12c3f64426343e5fded5d3ba3592b604a741c428
       url: "https://pub.dev"
     source: hosted
-    version: "1.40.0"
+    version: "1.41.1"
   algolia_client_insights:
     dependency: transitive
     description:
       name: algolia_client_insights
-      sha256: "47ee6ac41cf2bbc2afb3f197b86693e3794372019dc20c35213b285b35898ed1"
+      sha256: "6800e52bc72d8fbda6a13e5ddddff1ad2fedec473d8605639c0f0af2c3b34a51"
       url: "https://pub.dev"
     source: hosted
-    version: "1.40.0"
+    version: "1.41.1"
   algolia_client_search:
     dependency: transitive
     description:
       name: algolia_client_search
-      sha256: "48ca6a5c07ba3a6d9148dda1c0dc29ec52868d95fcf62d0202a8610355d688a2"
+      sha256: "0eb8c85bfefa82bc99e958117af13f1a2e889e217461db9a659ecb9d8e79c0fc"
       url: "https://pub.dev"
     source: hosted
-    version: "1.40.0"
+    version: "1.41.1"
   algoliasearch:
     dependency: "direct main"
     description:
       name: algoliasearch
-      sha256: "3b5c1f30e9e829ac98e30e8a437c4a0986382ef8646700749f1e0c5abf8b267a"
+      sha256: eba3f9381bcd6c2d86d9c5f7013ae8cd1643ee12418cec5bbe883a5931e887e3
       url: "https://pub.dev"
     source: hosted
-    version: "1.40.0"
+    version: "1.41.1"
   archive:
     dependency: transitive
     description:
@@ -261,10 +261,10 @@ packages:
     dependency: transitive
     description:
       name: crypto
-      sha256: "1e445881f28f22d6140f181e07737b22f1e099a5e1ff94b0af2f9e4a463f4855"
+      sha256: c8ea0233063ba03258fbcf2ca4d6dadfefe14f02fab57702265467a19f27fadf
       url: "https://pub.dev"
     source: hosted
-    version: "3.0.6"
+    version: "3.0.7"
   cupertino_icons:
     dependency: "direct main"
     description:
@@ -349,10 +349,10 @@ packages:
     dependency: "direct main"
     description:
       name: file_picker
-      sha256: f2d9f173c2c14635cc0e9b14c143c49ef30b4934e8d1d274d6206fcb0086a06f
+      sha256: f8f4ea435f791ab1f817b4e338ed958cb3d04ba43d6736ffc39958d950754967
       url: "https://pub.dev"
     source: hosted
-    version: "10.3.3"
+    version: "10.3.6"
   file_selector_linux:
     dependency: transitive
     description:
@@ -690,10 +690,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_svg
-      sha256: b9c2ad5872518a27507ab432d1fb97e8813b05f0fc693f9d40fad06d073e0678
+      sha256: "055de8921be7b8e8b98a233c7a5ef84b3a6fcc32f46f1ebf5b9bb3576d108355"
       url: "https://pub.dev"
     source: hosted
-    version: "2.2.1"
+    version: "2.2.2"
   flutter_test:
     dependency: transitive
     description: flutter
@@ -732,10 +732,10 @@ packages:
     dependency: "direct main"
     description:
       name: go_router
-      sha256: d8f590a69729f719177ea68eb1e598295e8dbc41bbc247fed78b2c8a25660d7c
+      sha256: c92d18e1fe994cb06d48aa786c46b142a5633067e8297cff6b5a3ac742620104
       url: "https://pub.dev"
     source: hosted
-    version: "16.3.0"
+    version: "17.0.0"
   google_fonts:
     dependency: "direct main"
     description:
@@ -836,10 +836,10 @@ packages:
     dependency: "direct main"
     description:
       name: http
-      sha256: bb2ce4590bc2667c96f318d68cac1b5a7987ec819351d32b1c987239a815e007
+      sha256: "87721a4a50b19c7f1d49001e51409bddc46303966ce89a65af4f4e6004896412"
       url: "https://pub.dev"
     source: hosted
-    version: "1.5.0"
+    version: "1.6.0"
   http_parser:
     dependency: transitive
     description:
@@ -884,10 +884,10 @@ packages:
     dependency: transitive
     description:
       name: image_picker
-      sha256: "736eb56a911cf24d1859315ad09ddec0b66104bc41a7f8c5b96b4e2620cf5041"
+      sha256: "784210112be18ea55f69d7076e2c656a4e24949fa9e76429fe53af0c0f4fa320"
       url: "https://pub.dev"
     source: hosted
-    version: "1.2.0"
+    version: "1.2.1"
   image_picker_android:
     dependency: transitive
     description:
@@ -1645,18 +1645,18 @@ packages:
     dependency: transitive
     description:
       name: syncfusion_flutter_core
-      sha256: "825670efc828e18e14ff310cbcf6de91c8ff73b55c75ae6868a2b3cd87e88b6c"
+      sha256: "8118f13264d1401a7085d12a0aaeac1ebd5cd939046b8c565d195879646daad6"
       url: "https://pub.dev"
     source: hosted
-    version: "31.2.5"
+    version: "31.2.10"
   syncfusion_flutter_sliders:
     dependency: "direct main"
     description:
       name: syncfusion_flutter_sliders
-      sha256: a21ce298e5f36b7d28019413cb63a1888fe8dc775e429ca3fb1b1c1bd42c7868
+      sha256: "051dfc128480aefe5af8e6889eb66f0244b171131aeebb5b196a7b2ee5413ed7"
       url: "https://pub.dev"
     source: hosted
-    version: "31.2.5"
+    version: "31.2.10"
   synchronized:
     dependency: transitive
     description:

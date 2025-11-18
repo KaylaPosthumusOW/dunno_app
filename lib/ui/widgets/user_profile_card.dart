@@ -4,6 +4,7 @@ import 'package:dunno/constants/themes.dart';
 import 'package:dunno/cubits/app_user_profile/app_user_profile_cubit.dart';
 import 'package:dunno/cubits/connections/connection_cubit.dart';
 import 'package:dunno/models/app_user_profile.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart' hide ConnectionState;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -63,7 +64,7 @@ class _UserProfileCardState extends State<UserProfileCard> {
                     radius: 30,
                     backgroundColor: AppColors.pinkLavender.withValues(alpha: 0.5),
                     backgroundImage: widget.userProfile.profilePicture != null
-                        ? NetworkImage(widget.userProfile.profilePicture!)
+                        ? CachedNetworkImageProvider(widget.userProfile.profilePicture!)
                         : null,
                     child: widget.userProfile.profilePicture == null
                         ? Icon(Icons.person, size: 30, color: AppColors.cerise)

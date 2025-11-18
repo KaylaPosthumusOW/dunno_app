@@ -10,9 +10,9 @@ dependencies:
   flutter:
     sdk: flutter
 
-  algoliasearch: ^1.40.0
+  algoliasearch: ^1.41.1
   cached_network_image: ^3.4.1
-  http: ^1.5.0
+  http: ^1.6.0
   intl_phone_field: ^3.2.0
   pin_input_text_field: ^4.5.2
   font_awesome_flutter: ^10.12.0
@@ -22,7 +22,7 @@ dependencies:
   cupertino_icons: ^1.0.8
   cloud_firestore: ^6.1.0
   equatable: ^2.0.7
-  file_picker: ^10.3.3
+  file_picker: ^10.3.6
   flutter_dotenv:  ^6.0.0
   firebase_analytics: ^12.0.4
   firebase_messaging: ^16.0.4
@@ -32,10 +32,10 @@ dependencies:
   flutter_bloc: ^9.1.1
   flutter_cache_manager: ^3.4.1
   flutter_calendar_carousel: ^2.5.4
-  flutter_svg: ^2.2.1
+  flutter_svg: ^2.2.2
   flutter_typeahead: ^5.2.0
   get_it: ^9.0.5
-  go_router: ^16.3.0
+  go_router: ^17.0.0
   intl: ^0.20.2
   lottie: ^3.3.2
   qr_bar_code: ^3.0.0
@@ -47,7 +47,7 @@ dependencies:
   shared_preferences: ^2.5.3
   package_info_plus: ^9.0.0
   google_fonts: ^6.3.2
-  syncfusion_flutter_sliders: ^31.2.5
+  syncfusion_flutter_sliders: ^31.2.10
 
   sp_firebase:
     path: ../spaza/spaza-packages/sp-firebase

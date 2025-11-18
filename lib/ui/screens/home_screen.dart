@@ -7,6 +7,7 @@ import 'package:dunno/models/app_user_profile.dart';
 import 'package:dunno/ui/screens/scanner_screen.dart';
 import 'package:dunno/ui/widgets/calender.dart';
 import 'package:dunno/ui/widgets/calender_notification_card.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -91,7 +92,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 child: CircleAvatar(
                   backgroundColor: Colors.grey.shade400,
-                  backgroundImage: state.mainAppUserProfileState.appUserProfile?.profilePicture != null ? NetworkImage(state.mainAppUserProfileState.appUserProfile!.profilePicture!) : null,
+                  backgroundImage: state.mainAppUserProfileState.appUserProfile?.profilePicture != null ? CachedNetworkImageProvider(state.mainAppUserProfileState.appUserProfile!.profilePicture!) : null,
                   child: state.mainAppUserProfileState.appUserProfile?.profilePicture == null ? Icon(Icons.person, color: AppColors.offWhite) : null,
                 ),
               ),
